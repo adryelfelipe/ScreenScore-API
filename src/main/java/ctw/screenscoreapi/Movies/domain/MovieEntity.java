@@ -9,9 +9,10 @@ public class MovieEntity {
     private boolean adult;
     private String releaseDate;
     private String posterImage;
+    private String overview;
 
     // Construtor
-    public MovieEntity(Long id, String posterImage, String releaseDate, boolean adult, String originalTitle, String originalLanguage, String title) {
+    public MovieEntity(Long id, String posterImage, String releaseDate, boolean adult, String originalTitle, String originalLanguage, String title, String overview) {
         this.id = id;
         this.posterImage = posterImage;
         this.releaseDate = releaseDate;
@@ -19,6 +20,7 @@ public class MovieEntity {
         this.originalTitle = originalTitle;
         this.originalLanguage = originalLanguage;
         this.title = title;
+        this.overview = overview;
     }
 
     // Getters e Setters
@@ -76,5 +78,13 @@ public class MovieEntity {
 
     public void setOriginalTitle(String originalTitle) {
         this.originalTitle = originalTitle;
+    }
+
+    public String getOverview() {
+        return overview;
+    }
+
+    public void setOverview(String overview) {
+        this.overview = overview;
     }
 }

@@ -1,12 +1,10 @@
 package ctw.screenscoreapi.Movies.application.dtos.get;
 
+import ctw.screenscoreapi.Movies.domain.MovieEntity;
+
+import java.util.List;
+
 public record GetMovieResponse(
-        Long id,
-        String title,
-        String originalLanguage,
-        String originalTitle,
-        boolean adult,
-        String releaseDate,
-        String posterImage
+        List<MovieEntity> moviesList
 )  {}
 

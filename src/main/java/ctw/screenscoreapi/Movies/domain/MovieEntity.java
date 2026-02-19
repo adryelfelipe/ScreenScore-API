@@ -1,5 +1,7 @@
 package ctw.screenscoreapi.Movies.domain;
 
+import java.util.List;
+
 public class MovieEntity {
     // Atributos
     private Long id;
@@ -10,9 +12,10 @@ public class MovieEntity {
     private String releaseDate;
     private String posterImage;
     private String overview;
+    private List<Integer> genreIds;
 
     // Construtor
-    public MovieEntity(Long id, String posterImage, String releaseDate, boolean adult, String originalTitle, String originalLanguage, String title, String overview) {
+    public MovieEntity(Long id, String posterImage, String releaseDate, boolean adult, String originalTitle, String originalLanguage, String title, String overview, List<Integer> genreIds) {
         this.id = id;
         this.posterImage = posterImage;
         this.releaseDate = releaseDate;
@@ -21,6 +24,7 @@ public class MovieEntity {
         this.originalLanguage = originalLanguage;
         this.title = title;
         this.overview = overview;
+        this.genreIds = genreIds;
     }
 
     // Getters e Setters
@@ -86,5 +90,13 @@ public class MovieEntity {
 
     public void setOverview(String overview) {
         this.overview = overview;
+    }
+
+    public List<Integer> getGenreIds() {
+        return genreIds;
+    }
+
+    public void setGenreIds(List<Integer> genreIds) {
+        this.genreIds = genreIds;
     }
 }

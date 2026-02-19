@@ -5,6 +5,6 @@ import ctw.screenscoreapi.Movies.domain.MovieEntity;
 import java.util.List;
 
 public record GetMovieResponse(
-        List<MovieEntity> moviesList
+        List<MovieEntity> movies
 )  {}
 

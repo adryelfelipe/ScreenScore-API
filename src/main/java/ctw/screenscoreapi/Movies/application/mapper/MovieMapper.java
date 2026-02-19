@@ -1,5 +1,6 @@
 package ctw.screenscoreapi.Movies.application.mapper;
 
+import ctw.screenscoreapi.Movies.application.dtos.create.CreateMovieRequest;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetMovieResponse;
 import ctw.screenscoreapi.Movies.domain.MovieEntity;
 import ctw.screenscoreapi.Movies.infra.feign.MovieApiEntity;
@@ -19,8 +20,24 @@ public class MovieMapper {
                 apiEntity.getOriginal_title(),
                 apiEntity.getOriginal_language(),
                 apiEntity.getTitle(),
-                apiEntity.getOverview()
+                apiEntity.getOverview(),
+                apiEntity.getGenre_ids()
                 );
+    }
+
+    public MovieEntity toEntity(CreateMovieRequest request) {
+
+        return new MovieEntity(
+                null,
+                request.posterImage(),
+                request.releaseDate(),
+                request.adult(),
+                request.originalTitle(),
+                request.originalLanguage(),
+                request.title(),
+                request.overview(),
+                request.genreIds()
+        );
     }
 
     public GetMovieResponse toResponse(List<MovieApiEntity> moviesApiList) {

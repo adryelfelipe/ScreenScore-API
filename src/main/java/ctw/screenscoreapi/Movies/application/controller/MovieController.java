@@ -31,7 +31,7 @@ public class MovieController {
     }
 
     @GetMapping("/externo")
-    public ResponseEntity<GetMovieResponse> getExternalMovie(GetExternalMovieRequest request) {
+    public ResponseEntity<GetMovieResponse> getExternalMovie(@Valid GetExternalMovieRequest request) {
         GetMovieResponse response = movieService.getExternal(request);
 
         return ResponseEntity

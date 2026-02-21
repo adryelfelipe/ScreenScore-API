@@ -3,18 +3,15 @@ package ctw.screenscoreapi.Movies.application.service;
 import ctw.screenscoreapi.Movies.application.dtos.create.CreateMovieRequest;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetExternalMovieRequest;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetMovieResponse;
-import ctw.screenscoreapi.Movies.application.exceptions.MovieTitleAlreadyUsed;
+import ctw.screenscoreapi.Movies.application.exceptions.MovieTitleAlreadyUsedException;
 import ctw.screenscoreapi.Movies.application.mapper.MovieMapper;
 import ctw.screenscoreapi.Movies.domain.MovieEntity;
 import ctw.screenscoreapi.Movies.domain.repository.MovieRepository;
 import ctw.screenscoreapi.Movies.infra.feign.MovieApiClient;
-import ctw.screenscoreapi.Movies.infra.feign.MovieApiEntity;
 import ctw.screenscoreapi.Movies.infra.feign.MovieApiResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @Service
@@ -40,7 +37,7 @@ public class MovieService {
         Optional<MovieEntity> optionalMovie = movieRepository.findByTitle(title);
 
         if(optionalMovie.isPresent()) {
-            throw new MovieTitleAlreadyUsed(title);
+            throw new MovieTitleAlreadyUsedException(title);
         }
 
         MovieEntity movie = movieMapper.toEntity(request);

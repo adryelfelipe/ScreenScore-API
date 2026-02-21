@@ -1,5 +1,6 @@
 package ctw.screenscoreapi.Movies.infra.exception;
 
+import ctw.screenscoreapi.Movies.application.exceptions.MovieApplicationException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -22,7 +23,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ProblemDetail> handleMethodArgumentNotValidException(MethodArgumentNotValidException e, HttpServletRequest request) throws URISyntaxException {
-        URI type = new URI(BASE_URL + "/invalid-argument");
+        URI type = new URI(BASE_URL + "/errors/invalid-argument");
         URI instance = new URI(request.getRequestURI());
         String title = "A requisição contém campos inválidos";
         HttpStatus status = HttpStatus.BAD_REQUEST;
@@ -39,6 +40,25 @@ public class GlobalExceptionHandler {
         problemDetail.setInstance(instance);
         problemDetail.setTitle(title);
         problemDetail.setProperty("erros", errors);
+
+        return ResponseEntity
+                .status(status)
+                .body(problemDetail);
+    }
+
+    @ExceptionHandler(MovieApplicationException.class)
+    public ResponseEntity<ProblemDetail> handleMovieApplicationException(MovieApplicationException e, HttpServletRequest request) throws URISyntaxException {
+        URI type = new URI(BASE_URL + "/errors/business-rule");
+        URI instance = new URI(request.getRequestURI());
+        String title = "Violação de regra de negócio";
+        String detail = e.getMessage();
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+
+        ProblemDetail problemDetail = ProblemDetail.forStatus(status);
+        problemDetail.setType(type);
+        problemDetail.setInstance(instance);
+        problemDetail.setDetail(detail);
+        problemDetail.setTitle(title);
 
         return ResponseEntity
                 .status(status)

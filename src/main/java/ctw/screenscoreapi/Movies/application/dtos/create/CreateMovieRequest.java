@@ -1,5 +1,6 @@
 package ctw.screenscoreapi.Movies.application.dtos.create;
 
+import ctw.screenscoreapi.Movies.domain.enums.Genre;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -30,5 +31,5 @@ public record CreateMovieRequest(@NotBlank(message = "O título do filme é obri
                                  String overview,
 
                                  @NotNull(message = "O gênero do filme é obrigatório")
-                                 List<Integer> genreIds
+                                 List<Genre> genres
 ) {}

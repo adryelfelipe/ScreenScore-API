@@ -45,7 +45,8 @@ public class MovieService {
     }
 
     public GetMovieResponse getExternal(GetExternalMovieRequest request) {
-        MovieApiResponse movieApiResponse = movieApiClient.search(request.title(), "pt-BR", "Bearer " + themoviedbApiKey);
+        System.out.println(themoviedbApiKey);
+        MovieApiResponse movieApiResponse = movieApiClient.search(request.title(), "pt-BR", themoviedbApiKey);
         return movieMapper.toResponse(movieApiResponse.getResults());
     }
 }

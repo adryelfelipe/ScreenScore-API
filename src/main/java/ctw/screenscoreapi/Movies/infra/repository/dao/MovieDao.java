@@ -1,6 +1,8 @@
 package ctw.screenscoreapi.Movies.infra.repository.dao;
 
+import ctw.screenscoreapi.Movies.application.exceptions.MovieUnkwonGenreException;
 import ctw.screenscoreapi.Movies.domain.MovieEntity;
+import ctw.screenscoreapi.Movies.domain.enums.Genre;
 import ctw.screenscoreapi.Share.connection.ConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,9 +41,9 @@ public class MovieDao {
             movie.setId(movieId);
 
 
-            for(long genreId: movie.getGenreIds()) {
+            for(Genre genre: movie.getGenres()) {
                 psGeneres.setLong(1, movieId);
-                psGeneres.setLong(2, genreId);
+                psGeneres.setLong(2, genre.getId());
                 psGeneres.executeUpdate();
             }
 
@@ -68,12 +70,19 @@ public class MovieDao {
             psGenre.setLong(1, movieId);
             ResultSet rsGenre = psGenre.executeQuery();
 
-            List<Integer> genreList = new ArrayList<>();
+            List<Integer> genreIds = new ArrayList<>();
 
             while(rsGenre.next()) {
                 int genreId = rsGenre.getInt("id_genero");
-                genreList.add(genreId);
+                genreIds.add(genreId);
             }
+
+            List<Genre> genres = genreIds.stream()
+                                         .map(genreId -> Genre.getGenreById(genreId)
+                                                 .orElseThrow(() -> new MovieUnkwonGenreException(genreId)))
+                                         .toList();
+
+
 
             MovieEntity movie = new MovieEntity(
                     movieId,
@@ -84,7 +93,7 @@ public class MovieDao {
                     rsMovie.getString("lingua_original"),
                     rsMovie.getString("titulo"),
                     rsMovie.getString("visao_geral"),
-                    genreList
+                    genres
             );
 
             return Optional.of(movie);

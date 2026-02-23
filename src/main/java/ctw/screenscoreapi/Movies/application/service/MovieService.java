@@ -3,13 +3,13 @@ package ctw.screenscoreapi.Movies.application.service;
 import ctw.screenscoreapi.Movies.application.dtos.create.CreateMovieRequest;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetExternalMovieRequest;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetExternalMovieResponse;
-import ctw.screenscoreapi.Movies.application.dtos.get.GetMovieResponse;
 import ctw.screenscoreapi.Movies.application.exceptions.MovieTitleAlreadyUsedException;
 import ctw.screenscoreapi.Movies.application.mapper.MovieMapper;
 import ctw.screenscoreapi.Movies.domain.MovieEntity;
 import ctw.screenscoreapi.Movies.domain.repository.MovieRepository;
 import ctw.screenscoreapi.Movies.infra.feign.MovieApiClient;
 import ctw.screenscoreapi.Movies.infra.feign.MovieApiResponse;
+import ctw.screenscoreapi.Movies.infra.mapper.TmdbMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -21,16 +21,18 @@ public class MovieService {
     // Atributos
     private MovieApiClient movieApiClient;
     private MovieMapper movieMapper;
+    private TmdbMapper tmdbMapper;
     private MovieRepository movieRepository;
 
     @Value("${themoviedb.apikey}")
     private String themoviedbApiKey;
 
     // Construtor
-    public MovieService(MovieApiClient movieApiClient, MovieMapper movieMapper, MovieRepository movieRepository) {
+    public MovieService(MovieApiClient movieApiClient, MovieMapper movieMapper, MovieRepository movieRepository, TmdbMapper tmdbMapper) {
         this.movieApiClient = movieApiClient;
         this.movieMapper = movieMapper;
         this.movieRepository = movieRepository;
+        this.tmdbMapper = tmdbMapper;
     }
 
     // Metodos
@@ -47,10 +49,9 @@ public class MovieService {
     }
 
     public GetExternalMovieResponse getExternal(GetExternalMovieRequest request) {
-        System.out.println(themoviedbApiKey);
         MovieApiResponse movieApiResponse = movieApiClient.search(request.title(), "pt-BR", themoviedbApiKey);
-        List<MovieEntity> movies = movieMapper.toEntity(movieApiResponse.getResults());
+        List<MovieEntity> movies = tmdbMapper.toDomainEntities(movieApiResponse.getResults());
 
-        return movieMapper.toResponse(movies);
+        return tmdbMapper.toResponseEntities(movies);
     }
 }

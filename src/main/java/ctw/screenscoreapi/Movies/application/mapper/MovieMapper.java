@@ -1,6 +1,7 @@
 package ctw.screenscoreapi.Movies.application.mapper;
 
 import ctw.screenscoreapi.Movies.application.dtos.create.CreateMovieRequest;
+import ctw.screenscoreapi.Movies.application.dtos.get.GetExternalMovieResponse;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetMovieResponse;
 import ctw.screenscoreapi.Movies.application.exceptions.TmdbUnkwonGenreException;
 import ctw.screenscoreapi.Movies.domain.MovieEntity;
@@ -44,12 +45,27 @@ public class MovieMapper {
         );
     }
 
-    public GetMovieResponse toResponse(List<MovieApiEntity> moviesApiList) {
-        List<MovieEntity> moviesList = moviesApiList.stream().map(this::toEntity).toList();
+    public List<MovieEntity> toEntity(List<MovieApiEntity> moviesApiList) {
+        return moviesApiList.stream().map(this::toEntity).toList();
+    }
 
+    public GetMovieResponse toResponseEntity(MovieEntity movieEntity) {
         return new GetMovieResponse(
-               moviesList
+                movieEntity.getTitle(),
+                movieEntity.getOriginalLanguage(),
+                movieEntity.getOriginalTitle(),
+                movieEntity.isAdult(),
+                movieEntity.getReleaseDate(),
+                movieEntity.getPosterImage(),
+                movieEntity.getOverview(),
+                movieEntity.getGenres()
         );
+    }
+
+    public GetExternalMovieResponse toResponse(List<MovieEntity> moviesList) {
+        List<GetMovieResponse> movieResponses = moviesList.stream().map(this::toResponseEntity).toList();
+
+        return new GetExternalMovieResponse(movieResponses);
     }
 
     private Genre toMovieGenre (Integer apiGenreId) {

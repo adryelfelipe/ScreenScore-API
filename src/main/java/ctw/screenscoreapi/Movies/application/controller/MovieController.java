@@ -2,6 +2,7 @@ package ctw.screenscoreapi.Movies.application.controller;
 
 import ctw.screenscoreapi.Movies.application.dtos.create.CreateMovieRequest;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetExternalMovieRequest;
+import ctw.screenscoreapi.Movies.application.dtos.get.GetExternalMovieResponse;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetMovieResponse;
 import ctw.screenscoreapi.Movies.application.service.MovieService;
 import jakarta.validation.Valid;
@@ -31,8 +32,8 @@ public class MovieController {
     }
 
     @GetMapping("/externo")
-    public ResponseEntity<GetMovieResponse> getExternalMovie(@Valid GetExternalMovieRequest request) {
-        GetMovieResponse response = movieService.getExternal(request);
+    public ResponseEntity<GetExternalMovieResponse> getExternalMovie(@Valid GetExternalMovieRequest request) {
+        GetExternalMovieResponse response = movieService.getExternal(request);
 
         return ResponseEntity
                 .ok()

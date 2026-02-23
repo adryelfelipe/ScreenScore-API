@@ -2,6 +2,7 @@ package ctw.screenscoreapi.Movies.application.service;
 
 import ctw.screenscoreapi.Movies.application.dtos.create.CreateMovieRequest;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetExternalMovieRequest;
+import ctw.screenscoreapi.Movies.application.dtos.get.GetExternalMovieResponse;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetMovieResponse;
 import ctw.screenscoreapi.Movies.application.exceptions.MovieTitleAlreadyUsedException;
 import ctw.screenscoreapi.Movies.application.mapper.MovieMapper;
@@ -12,6 +13,7 @@ import ctw.screenscoreapi.Movies.infra.feign.MovieApiResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -44,9 +46,11 @@ public class MovieService {
         movieRepository.create(movie);
     }
 
-    public GetMovieResponse getExternal(GetExternalMovieRequest request) {
+    public GetExternalMovieResponse getExternal(GetExternalMovieRequest request) {
         System.out.println(themoviedbApiKey);
         MovieApiResponse movieApiResponse = movieApiClient.search(request.title(), "pt-BR", themoviedbApiKey);
-        return movieMapper.toResponse(movieApiResponse.getResults());
+        List<MovieEntity> movies = movieMapper.toEntity(movieApiResponse.getResults());
+
+        return movieMapper.toResponse(movies);
     }
 }

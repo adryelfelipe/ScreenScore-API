@@ -1,4 +1,6 @@
 package ctw.screenscoreapi.Movies.application.dtos.get;
 
-public record GetExternalMovieRequest(String title) {
+import jakarta.validation.constraints.NotBlank;
+
+public record GetExternalMovieRequest(@NotBlank(message = "O título do filme é obrigatório") String title) {
 }

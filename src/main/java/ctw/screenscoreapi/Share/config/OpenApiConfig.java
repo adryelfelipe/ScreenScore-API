@@ -27,7 +27,7 @@ public class OpenApiConfig {
                 .contact(new Contact()
                         .name("Adryel Felipe")
                         .email("adryxd003@gmail.com")
-                        .url("github.com/adryelfelipe/ScreenScoreAPI")));
+                        .url("https://github.com/adryelfelipe/ScreenScore-API")));
 
     }
 }

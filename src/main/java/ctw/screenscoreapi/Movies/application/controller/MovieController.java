@@ -28,6 +28,14 @@ public class MovieController {
 
     // Endpoints
     @PostMapping
+    @Operation(
+            summary = "Cadastra um novo filme",
+            description = "Cadastra um novo filme no sistema caso não exista nenhum outro registrado com o mesmo título"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Filme criado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Os dados fornecidos estão inválidos")
+    })
     public ResponseEntity<Void> create(@Valid @RequestBody CreateMovieRequest request) {
        movieService.create(request);
 

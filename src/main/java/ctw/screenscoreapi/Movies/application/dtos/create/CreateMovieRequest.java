@@ -1,6 +1,7 @@
 package ctw.screenscoreapi.Movies.application.dtos.create;
 
 import ctw.screenscoreapi.Movies.domain.enums.Genre;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -12,8 +13,10 @@ public record CreateMovieRequest(@NotBlank(message = "O título do filme é obri
                                  @Size(min = 2, max = 255, message = "O título do filme deve possuir entre 2 e 255 caracteres")
                                  String title,
 
+                                 @Size(min = 2, max = 4, message = "A língua original deve possui entre 2 e 4 caracteres")
                                  String originalLanguage,
 
+                                 @Size(max = 255, message = "O título do filme deve possuir no máximo 255 caracteres")
                                  String originalTitle,
 
                                  @NotNull(message = "A classificação etária do filme é obrigatória")

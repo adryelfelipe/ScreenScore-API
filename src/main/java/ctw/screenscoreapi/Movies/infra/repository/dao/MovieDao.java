@@ -48,7 +48,7 @@ public class MovieDao {
             }
 
         } catch(SQLException e) {
-            logger.error("Erro ao inserir filme no banco de dados | ID: {}", movie.getId());
+            logger.error("Erro ao inserir filme no banco de dados | {}", e.getMessage());
         }
     }
 
@@ -98,8 +98,8 @@ public class MovieDao {
 
             return Optional.of(movie);
         } catch(SQLException e) {
-            logger.error("Erro ao buscar filme com título | Titulo: {}", title);
-            e.printStackTrace();
+            logger.error("Erro ao buscar filme com título | {}", e.getMessage());
+
 
             return Optional.empty();
         }

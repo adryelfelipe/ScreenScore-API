@@ -3,6 +3,8 @@ package ctw.screenscoreapi.Movies.infra.exception;
 import ctw.screenscoreapi.Movies.application.exceptions.MovieApplicationException;
 import feign.FeignException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -24,9 +26,12 @@ import java.util.Map;
 public class GlobalExceptionHandler {
     @Value("${BASE_URL}" + "/errors")
     private String BASE_URL;
+    private Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ProblemDetail> handleMethodArgumentNotValidException(MethodArgumentNotValidException e, HttpServletRequest request) throws URISyntaxException {
+        logger.warn("Erro ao processar requisicao, campos violados | path: {}", request.getRequestURI());
+
         URI type = new URI(BASE_URL + "/invalid-argument");
         URI instance = new URI(request.getRequestURI());
         String title = "A requisição contém campos inválidos";
@@ -52,6 +57,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MovieApplicationException.class)
     public ResponseEntity<ProblemDetail> handleMovieApplicationException(MovieApplicationException e, HttpServletRequest request) throws URISyntaxException {
+        logger.warn("Erro ao processar requisicao, regra de negocio violada | path: {}", request.getRequestURI());
+
         URI type = new URI(BASE_URL + "/business-rule");
         URI instance = new URI(request.getRequestURI());
         String title = "Violação de regra de negócio";
@@ -71,6 +78,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ProblemDetail> handleNoResourceFoundException(HttpServletRequest httpRequest) throws URISyntaxException {
+        logger.warn("Erro ao processar requisicao, recurso nao encontrado | path: {}", httpRequest.getRequestURI());
+
         URI type = new URI(BASE_URL + "/no-resource-found");
         URI instace = new URI(httpRequest.getRequestURI());
         String title = "Recurso não encontrado";
@@ -88,6 +97,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ProblemDetail> handleMethodNotAllowedException(HttpRequestMethodNotSupportedException e, HttpServletRequest httpRequest) throws URISyntaxException {
+        logger.warn("Erro ao processar requisicao, metodo http nao permitido | metodo: {} | path: {}", httpRequest.getMethod(), httpRequest.getRequestURI());
+
         URI type = new URI(BASE_URL + "/method-not-allowed");
         URI instance = new URI(httpRequest.getRequestURI());
         String title = "O método " + httpRequest.getMethod() + " não é permitido";
@@ -107,6 +118,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(FeignException.class)
     public ResponseEntity<ProblemDetail> handleFeignException(FeignException e, HttpServletRequest httpRequest) throws URISyntaxException {
+        logger.error("Erro ao se comunicar com sistema externo: {} | {}", e.request().url(), e.getMessage());
+
+
         URI type = new URI(BASE_URL + "/external-server");
         URI instance = new URI(httpRequest.getRequestURI());
         String title = "Erro ao se comunicar com sistema externo";
@@ -124,6 +138,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ProblemDetail> handleMessageNotReadableException(HttpServletRequest httpRequest) throws URISyntaxException {
+        logger.warn("Erro ao processar requisião, body inválido | path: {}", httpRequest.getRequestURI());
+
         URI type = new URI(BASE_URL + "/invalid-body");
         URI instace = new URI(httpRequest.getRequestURI());
         String title = "O body da requisição está ausente ou mal formatado";
@@ -140,7 +156,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ProblemDetail> handleException(HttpServletRequest httpRequest) throws URISyntaxException {
+    public ResponseEntity<ProblemDetail> handleException(Exception e, HttpServletRequest httpRequest) throws URISyntaxException {
+        logger.error("Erro interno do servidor: {}", e.getMessage());
+
         URI type = new URI(BASE_URL + "/generic-exception");
         URI instance = new URI(httpRequest.getRequestURI());
         String title = "Exceção genérica";

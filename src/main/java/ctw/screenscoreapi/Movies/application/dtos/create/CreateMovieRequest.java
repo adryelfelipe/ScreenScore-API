@@ -41,6 +41,12 @@ public record CreateMovieRequest(@NotBlank(message = "O título do filme é obri
                                  String overview,
 
                                  @NotNull(message = "O gênero do filme é obrigatório")
-                                 @Schema(example = "FICCAO_CIENTIFICA")
+                                 @Schema(example =
+                                 """
+                                 [
+                                     "FICCAO_CIENTIFICA",  
+                                     "ACAO"
+                                 ]
+                                 """)
                                  List<Genre> genres
 ) {}

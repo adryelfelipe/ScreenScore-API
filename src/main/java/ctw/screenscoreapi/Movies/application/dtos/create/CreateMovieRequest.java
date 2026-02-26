@@ -11,15 +11,15 @@ import java.util.List;
 
 public record CreateMovieRequest(@NotBlank(message = "O título do filme é obrigatório")
                                  @Size(min = 2, max = 255, message = "O título do filme deve possuir entre 2 e 255 caracteres")
-                                 @Schema(example = "ScreenScore, the best movie")
+                                 @Schema(example = "ScreenScore, o melhor filme de todos!")
                                  String title,
 
                                  @Size(min = 2, max = 4, message = "A língua original deve possui entre 2 e 4 caracteres")
-                                 @Schema(example = "user@example.com")
+                                 @Schema(example = "en")
                                  String originalLanguage,
 
                                  @Size(max = 255, message = "O título do filme deve possuir no máximo 255 caracteres")
-                                 @Schema(example = "pt")
+                                 @Schema(example = "ScreenScore, the best movie!")
                                  String originalTitle,
 
                                  @NotNull(message = "A classificação etária do filme é obrigatória")

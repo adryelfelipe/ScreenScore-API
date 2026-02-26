@@ -24,10 +24,11 @@ public class OpenApiConfig {
                         - **Filtragem e Ordenação**: Filtrar por gênero, ano, diretor ou faixa etária; ordenar por avaliação média
                         - **Rankings e Estatísticas**: Top 10 filmes, média de avaliações por gênero e outras estatísticas agregadas
                         """)
+                .version("v1.0.0")
                 .contact(new Contact()
                         .name("Adryel Felipe")
                         .email("adryxd003@gmail.com")
-                        .url("github.com/adryelfelipe/ScreenScoreAPI")));
+                        .url("https://github.com/adryelfelipe/ScreenScore-API")));
 
     }
 }

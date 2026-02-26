@@ -57,11 +57,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MovieApplicationException.class)
     public ResponseEntity<ProblemDetail> handleMovieApplicationException(MovieApplicationException e, HttpServletRequest request) throws URISyntaxException {
-        logger.warn("Erro ao processar requisicao, regra de negocio violada | path: {}", request.getRequestURI());
+        logger.warn("Erro ao processar requisicao, aplicacao violada | path: {}", request.getRequestURI());
 
-        URI type = new URI(BASE_URL + "/business-rule");
+        URI type = new URI(BASE_URL + "/application");
         URI instance = new URI(request.getRequestURI());
-        String title = "Violação de regra de negócio";
+        String title = "Falha durante execução da aplicação";
         String detail = e.getMessage();
         HttpStatus status = HttpStatus.BAD_REQUEST;
 

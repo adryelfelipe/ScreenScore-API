@@ -6,12 +6,15 @@ import ctw.screenscoreapi.Movies.application.dtos.get.GetExternalMovieResponse;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetMovieResponse;
 import ctw.screenscoreapi.Movies.application.service.MovieService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
@@ -100,5 +103,15 @@ public class MovieController {
         return ResponseEntity
                 .ok()
                 .body(response);
+    }
+
+    @GetMapping()
+    public ResponseEntity<GetMovieResponse> get(
+            @NotBlank(message = "O título é obrigatório")
+            @RequestParam String title) {
+
+        GetMovieResponse response = movieService.get(title);
+
+        return ResponseEntity.ok(response);
     }
 }

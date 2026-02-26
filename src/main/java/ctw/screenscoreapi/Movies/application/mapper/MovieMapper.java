@@ -27,4 +27,18 @@ public class MovieMapper {
                 request.genres()
         );
     }
+
+    public GetMovieResponse toResponse(MovieEntity movieEntity) {
+
+        return new GetMovieResponse(
+                movieEntity.getTitle(),
+                movieEntity.getOriginalLanguage(),
+                movieEntity.getOriginalTitle(),
+                movieEntity.isAdult(),
+                movieEntity.getReleaseDate(),
+                movieEntity.getPosterImage(),
+                movieEntity.getOverview(),
+                movieEntity.getGenres()
+        );
+    }
 }

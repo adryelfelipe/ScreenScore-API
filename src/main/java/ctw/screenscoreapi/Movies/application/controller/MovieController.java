@@ -36,8 +36,26 @@ public class MovieController {
             description = "Cadastra um novo filme no sistema caso não exista nenhum outro registrado com o mesmo título."
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Filme criado com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Os dados fornecidos estão inválidos")
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Filme criado com sucesso"
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Os dados fornecidos estão inválidos",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class, example =
+                            """
+                           {
+                               "instance": "/filmes",
+                                "status": 400,
+                                "title": "A requisição contém campos inválidos",
+                                "type": "http://localhost:8080/errors/invalid-argument",
+                                "erros": {
+                                    "overview": "A visão geral do filme deve possuir no mínimo 5 caracteres"
+                                }
+                           }        
+                            """))
+            )
     })
     public ResponseEntity<Void> create(@Valid @RequestBody CreateMovieRequest request) {
        movieService.create(request);
@@ -54,7 +72,7 @@ public class MovieController {
     )
     @ApiResponses({
             @ApiResponse(
-                    responseCode = "200",
+                    responseCode = "200",   
                     description = "Lista de filmes retornada com sucesso",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = GetExternalMovieResponse.class, example =
                             """

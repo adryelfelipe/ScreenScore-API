@@ -56,6 +56,10 @@ public class MovieController {
                                 }
                            }        
                             """))
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    ref = "#/components/responses/InternalServerError"
             )
     })
     public ResponseEntity<Void> create(@Valid @RequestBody CreateMovieRequest request) {
@@ -93,6 +97,10 @@ public class MovieController {
                                 }
                             }
                             """))
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    ref = "#/components/responses/InternalServerError"
             )
     })
     public ResponseEntity<GetMoviesByTitleResponse> getExternalMovie(
@@ -127,6 +135,10 @@ public class MovieController {
                             }
                             """
                     ))
+            ),
+            @ApiResponse (
+                    responseCode = "500",
+                    ref = "#/components/responses/InternalServerError"
             )
     })
     @GetMapping()

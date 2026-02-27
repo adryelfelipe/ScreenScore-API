@@ -98,8 +98,7 @@ public class MovieController {
     public ResponseEntity<GetMoviesByTitleResponse> getExternalMovie(
             @NotBlank
             @Parameter(description = "Título do filme", example = "Piratas do Caribe")
-            @RequestParam
-            String title
+            @RequestParam String title
     ) {
         GetMoviesByTitleResponse response = movieService.getExternal(title);
 
@@ -141,8 +140,32 @@ public class MovieController {
         return ResponseEntity.ok(response);
     }
 
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "204",
+                    content = @Content(mediaType = "application/json")
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class, example =
+                            """
+                            {
+                                "instance": "/filmes/{id}",
+                                "status": 400,
+                                "title": "Falha durante execução da aplicação",
+                                "type": "http://localhost:8080/errors/application",
+                                "detail": "Não foi possível encontrar um filme com o ID: {id}"
+                            }        
+                            """
+                    ))
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    ref = "#/components/responses/InternalServerError"
+            )
+    })
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable long id) {
+    public ResponseEntity<Void> delete(@Parameter(description = "ID do filme", example = "256") @PathVariable long id) {
         movieService.delete(id);
 
         return ResponseEntity

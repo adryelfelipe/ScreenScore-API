@@ -1,15 +1,9 @@
 package ctw.screenscoreapi.Movies.application.mapper;
 
 import ctw.screenscoreapi.Movies.application.dtos.create.CreateMovieRequest;
-import ctw.screenscoreapi.Movies.application.dtos.get.GetExternalMovieResponse;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetMovieResponse;
-import ctw.screenscoreapi.Movies.application.exceptions.TmdbUnkwonGenreException;
 import ctw.screenscoreapi.Movies.domain.MovieEntity;
-import ctw.screenscoreapi.Movies.domain.enums.Genre;
-import ctw.screenscoreapi.Movies.infra.feign.MovieApiEntity;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 public class MovieMapper {

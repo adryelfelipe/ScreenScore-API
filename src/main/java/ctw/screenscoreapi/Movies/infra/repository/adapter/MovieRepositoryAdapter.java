@@ -5,6 +5,7 @@ import ctw.screenscoreapi.Movies.domain.repository.MovieRepository;
 import ctw.screenscoreapi.Movies.infra.repository.dao.MovieDao;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -24,7 +25,14 @@ public class MovieRepositoryAdapter implements MovieRepository {
     }
 
     @Override
-    public Optional<MovieEntity> findByTitle(String title) {
-        return movieDao.findByTitle(title);
+    public Optional<List<MovieEntity>> findByLikeTitle(String title) {
+
+        return movieDao.findByLikeTitle(title);
+    }
+
+    @Override
+    public Optional<MovieEntity> findByExactTitle(String title) {
+
+        return movieDao.findByExactTitle(title);
     }
 }

@@ -3,6 +3,7 @@ package ctw.screenscoreapi.Movies.infra.repository.dao;
 import ctw.screenscoreapi.Movies.application.exceptions.MovieUnkwonGenreException;
 import ctw.screenscoreapi.Movies.domain.MovieEntity;
 import ctw.screenscoreapi.Movies.domain.enums.Genre;
+import ctw.screenscoreapi.Movies.infra.repository.exception.DatabaseException;
 import ctw.screenscoreapi.Share.connection.ConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +50,8 @@ public class MovieDao {
 
         } catch(SQLException e) {
             logger.error("Erro ao inserir filme no banco de dados | {}", e.getMessage());
+
+            throw new DatabaseException(e.getMessage());
         }
     }
 
@@ -104,7 +107,7 @@ public class MovieDao {
             logger.error("Erro ao buscar filme com título | {}", e.getMessage());
 
 
-            return Optional.empty();
+            throw new DatabaseException(e.getMessage());
         }
     }
 
@@ -155,7 +158,7 @@ public class MovieDao {
             logger.error("Erro ao buscar filme com título | {}", e.getMessage());
 
 
-            return Optional.empty();
+            throw new DatabaseException(e.getMessage());
         }
     }
 
@@ -170,7 +173,7 @@ public class MovieDao {
         } catch (SQLException e) {
             logger.error("Erro ao inserir filme no banco de dados | {}", e.getMessage());
 
-            return 0;
+            throw new DatabaseException(e.getMessage());
         }
     }
 }

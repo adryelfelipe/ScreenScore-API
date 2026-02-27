@@ -43,7 +43,7 @@ public class MovieController {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Os dados fornecidos estão inválidos",
+                    description = "Os dados fornecidos estão inválidos ou falha durante a execução da aplicação",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class, example =
                             """
                            {

@@ -1,7 +1,6 @@
 package ctw.screenscoreapi.Movies.application.service;
 
 import ctw.screenscoreapi.Movies.application.dtos.create.CreateMovieRequest;
-import ctw.screenscoreapi.Movies.application.dtos.get.GetExternalMovieRequest;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetExternalMovieResponse;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetMovieResponse;
 import ctw.screenscoreapi.Movies.application.exceptions.MovieNotFoundByTitle;
@@ -12,7 +11,6 @@ import ctw.screenscoreapi.Movies.domain.repository.MovieRepository;
 import ctw.screenscoreapi.Movies.infra.feign.MovieApiClient;
 import ctw.screenscoreapi.Movies.infra.feign.MovieApiResponse;
 import ctw.screenscoreapi.Movies.infra.mapper.TmdbMapper;
-import ctw.screenscoreapi.Movies.infra.repository.dao.MovieDao;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import tools.jackson.databind.cfg.MapperBuilder;
@@ -56,8 +54,8 @@ public class MovieService {
         movieRepository.create(movie);
     }
 
-    public GetExternalMovieResponse getExternal(GetExternalMovieRequest request) {
-        MovieApiResponse movieApiResponse = movieApiClient.search(request.title(), "pt-BR", themoviedbApiKey);
+    public GetExternalMovieResponse getExternal(String title) {
+        MovieApiResponse movieApiResponse = movieApiClient.search(title, "pt-BR", themoviedbApiKey);
         List<MovieEntity> movies = tmdbMapper.toDomainEntities(movieApiResponse.getResults());
 
         return tmdbMapper.toResponseEntities(movies);

@@ -1,7 +1,7 @@
 package ctw.screenscoreapi.Movies.application.controller;
 
 import ctw.screenscoreapi.Movies.application.dtos.create.CreateMovieRequest;
-import ctw.screenscoreapi.Movies.application.dtos.get.GetExternalMovieResponse;
+import ctw.screenscoreapi.Movies.application.dtos.get.GetMoviesByTitleResponse;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetMovieResponse;
 import ctw.screenscoreapi.Movies.application.service.MovieService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,12 +38,12 @@ public class MovieController {
     )
     @ApiResponses({
             @ApiResponse(
-                    responseCode = "200",
+                    responseCode = "201",
                     description = "Filme criado com sucesso"
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Os dados fornecidos estão inválidos",
+                    description = "Os dados fornecidos estão inválidos ou falha durante a execução da aplicação",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class, example =
                             """
                            {
@@ -75,7 +75,7 @@ public class MovieController {
             @ApiResponse(
                     responseCode = "200",   
                     description = "Lista de filmes retornada com sucesso",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = GetExternalMovieResponse.class))
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = GetMoviesByTitleResponse.class))
             ),
 
             @ApiResponse(
@@ -95,13 +95,12 @@ public class MovieController {
                             """))
             )
     })
-    public ResponseEntity<GetExternalMovieResponse> getExternalMovie(
+    public ResponseEntity<GetMoviesByTitleResponse> getExternalMovie(
             @NotBlank
             @Parameter(description = "Título do filme", example = "Piratas do Caribe")
-            @RequestParam
-            String title
+            @RequestParam String title
     ) {
-        GetExternalMovieResponse response = movieService.getExternal(title);
+        GetMoviesByTitleResponse response = movieService.getExternal(title);
 
         return ResponseEntity
                 .ok()
@@ -112,7 +111,7 @@ public class MovieController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Filme encontrado com sucesso",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = GetMovieResponse.class))
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = GetMoviesByTitleResponse.class))
             ),
             @ApiResponse(
                     responseCode = "400",
@@ -131,13 +130,46 @@ public class MovieController {
             )
     })
     @GetMapping()
-    public ResponseEntity<GetMovieResponse> get(
+    public ResponseEntity<GetMoviesByTitleResponse> get(
             @NotBlank(message = "O título é obrigatório")
-            @Parameter(description = "Título do filme", example = "ScreenScore, batalha nas estrelas")
+            @Parameter(description = "Título do filme", example = "Minions")
             @RequestParam String title) {
 
-        GetMovieResponse response = movieService.get(title);
+        GetMoviesByTitleResponse response = movieService.get(title);
 
         return ResponseEntity.ok(response);
+    }
+
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "204",
+                    content = @Content(mediaType = "application/json")
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class, example =
+                            """
+                            {
+                                "instance": "/filmes/{id}",
+                                "status": 400,
+                                "title": "Falha durante execução da aplicação",
+                                "type": "http://localhost:8080/errors/application",
+                                "detail": "Não foi possível encontrar um filme com o ID: {id}"
+                            }        
+                            """
+                    ))
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    ref = "#/components/responses/InternalServerError"
+            )
+    })
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@Parameter(description = "ID do filme", example = "256") @PathVariable long id) {
+        movieService.delete(id);
+
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 }

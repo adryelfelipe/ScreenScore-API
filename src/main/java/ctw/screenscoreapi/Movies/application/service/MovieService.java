@@ -1,8 +1,9 @@
 package ctw.screenscoreapi.Movies.application.service;
 
 import ctw.screenscoreapi.Movies.application.dtos.create.CreateMovieRequest;
-import ctw.screenscoreapi.Movies.application.dtos.get.GetExternalMovieResponse;
+import ctw.screenscoreapi.Movies.application.dtos.get.GetMoviesByTitleResponse;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetMovieResponse;
+import ctw.screenscoreapi.Movies.application.exceptions.MovieNotFoundByIdException;
 import ctw.screenscoreapi.Movies.application.exceptions.MovieNotFoundByTitle;
 import ctw.screenscoreapi.Movies.application.exceptions.MovieTitleAlreadyUsedException;
 import ctw.screenscoreapi.Movies.application.mapper.MovieMapper;
@@ -20,8 +21,6 @@ import java.util.Optional;
 
 @Service
 public class MovieService {
-    private final MovieRepository movieDao;
-    private final MapperBuilder mapperBuilder;
     // Atributos
     private MovieApiClient movieApiClient;
     private MovieMapper movieMapper;
@@ -37,14 +36,12 @@ public class MovieService {
         this.movieMapper = movieMapper;
         this.movieRepository = movieRepository;
         this.tmdbMapper = tmdbMapper;
-        this.movieDao = movieDao;
-        this.mapperBuilder = mapperBuilder;
     }
 
     // Metodos
     public void create(CreateMovieRequest request) {
         String title = request.title();
-        Optional<MovieEntity> optionalMovie = movieRepository.findByTitle(title);
+        Optional<MovieEntity> optionalMovie = movieRepository.findByExactTitle(title);
 
         if(optionalMovie.isPresent()) {
             throw new MovieTitleAlreadyUsedException(title);
@@ -54,17 +51,26 @@ public class MovieService {
         movieRepository.create(movie);
     }
 
-    public GetExternalMovieResponse getExternal(String title) {
+    public GetMoviesByTitleResponse getExternal(String title) {
         MovieApiResponse movieApiResponse = movieApiClient.search(title, "pt-BR", themoviedbApiKey);
         List<MovieEntity> movies = tmdbMapper.toDomainEntities(movieApiResponse.getResults());
 
         return tmdbMapper.toResponseEntities(movies);
     }
 
-    public GetMovieResponse get(String title) {
-        Optional<MovieEntity> optionalMovie = movieDao.findByTitle(title);
-        MovieEntity movie = optionalMovie.orElseThrow(() -> new MovieNotFoundByTitle());
+    public GetMoviesByTitleResponse get(String title) {
+        Optional<List<MovieEntity>> optionalMovie = movieRepository.findByLikeTitle(title);
+        List<MovieEntity> movieEntities = optionalMovie.orElseThrow(MovieNotFoundByTitle::new);
+        List<GetMovieResponse> movieResponses = movieEntities.stream().map(movieMapper::toResponse).toList();
 
-        return movieMapper.toResponse(movie);
+        return new GetMoviesByTitleResponse(movieResponses);
+    }
+
+    public void delete(long id) {
+        long deletedMovies = movieRepository.delete(id);
+
+        if(deletedMovies == 0) {
+            throw new MovieNotFoundByIdException(id);
+        }
     }
 }

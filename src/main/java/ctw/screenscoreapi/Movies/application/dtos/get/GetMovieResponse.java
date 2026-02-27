@@ -11,7 +11,7 @@ import jakarta.validation.constraints.Size;
 import java.util.List;
 
 public record GetMovieResponse(
-        @Schema(example = "ScreenScore, batalha nas esstrelas")
+        @Schema(example = "ScreenScore, batalha nas estrelas")
         String title,
 
         @Schema(example = "eu")

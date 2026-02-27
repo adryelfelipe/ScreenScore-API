@@ -159,9 +159,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ProblemDetail> handleException(Exception e, HttpServletRequest httpRequest) throws URISyntaxException {
         logger.error("Erro interno do servidor: {}", e.getMessage());
 
-        URI type = new URI(BASE_URL + "/generic-exception");
+        URI type = new URI(BASE_URL + "/internal-server");
         URI instance = new URI(httpRequest.getRequestURI());
-        String title = "Exceção genérica";
+        String title = "Erro interno do servidor";
         String detail = "O servidor encontrou um erro inesperado";
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
 

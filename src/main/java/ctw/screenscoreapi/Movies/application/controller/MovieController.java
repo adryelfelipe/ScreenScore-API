@@ -1,7 +1,6 @@
 package ctw.screenscoreapi.Movies.application.controller;
 
 import ctw.screenscoreapi.Movies.application.dtos.create.CreateMovieRequest;
-import ctw.screenscoreapi.Movies.application.dtos.get.GetExternalMovieRequest;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetExternalMovieResponse;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetMovieResponse;
 import ctw.screenscoreapi.Movies.application.service.MovieService;
@@ -14,7 +13,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
@@ -97,8 +95,13 @@ public class MovieController {
                             """))
             )
     })
-    public ResponseEntity<GetExternalMovieResponse> getExternalMovie(@Valid GetExternalMovieRequest request) {
-        GetExternalMovieResponse response = movieService.getExternal(request);
+    public ResponseEntity<GetExternalMovieResponse> getExternalMovie(
+            @NotBlank
+            @Parameter(description = "Título do filme", example = "Piratas do Caribe")
+            @RequestParam
+            String title
+    ) {
+        GetExternalMovieResponse response = movieService.getExternal(title);
 
         return ResponseEntity
                 .ok()

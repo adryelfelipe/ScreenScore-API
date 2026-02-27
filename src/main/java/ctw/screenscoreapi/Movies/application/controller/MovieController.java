@@ -105,9 +105,32 @@ public class MovieController {
                 .body(response);
     }
 
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Filme encontrado com sucesso",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = GetMovieResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Campos fornecidos inválidos ou filme não identificado",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class, example =
+                            """
+                            {
+                                "instance": "/filmes",
+                                "status": 400,
+                                "title": "Falha durante execução da aplicação",
+                                "type": "http://localhost:8080/errors/application",
+                                "detail": "Não foi possível identificar um filme com este título"
+                            }
+                            """
+                    ))
+            )
+    })
     @GetMapping()
     public ResponseEntity<GetMovieResponse> get(
             @NotBlank(message = "O título é obrigatório")
+            @Parameter(description = "Título do filme", example = "ScreenScore, batalha nas estrelas")
             @RequestParam String title) {
 
         GetMovieResponse response = movieService.get(title);

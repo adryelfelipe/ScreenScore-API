@@ -1,4 +1,4 @@
-package ctw.screenscoreapi.Movies.infra.exception;
+package ctw.screenscoreapi.Share.exception;
 
 import ctw.screenscoreapi.Movies.application.exceptions.MovieApplicationException;
 import feign.FeignException;

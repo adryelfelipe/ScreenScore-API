@@ -3,6 +3,7 @@ package ctw.screenscoreapi.Movies.application.service;
 import ctw.screenscoreapi.Movies.application.dtos.create.CreateMovieRequest;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetMoviesByTitleResponse;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetMovieResponse;
+import ctw.screenscoreapi.Movies.application.exceptions.MovieNotFoundByIdException;
 import ctw.screenscoreapi.Movies.application.exceptions.MovieNotFoundByTitle;
 import ctw.screenscoreapi.Movies.application.exceptions.MovieTitleAlreadyUsedException;
 import ctw.screenscoreapi.Movies.application.mapper.MovieMapper;
@@ -63,5 +64,13 @@ public class MovieService {
         List<GetMovieResponse> movieResponses = movieEntities.stream().map(movieMapper::toResponse).toList();
 
         return new GetMoviesByTitleResponse(movieResponses);
+    }
+
+    public void delete(long id) {
+        long deletedMovies = movieRepository.delete(id);
+
+        if(deletedMovies == 0) {
+            throw new MovieNotFoundByIdException(id);
+        }
     }
 }

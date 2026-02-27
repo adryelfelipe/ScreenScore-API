@@ -35,4 +35,9 @@ public class MovieRepositoryAdapter implements MovieRepository {
 
         return movieDao.findByExactTitle(title);
     }
+
+    @Override
+    public long delete(long id) {
+        return movieDao.delete(id);
+    }
 }

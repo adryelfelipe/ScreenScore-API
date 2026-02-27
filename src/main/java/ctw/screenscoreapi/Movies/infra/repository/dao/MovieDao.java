@@ -138,8 +138,6 @@ public class MovieDao {
                                                  .orElseThrow(() -> new MovieUnkwonGenreException(genreId)))
                                          .toList();
 
-
-
             MovieEntity movie = new MovieEntity(
                     movieId,
                     rsMovie.getString("poster"),
@@ -158,6 +156,21 @@ public class MovieDao {
 
 
             return Optional.empty();
+        }
+    }
+
+    public long delete(long id) {
+        String sql = "DELETE FROM Filmes WHERE ID = ?";
+
+        try(Connection conn = ConnectionFactory.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setLong(1, id);
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            logger.error("Erro ao inserir filme no banco de dados | {}", e.getMessage());
+
+            return 0;
         }
     }
 }

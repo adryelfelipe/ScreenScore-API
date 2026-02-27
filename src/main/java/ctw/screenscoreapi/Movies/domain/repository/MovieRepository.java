@@ -9,4 +9,5 @@ public interface MovieRepository {
     void create(MovieEntity movie);
     Optional<List<MovieEntity>> findByLikeTitle(String title);
     Optional<MovieEntity> findByExactTitle(String title);
+    long delete(long id);
 }

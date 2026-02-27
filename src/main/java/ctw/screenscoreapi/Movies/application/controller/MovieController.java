@@ -140,4 +140,13 @@ public class MovieController {
 
         return ResponseEntity.ok(response);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable long id) {
+        movieService.delete(id);
+
+        return ResponseEntity
+                .noContent()
+                .build();
+    }
 }

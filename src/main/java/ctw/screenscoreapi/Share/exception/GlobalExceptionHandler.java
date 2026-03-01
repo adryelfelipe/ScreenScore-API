@@ -1,6 +1,8 @@
 package ctw.screenscoreapi.Share.exception;
 
 import ctw.screenscoreapi.Movies.application.exceptions.MovieApplicationException;
+import ctw.screenscoreapi.Movies.application.exceptions.MovieDataAlreadyUsedException;
+import ctw.screenscoreapi.Movies.application.exceptions.MovieNotFoundException;
 import feign.FeignException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -59,7 +61,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ProblemDetail> handleMovieApplicationException(MovieApplicationException e, HttpServletRequest request) throws URISyntaxException {
         logger.warn("Erro ao processar requisicao, aplicacao violada | path: {}", request.getRequestURI());
 
-        URI type = new URI(BASE_URL + "/application");
+        URI type = new URI(BASE_URL + "/business-rule");
         URI instance = new URI(request.getRequestURI());
         String title = "Falha durante execução da aplicação";
         String detail = e.getMessage();
@@ -76,19 +78,61 @@ public class GlobalExceptionHandler {
                 .body(problemDetail);
     }
 
+    @ExceptionHandler(MovieNotFoundException.class)
+    public ResponseEntity<ProblemDetail> handleMovieNotFoundException(MovieNotFoundException e, HttpServletRequest request) throws URISyntaxException {
+        logger.warn("Erro ao processar requisicao, filme nao encontrado | path: {}", request.getRequestURI());
+
+        URI type = new URI(BASE_URL + "/movie-not-found");
+        URI instance = new URI(request.getRequestURI());
+        String title = "Filme não encontrado";
+        String detail = e.getMessage();
+        HttpStatus status = HttpStatus.NOT_FOUND;
+
+        ProblemDetail problemDetail = ProblemDetail.forStatus(status);
+        problemDetail.setType(type);
+        problemDetail.setInstance(instance);
+        problemDetail.setDetail(detail);
+        problemDetail.setTitle(title);
+
+        return ResponseEntity
+                .status(status)
+                .body(problemDetail);
+    }
+
+    @ExceptionHandler(MovieDataAlreadyUsedException.class)
+    public ResponseEntity<ProblemDetail> handleMovieDataAlreadyUsedException(MovieDataAlreadyUsedException e, HttpServletRequest request) throws URISyntaxException {
+        logger.warn("Erro ao processar requisicao, dados já registrados no banco | path: {}", request.getRequestURI());
+
+        URI type = new URI(BASE_URL + "/data-already-used");
+        URI instance = new URI(request.getRequestURI());
+        String title = "Dados já registrados no servidor";
+        String detail = e.getMessage();
+        HttpStatus status = HttpStatus.CONFLICT;
+
+        ProblemDetail problemDetail = ProblemDetail.forStatus(status);
+        problemDetail.setType(type);
+        problemDetail.setInstance(instance);
+        problemDetail.setDetail(detail);
+        problemDetail.setTitle(title);
+
+        return ResponseEntity
+                .status(status)
+                .body(problemDetail);
+    }
+
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ProblemDetail> handleNoResourceFoundException(HttpServletRequest httpRequest) throws URISyntaxException {
         logger.warn("Erro ao processar requisicao, recurso nao encontrado | path: {}", httpRequest.getRequestURI());
 
-        URI type = new URI(BASE_URL + "/no-resource-found");
-        URI instace = new URI(httpRequest.getRequestURI());
-        String title = "Recurso não encontrado";
-        HttpStatus status = HttpStatus.BAD_REQUEST;
+        URI type = new URI(BASE_URL + "/endpoint-not-found");
+        URI instance = new URI(httpRequest.getRequestURI());
+        String title = "Endpoint não encontrado";
+        HttpStatus status = HttpStatus.NOT_FOUND;
 
         ProblemDetail problemDetail = ProblemDetail.forStatus(status);
         problemDetail.setType(type);
         problemDetail.setTitle(title);
-        problemDetail.setInstance(instace);
+        problemDetail.setInstance(instance);
 
         return ResponseEntity
                 .status(status)

@@ -3,14 +3,14 @@ package ctw.screenscoreapi.Movies.application.dtos.get;
 import ctw.screenscoreapi.Movies.domain.MovieEntity;
 import ctw.screenscoreapi.Movies.domain.enums.Genre;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 import java.util.List;
 
 public record GetMovieResponse(
+        @Schema(example = "256")
+        long id,
+
         @Schema(example = "ScreenScore, batalha nas estrelas")
         String title,
 

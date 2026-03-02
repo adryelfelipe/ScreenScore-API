@@ -25,6 +25,7 @@ public class MovieMapper {
     public GetMovieResponse toResponse(MovieEntity movieEntity) {
 
         return new GetMovieResponse(
+                movieEntity.getId(),
                 movieEntity.getTitle(),
                 movieEntity.getOriginalLanguage(),
                 movieEntity.getOriginalTitle(),

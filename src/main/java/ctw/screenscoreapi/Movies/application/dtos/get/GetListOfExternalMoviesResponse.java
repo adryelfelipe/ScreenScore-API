@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.List;
 
-public record GetMoviesByTitleResponse(
+public record GetListOfExternalMoviesResponse(
         @Schema(example =
                 """     
                     [                                           
@@ -43,5 +43,5 @@ public record GetMoviesByTitleResponse(
                     ]        
                 """
         )
-        List<GetMovieResponse> movies
+        List<GetExternalMovieResponse> movies
 ) {}

@@ -2,7 +2,8 @@ package ctw.screenscoreapi.Movies.application.controller;
 
 import ctw.screenscoreapi.Movies.application.dtos.create.CreateMovieRequest;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetMovieResponse;
-import ctw.screenscoreapi.Movies.application.dtos.get.GetMoviesByTitleResponse;
+import ctw.screenscoreapi.Movies.application.dtos.get.GetListOfExternalMoviesResponse;
+import ctw.screenscoreapi.Movies.application.dtos.get.GetListOfMoviesResponse;
 import ctw.screenscoreapi.Movies.application.service.MovieService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -17,7 +18,6 @@ import jakarta.validation.constraints.Positive;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 @RestController
 @RequestMapping("/filmes")
@@ -72,7 +72,7 @@ public class MovieController {
             @ApiResponse(
                     responseCode = "200",   
                     description = "Lista de filmes retornada com sucesso",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = GetMoviesByTitleResponse.class))
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = GetListOfExternalMoviesResponse.class))
             ),
             @ApiResponse(
                     responseCode = "400",
@@ -83,13 +83,13 @@ public class MovieController {
                     ref = "#/components/responses/Movie_500"
             )
     })
-    public ResponseEntity<GetMoviesByTitleResponse> getExternalMovie(
+    public ResponseEntity<GetListOfExternalMoviesResponse> getExternalMovie(
             @NotBlank
             @Parameter(description = "Título do filme", example = "Piratas do Caribe")
             @RequestParam
             String title
     ) {
-        GetMoviesByTitleResponse response = movieService.getExternal(title);
+        GetListOfExternalMoviesResponse response = movieService.getExternal(title);
 
         return ResponseEntity
                 .ok()
@@ -153,14 +153,14 @@ public class MovieController {
             )
     })
     @GetMapping()
-    public ResponseEntity<GetMoviesByTitleResponse> getMoviesByTitle(
+    public ResponseEntity<GetListOfMoviesResponse> getMoviesByTitle(
             @NotBlank(message = "O título é obrigatório")
             @Parameter(description = "Título do filme", example = "Minions")
             @RequestParam
             String title
     ) {
 
-        GetMoviesByTitleResponse response = movieService.getByTitle(title);
+        GetListOfMoviesResponse response = movieService.getByTitle(title);
 
         return ResponseEntity.ok(response);
     }

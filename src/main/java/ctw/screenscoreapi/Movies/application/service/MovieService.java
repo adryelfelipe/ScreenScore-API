@@ -1,8 +1,9 @@
 package ctw.screenscoreapi.Movies.application.service;
 
 import ctw.screenscoreapi.Movies.application.dtos.create.CreateMovieRequest;
-import ctw.screenscoreapi.Movies.application.dtos.get.GetMoviesByTitleResponse;
+import ctw.screenscoreapi.Movies.application.dtos.get.GetListOfExternalMoviesResponse;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetMovieResponse;
+import ctw.screenscoreapi.Movies.application.dtos.get.GetListOfMoviesResponse;
 import ctw.screenscoreapi.Movies.application.exceptions.MovieNotFoundByIdException;
 import ctw.screenscoreapi.Movies.application.exceptions.MovieNotFoundByTitleException;
 import ctw.screenscoreapi.Movies.application.exceptions.MovieTitleAlreadyUsedException;
@@ -51,7 +52,7 @@ public class MovieService {
         movieRepository.create(movie);
     }
 
-    public GetMoviesByTitleResponse getExternal(String title) {
+    public GetListOfExternalMoviesResponse getExternal(String title) {
         MovieApiResponse movieApiResponse = movieApiClient.search(title, "pt-BR", themoviedbApiKey);
         List<MovieEntity> movies = tmdbMapper.toDomainEntities(movieApiResponse.getResults());
 
@@ -64,12 +65,12 @@ public class MovieService {
         return movieMapper.toResponse(movie);
     }
 
-    public GetMoviesByTitleResponse getByTitle(String title) {
+    public GetListOfMoviesResponse getByTitle(String title) {
         Optional<List<MovieEntity>> optionalMovie = movieRepository.findByLikeTitle(title);
         List<MovieEntity> movieEntities = optionalMovie.orElseThrow(MovieNotFoundByTitleException::new);
         List<GetMovieResponse> movieResponses = movieEntities.stream().map(movieMapper::toResponse).toList();
 
-        return new GetMoviesByTitleResponse(movieResponses);
+        return new GetListOfMoviesResponse(movieResponses);
     }
 
     public void delete(long id) {

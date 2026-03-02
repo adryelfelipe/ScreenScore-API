@@ -72,7 +72,7 @@ public class OpenApiConfig {
                                                                                             "status": 500,
                                                                                             "title": "Erro interno do servidor",
                                                                                             "type": "http://localhost:8080/errors/internal-server",
-                                                                                            "detail": "O servidor encontrou um erro inesperado"
+                                                                                            "detail": "Ocorreu um erro interno no servidor. Tente novamente mais tarde."
                                                                                         }
                                                                                         """)
                                                                 )
@@ -99,6 +99,7 @@ public class OpenApiConfig {
                                                                                             "status": 400,
                                                                                             "title": "A requisição contém campos inválidos",
                                                                                             "type": "http://localhost:8080/errors/invalid-argument",
+                                                                                            "detail": "Consulte a documentação do endpoint para visualizar os formatos esperados",
                                                                                             "erros": {
                                                                                                 "title": "O título do filme é obrigatório"
                                                                                             }

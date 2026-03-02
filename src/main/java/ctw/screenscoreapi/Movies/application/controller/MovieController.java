@@ -103,7 +103,7 @@ public class MovieController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Filme encontrado com sucesso",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = GetMoviesByTitleResponse.class))
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = GetMovieResponse.class))
             ),
             @ApiResponse(
                     responseCode = "400",

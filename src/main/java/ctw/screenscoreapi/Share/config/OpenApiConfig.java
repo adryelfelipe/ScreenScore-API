@@ -21,65 +21,9 @@ public class OpenApiConfig {
     @Bean
     public OpenAPI customApiConfig() {
 
-        ResolvedSchema problemDetailBadRequest = ModelConverters.getInstance().resolveAsResolvedSchema(new AnnotatedType(ProblemDetail.class));
-        problemDetailBadRequest.schema
-                .example(
-                            """
-                            {
-                                "instance": "/filmes/externo",
-                                "status": 400,
-                                "title": "A requisição contém campos inválidos",
-                                "type": "http://localhost:8080/errors/invalid-argument",
-                                "erros": {
-                                    "title": "O título do filme é obrigatório"
-                                }
-                            }
-                            """)
-                .description("Representa um erro ocorrido devido a dados inálidos durante o processamento da requisição, seguindo o padrão RFC 7807");
-
-        ResolvedSchema problemDetailNotFound = ModelConverters.getInstance().resolveAsResolvedSchema(new AnnotatedType(ProblemDetail.class));
-        problemDetailNotFound.schema
-                .example(
-                            """
-                            {
-                                "instance": "/filmes",
-                                "status": 404,
-                                "title": "Filme não encontrado",
-                                "type": "http://localhost:8080/errors/movie-not-found",
-                                "detail": "Não foi possível identificar um filme com este título"
-                            }
-                            """)
-                .description("Representa um erro ocorrido devido a um recurso não encontrado durante o processamento da requisição, seguindo o padrão RFC 7807");
-
-        ResolvedSchema problemDetailConflict = ModelConverters.getInstance().resolveAsResolvedSchema(new AnnotatedType(ProblemDetail.class));
-        problemDetailConflict.schema
-                .example(
-                            """
-                            {
-                                "instance": "/filmes",
-                                "status": 409,
-                                "title": "Dados já registrados no servidor",
-                                "type": "http://localhost:8080/errors/data-already-used",
-                                "detail": "O título do filme já foi utilizado"
-                            }
-                            """)
-                .description("Representa um erro ocorrido devido a conflito de dados durante o processamento da requisição, seguindo o padrão RFC 7807");
-
-        ResolvedSchema problemDetailInternalErrorServer = ModelConverters.getInstance().resolveAsResolvedSchema(new AnnotatedType(ProblemDetail.class));
-        problemDetailInternalErrorServer.schema
-                .example(
-                            """
-                            {
-                                "instance": "/filmes/{id}",
-                                "status": 500,
-                                "title": "Erro interno do servidor",
-                                "type": "http://localhost:8080/errors/internal-server",
-                                "detail": "O servidor encontrou um erro inesperado"
-                            }
-                            """)
-                .description("Representa um erro ocorrido devido a um problema interno do servidor durante o processamento da requisição, seguindo o padrão RFC 7807");
-
-
+        ResolvedSchema problemDetail = ModelConverters.getInstance().resolveAsResolvedSchema(new AnnotatedType(ProblemDetail.class));
+        problemDetail.schema
+                .description("Representa um erro ocorrido durante o processamento da requisição, seguindo o padrão RFC 7807");
 
         return new OpenAPI()
                 .info(
@@ -106,13 +50,10 @@ public class OpenApiConfig {
                 )
                 .components(
                         new Components()
-                                .addSchemas("ProblemDetail_BadRequest", problemDetailBadRequest.schema)
-                                .addSchemas("ProblemDetail_NotFound", problemDetailNotFound.schema)
-                                .addSchemas("ProblemDetail_Conflict", problemDetailConflict.schema)
-                                .addSchemas("ProblemDetail_InternalErrorServer", problemDetailInternalErrorServer.schema)
+                                .addSchemas("ProblemDetail", problemDetail.schema)
 
                                 .addResponses(
-                                        "500",
+                                        "Movie_500",
                                         new ApiResponse()
                                                 .description("Erro interno do servidor")
                                                 .content(
@@ -122,14 +63,24 @@ public class OpenApiConfig {
                                                                         new MediaType()
                                                                                 .schema(
                                                                                         new Schema<>()
-                                                                                                .$ref("#/components/schemas/ProblemDetail_InternalErrorServer")
+                                                                                                .$ref("#/components/schemas/ProblemDetail")
                                                                                 )
+                                                                                .example(
+                                                                                        """
+                                                                                        {
+                                                                                            "instance": "/filmes/{id}",
+                                                                                            "status": 500,
+                                                                                            "title": "Erro interno do servidor",
+                                                                                            "type": "http://localhost:8080/errors/internal-server",
+                                                                                            "detail": "O servidor encontrou um erro inesperado"
+                                                                                        }
+                                                                                        """)
                                                                 )
                                                 )
                                 )
 
                                 .addResponses(
-                                        "400",
+                                        "Movie_400",
                                         new ApiResponse()
                                                 .description("Os dados fornecidos estão inválidos")
                                                 .content(
@@ -139,14 +90,26 @@ public class OpenApiConfig {
                                                                         new MediaType()
                                                                                 .schema(
                                                                                         new Schema<>()
-                                                                                                .$ref("#/components/schemas/ProblemDetail_BadRequest")
+                                                                                                .$ref("#/components/schemas/ProblemDetail")
                                                                                 )
+                                                                                .example(
+                                                                                        """
+                                                                                        {
+                                                                                            "instance": "/filmes/externo",
+                                                                                            "status": 400,
+                                                                                            "title": "A requisição contém campos inválidos",
+                                                                                            "type": "http://localhost:8080/errors/invalid-argument",
+                                                                                            "erros": {
+                                                                                                "title": "O título do filme é obrigatório"
+                                                                                            }
+                                                                                        }
+                                                                                        """)
                                                                 )
                                                 )
                                 )
 
                                 .addResponses(
-                                        "404",
+                                        "Movie_404",
                                         new ApiResponse()
                                                 .description("Filme não encontrado")
                                                 .content(
@@ -156,14 +119,24 @@ public class OpenApiConfig {
                                                                         new MediaType()
                                                                                 .schema(
                                                                                         new Schema<>()
-                                                                                                .$ref("#/components/schemas/ProblemDetail_NotFound")
+                                                                                                .$ref("#/components/schemas/ProblemDetail")
                                                                                 )
+                                                                                .example(
+                                                                                        """
+                                                                                        {
+                                                                                            "instance": "/filmes",
+                                                                                            "status": 404,
+                                                                                            "title": "Filme não encontrado",
+                                                                                            "type": "http://localhost:8080/errors/movie-not-found",
+                                                                                            "detail": "Não foi possível identificar um filme com este título"
+                                                                                        }
+                                                                                        """)
                                                                 )
                                                 )
                                 )
 
                                 .addResponses(
-                                        "409",
+                                        "Movie_409",
                                         new ApiResponse()
                                                 .description("Dados já registrados no servidor")
                                                 .content(
@@ -173,8 +146,18 @@ public class OpenApiConfig {
                                                                         new MediaType()
                                                                                 .schema(
                                                                                         new Schema<>()
-                                                                                                .$ref("#/components/schemas/ProblemDetail_Conflict")
+                                                                                                .$ref("#/components/schemas/ProblemDetail")
                                                                                 )
+                                                                                .example(
+                                                                                        """
+                                                                                        {
+                                                                                            "instance": "/filmes",
+                                                                                            "status": 409,
+                                                                                            "title": "Dados já registrados no servidor",
+                                                                                            "type": "http://localhost:8080/errors/data-already-used",
+                                                                                            "detail": "O título do filme já foi utilizado"
+                                                                                        }
+                                                                                        """)
                                                                 )
                                                 )
                                 )

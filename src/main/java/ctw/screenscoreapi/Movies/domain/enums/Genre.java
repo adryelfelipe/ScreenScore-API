@@ -1,8 +1,9 @@
 package ctw.screenscoreapi.Movies.domain.enums;
 
+import ctw.screenscoreapi.Movies.application.exceptions.MovieUnkwonGenreException;
+
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public enum Genre {
@@ -37,8 +38,13 @@ public enum Genre {
         return id;
     }
 
-    public static Optional<Genre> getGenreById(Integer id) {
+    public static Genre getGenreById(Integer id) {
         Genre genre = BY_ID.get(id);
-        return Optional.ofNullable(genre);
+
+        if(genre == null) {
+            throw new MovieUnkwonGenreException(id);
+        }
+
+        return genre;
     }
 }

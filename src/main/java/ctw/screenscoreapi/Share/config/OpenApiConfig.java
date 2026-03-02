@@ -127,7 +127,7 @@ public class OpenApiConfig {
                                                                                             "instance": "/filmes",
                                                                                             "status": 404,
                                                                                             "title": "Filme não encontrado",
-                                                                                            "type": "http://localhost:8080/errors/movie-not-found",
+                                                                                            "type": "http://localhost:8080/errors/resource-not-found",
                                                                                             "detail": "Não foi possível identificar um filme com este título"
                                                                                         }
                                                                                         """)

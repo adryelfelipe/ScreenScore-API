@@ -40,4 +40,10 @@ public class MovieRepositoryAdapter implements MovieRepository {
     public long delete(long id) {
         return movieDao.delete(id);
     }
+
+    @Override
+    public Optional<MovieEntity> findById(long id) {
+
+        return movieDao.findById(id);
+    }
 }

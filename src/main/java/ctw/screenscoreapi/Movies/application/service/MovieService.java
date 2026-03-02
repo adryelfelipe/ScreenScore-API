@@ -58,7 +58,13 @@ public class MovieService {
         return tmdbMapper.toResponseEntities(movies);
     }
 
-    public GetMoviesByTitleResponse get(String title) {
+    public GetMovieResponse getById(long id) {
+        MovieEntity movie = movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundByIdException(id));                                             ;
+
+        return movieMapper.toResponse(movie);
+    }
+
+    public GetMoviesByTitleResponse getByTitle(String title) {
         Optional<List<MovieEntity>> optionalMovie = movieRepository.findByLikeTitle(title);
         List<MovieEntity> movieEntities = optionalMovie.orElseThrow(MovieNotFoundByTitleException::new);
         List<GetMovieResponse> movieResponses = movieEntities.stream().map(movieMapper::toResponse).toList();

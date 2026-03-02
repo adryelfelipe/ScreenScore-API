@@ -83,8 +83,7 @@ public class MovieDao {
                 }
 
                 List<Genre> genres = genreIds.stream()
-                        .map(genreId -> Genre.getGenreById(genreId)
-                                .orElseThrow(() -> new MovieUnkwonGenreException(genreId)))
+                        .map(Genre::getGenreById)
                         .toList();
 
                 MovieEntity movie = new MovieEntity(
@@ -121,9 +120,11 @@ public class MovieDao {
             psMovies.setString(1, title);
             ResultSet rsMovie = psMovies.executeQuery();
 
-            if(!rsMovie.next()) {
+            if(!rsMovie.isBeforeFirst()) {
                 return Optional.empty();
             }
+
+            rsMovie.next();
 
             long movieId = rsMovie.getLong("id");
             psGenre.setLong(1, movieId);
@@ -137,8 +138,7 @@ public class MovieDao {
             }
 
             List<Genre> genres = genreIds.stream()
-                                         .map(genreId -> Genre.getGenreById(genreId)
-                                                 .orElseThrow(() -> new MovieUnkwonGenreException(genreId)))
+                                         .map(Genre::getGenreById)
                                          .toList();
 
             MovieEntity movie = new MovieEntity(
@@ -170,6 +170,54 @@ public class MovieDao {
 
             ps.setLong(1, id);
             return ps.executeUpdate();
+        } catch (SQLException e) {
+            logger.error("Erro ao inserir filme no banco de dados | {}", e.getMessage());
+
+            throw new DatabaseException(e.getMessage());
+        }
+    }
+
+    public Optional<MovieEntity> findById(long id) {
+        String sqlMovie = "SELECT * FROM Filmes WHERE id = ?";
+        String sqlGenres = "SELECT * FROM Filme_Genero WHERE id_filme = ?";
+
+        try (Connection conn = ConnectionFactory.getConnection();
+            PreparedStatement psMovie = conn.prepareStatement(sqlMovie);
+            PreparedStatement psGenres = conn.prepareStatement(sqlGenres)) {
+
+            psMovie.setLong(1, id);
+            ResultSet rsMovie = psMovie.executeQuery();
+
+            if(!rsMovie.isBeforeFirst()) {
+                return Optional.empty();
+            }
+
+            rsMovie.next();
+
+            psGenres.setLong(1, id);
+            ResultSet rsGenres = psGenres.executeQuery();
+            List<Integer> genresIdList = new ArrayList<>();
+
+            while(rsGenres.next()) {
+                int idGenre = rsGenres.getInt("id_genero");
+                genresIdList.add(idGenre);
+            }
+
+            List<Genre> genresList = genresIdList.stream().map(Genre::getGenreById).toList();
+
+            MovieEntity movie = new MovieEntity(
+                    rsMovie.getLong("id"),
+                    rsMovie.getString("poster"),
+                    rsMovie.getDate("data_lancamento").toString(),
+                    rsMovie.getBoolean("adulto"),
+                    rsMovie.getString("titulo_original"),
+                    rsMovie.getString("lingua_original"),
+                    rsMovie.getString("titulo"),
+                    rsMovie.getString("visao_geral"),
+                    genresList
+            );
+
+            return Optional.of(movie);
         } catch (SQLException e) {
             logger.error("Erro ao inserir filme no banco de dados | {}", e.getMessage());
 

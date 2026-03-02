@@ -1,6 +1,7 @@
 package ctw.screenscoreapi.Movies.application.controller;
 
 import ctw.screenscoreapi.Movies.application.dtos.create.CreateMovieRequest;
+import ctw.screenscoreapi.Movies.application.dtos.get.GetMovieResponse;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetMoviesByTitleResponse;
 import ctw.screenscoreapi.Movies.application.service.MovieService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,6 +17,7 @@ import jakarta.validation.constraints.Positive;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 @RestController
 @RequestMapping("/filmes")
@@ -113,15 +115,47 @@ public class MovieController {
                     ref = "#/components/responses/Movie_500"
             )
     })
+    @GetMapping("/{id}")
+    public ResponseEntity<GetMovieResponse> getMovieById(
+            @Positive(message = "O ID deve ser um número positivo")
+            @Parameter(description = "Número identificador do filme", example = "4")
+            @PathVariable
+            long id
+    ) {
+
+        GetMovieResponse response = movieService.getById(id);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "204",
+                    content = @Content(mediaType = "application/json")
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    ref = "#/components/responses/Movie_400"
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    ref = "#/components/responses/Movie_404"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    ref = "#/components/responses/Movie_500"
+            )
+    })
+
     @GetMapping()
-    public ResponseEntity<GetMoviesByTitleResponse> get(
+    public ResponseEntity<GetMoviesByTitleResponse> getMoviesByTitle(
             @NotBlank(message = "O título é obrigatório")
             @Parameter(description = "Título do filme", example = "Minions")
             @RequestParam
             String title
     ) {
 
-        GetMoviesByTitleResponse response = movieService.get(title);
+        GetMoviesByTitleResponse response = movieService.getByTitle(title);
 
         return ResponseEntity.ok(response);
     }

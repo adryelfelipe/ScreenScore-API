@@ -10,4 +10,5 @@ public interface MovieRepository {
     Optional<List<MovieEntity>> findByLikeTitle(String title);
     Optional<MovieEntity> findByExactTitle(String title);
     long delete(long id);
+    Optional<MovieEntity> findById(long id);
 }

@@ -30,6 +30,18 @@ public class GlobalExceptionHandler {
     private String BASE_URL;
     private Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+    private static ResponseEntity<ProblemDetail> responseBuilder(URI type, URI instance, String title, HttpStatus status, String detail) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(status);
+        problemDetail.setType(type);
+        problemDetail.setInstance(instance);
+        problemDetail.setTitle(title);
+        problemDetail.setDetail(detail);
+
+        return ResponseEntity
+                .status(status)
+                .body(problemDetail);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ProblemDetail> handleMethodArgumentNotValidException(MethodArgumentNotValidException e, HttpServletRequest request) throws URISyntaxException {
         logger.warn("400 (BAD_REQUEST) - Erro ao processar requisicao, campos violados | path: {}", request.getRequestURI());
@@ -61,42 +73,26 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ProblemDetail> handleMovieApplicationException(MovieApplicationException e, HttpServletRequest request) throws URISyntaxException {
         logger.warn("400 (BAD_REQUEST) - Erro ao processar requisicao, aplicacao violada | path: {}", request.getRequestURI());
 
-        URI type = new URI(BASE_URL + "/business-rule");
-        URI instance = new URI(request.getRequestURI());
-        String title = "Falha durante execução da aplicação";
-        String detail = e.getMessage();
-        HttpStatus status = HttpStatus.BAD_REQUEST;
-
-        ProblemDetail problemDetail = ProblemDetail.forStatus(status);
-        problemDetail.setType(type);
-        problemDetail.setInstance(instance);
-        problemDetail.setDetail(detail);
-        problemDetail.setTitle(title);
-
-        return ResponseEntity
-                .status(status)
-                .body(problemDetail);
+        return responseBuilder(
+                URI.create(BASE_URL + "/business-rule"),
+                URI.create(request.getRequestURI()),
+                "Falha durante execução da aplicação",
+                HttpStatus.BAD_REQUEST,
+                e.getMessage()
+        );
     }
 
     @ExceptionHandler(MovieNotFoundException.class)
     public ResponseEntity<ProblemDetail> handleMovieNotFoundException(MovieNotFoundException e, HttpServletRequest request) throws URISyntaxException {
         logger.warn("404 (NOT_FOUND) - Erro ao processar requisicao, recurso nao encontrado | path: {}", request.getRequestURI());
 
-        URI type = new URI(BASE_URL + "/resource-not-found");
-        URI instance = new URI(request.getRequestURI());
-        String title = "Recurso não encontrado";
-        String detail = e.getMessage();
-        HttpStatus status = HttpStatus.NOT_FOUND;
-
-        ProblemDetail problemDetail = ProblemDetail.forStatus(status);
-        problemDetail.setType(type);
-        problemDetail.setInstance(instance);
-        problemDetail.setDetail(detail);
-        problemDetail.setTitle(title);
-
-        return ResponseEntity
-                .status(status)
-                .body(problemDetail);
+        return responseBuilder(
+                URI.create(BASE_URL + "/resource-not-found"),
+                URI.create(request.getRequestURI()),
+                "Recurso não encontrado",
+                HttpStatus.NOT_FOUND,
+                e.getMessage()
+        );
     }
 
     @ExceptionHandler(MovieDataAlreadyUsedException.class)

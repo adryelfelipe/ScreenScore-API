@@ -64,9 +64,9 @@ public class MovieController {
     }
 
     @GetMapping("/externo")
-    @Operation (
-            summary = "Retorna filmes de uma api externa.",
-            description = "Retorna uma lista de filmes de uma api externa a partir do nome fornecido, caso encontre."
+    @Operation(
+            summary = "Retorna filmes de uma api externa a partir do título.",
+            description = "Retorna uma lista de filmes de uma api externa a partir do título fornecido, caso encontre."
     )
     @ApiResponses({
             @ApiResponse(
@@ -95,7 +95,10 @@ public class MovieController {
                 .ok()
                 .body(response);
     }
-
+    @Operation(
+            summary = "Retorna um filme cadastrado no sistema a partir do ID.",
+            description = "Retorna os detalhes de um filme previamente cadastrado no sistema, com base no ID informado na URL."
+    )
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
@@ -127,7 +130,10 @@ public class MovieController {
 
         return ResponseEntity.ok(response);
     }
-
+    @Operation(
+            summary = "Retorna uma lista de filmes cadastrados no sistema pelo título.",
+            description = "Retorna os detalhes dos filmes cujo título contenha parcialmente o valor informado como parâmetro na URL."
+    )
     @ApiResponses({
             @ApiResponse(
                     responseCode = "204",
@@ -146,7 +152,6 @@ public class MovieController {
                     ref = "#/components/responses/Movie_500"
             )
     })
-
     @GetMapping()
     public ResponseEntity<GetMoviesByTitleResponse> getMoviesByTitle(
             @NotBlank(message = "O título é obrigatório")
@@ -160,6 +165,10 @@ public class MovieController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(
+            summary = "Deleta filmes através do ID",
+            description = "Deleta filmes cadastrados no sistema a partir do ID enviado como parâmetro na URL"
+    )
     @ApiResponses({
             @ApiResponse(
                     responseCode = "204",

@@ -2,7 +2,6 @@ package ctw.screenscoreapi.Movies.application.controller;
 
 import ctw.screenscoreapi.Movies.application.dtos.create.CreateMovieRequest;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetMoviesByTitleResponse;
-import ctw.screenscoreapi.Movies.application.dtos.get.GetMovieResponse;
 import ctw.screenscoreapi.Movies.application.service.MovieService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -13,8 +12,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,23 +42,15 @@ public class MovieController {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Os dados fornecidos estão inválidos ou falha durante a execução da aplicação",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class, example =
-                            """
-                           {
-                               "instance": "/filmes",
-                                "status": 400,
-                                "title": "A requisição contém campos inválidos",
-                                "type": "http://localhost:8080/errors/invalid-argument",
-                                "erros": {
-                                    "overview": "A visão geral do filme deve possuir no mínimo 5 caracteres"
-                                }
-                           }        
-                            """))
+                    ref = "#/components/responses/Movie_400"
             ),
             @ApiResponse(
+                    responseCode = "409",
+                    ref = "#/components/responses/Movie_409"
+            ),
+            @ApiResponse (
                     responseCode = "500",
-                    ref = "#/components/responses/InternalServerError"
+                    ref = "#/components/responses/Movie_500"
             )
     })
     public ResponseEntity<Void> create(@Valid @RequestBody CreateMovieRequest request) {
@@ -81,32 +72,20 @@ public class MovieController {
                     description = "Lista de filmes retornada com sucesso",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = GetMoviesByTitleResponse.class))
             ),
-
             @ApiResponse(
                     responseCode = "400",
-                    description = "Os dados fornecidos estão inválidos",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class, example =
-                            """
-                            {
-                                "instance": "/filmes/externo",
-                                "status": 400,
-                                "title": "A requisição contém campos inválidos",
-                                "type": "http://localhost:8080/errors/invalid-argument",
-                                "erros": {
-                                    "title": "O título do filme é obrigatório"
-                                }
-                            }
-                            """))
+                    ref = "#/components/responses/Movie_400"
             ),
             @ApiResponse(
                     responseCode = "500",
-                    ref = "#/components/responses/InternalServerError"
+                    ref = "#/components/responses/Movie_500"
             )
     })
     public ResponseEntity<GetMoviesByTitleResponse> getExternalMovie(
             @NotBlank
             @Parameter(description = "Título do filme", example = "Piratas do Caribe")
-            @RequestParam String title
+            @RequestParam
+            String title
     ) {
         GetMoviesByTitleResponse response = movieService.getExternal(title);
 
@@ -123,29 +102,24 @@ public class MovieController {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Campos fornecidos inválidos ou filme não identificado",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class, example =
-                            """
-                            {
-                                "instance": "/filmes",
-                                "status": 400,
-                                "title": "Falha durante execução da aplicação",
-                                "type": "http://localhost:8080/errors/application",
-                                "detail": "Não foi possível identificar um filme com este título"
-                            }
-                            """
-                    ))
+                    ref = "#/components/responses/Movie_400"
             ),
-            @ApiResponse (
+            @ApiResponse(
+                    responseCode = "404",
+                    ref = "#/components/responses/Movie_404"
+            ),
+            @ApiResponse(
                     responseCode = "500",
-                    ref = "#/components/responses/InternalServerError"
+                    ref = "#/components/responses/Movie_500"
             )
     })
     @GetMapping()
     public ResponseEntity<GetMoviesByTitleResponse> get(
             @NotBlank(message = "O título é obrigatório")
             @Parameter(description = "Título do filme", example = "Minions")
-            @RequestParam String title) {
+            @RequestParam
+            String title
+    ) {
 
         GetMoviesByTitleResponse response = movieService.get(title);
 
@@ -159,25 +133,24 @@ public class MovieController {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProblemDetail.class, example =
-                            """
-                            {
-                                "instance": "/filmes/{id}",
-                                "status": 400,
-                                "title": "Falha durante execução da aplicação",
-                                "type": "http://localhost:8080/errors/application",
-                                "detail": "Não foi possível encontrar um filme com o ID: {id}"
-                            }        
-                            """
-                    ))
+                    ref = "#/components/responses/Movie_400"
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    ref = "#/components/responses/Movie_404"
             ),
             @ApiResponse(
                     responseCode = "500",
-                    ref = "#/components/responses/InternalServerError"
+                    ref = "#/components/responses/Movie_500"
             )
     })
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@Parameter(description = "ID do filme", example = "256") @PathVariable long id) {
+    public ResponseEntity<Void> delete(
+            @Parameter(description = "ID do filme", example = "256")
+            @Positive(message = "O id do filme deve ser um número positivo")
+            @PathVariable
+            long id
+    ) {
         movieService.delete(id);
 
         return ResponseEntity

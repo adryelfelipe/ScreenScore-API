@@ -1,6 +1,8 @@
 package ctw.screenscoreapi.Share.exception;
 
 import ctw.screenscoreapi.Movies.application.exceptions.MovieApplicationException;
+import ctw.screenscoreapi.Movies.application.exceptions.MovieDataAlreadyUsedException;
+import ctw.screenscoreapi.Movies.application.exceptions.MovieNotFoundException;
 import feign.FeignException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -28,9 +30,21 @@ public class GlobalExceptionHandler {
     private String BASE_URL;
     private Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+    private static ResponseEntity<ProblemDetail> responseBuilder(URI type, URI instance, String title, HttpStatus status, String detail) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(status);
+        problemDetail.setType(type);
+        problemDetail.setInstance(instance);
+        problemDetail.setTitle(title);
+        problemDetail.setDetail(detail);
+
+        return ResponseEntity
+                .status(status)
+                .body(problemDetail);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ProblemDetail> handleMethodArgumentNotValidException(MethodArgumentNotValidException e, HttpServletRequest request) throws URISyntaxException {
-        logger.warn("Erro ao processar requisicao, campos violados | path: {}", request.getRequestURI());
+        logger.warn("400 (BAD_REQUEST) - Erro ao processar requisicao, campos violados | path: {}", request.getRequestURI());
 
         URI type = new URI(BASE_URL + "/invalid-argument");
         URI instance = new URI(request.getRequestURI());
@@ -57,13 +71,39 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MovieApplicationException.class)
     public ResponseEntity<ProblemDetail> handleMovieApplicationException(MovieApplicationException e, HttpServletRequest request) throws URISyntaxException {
-        logger.warn("Erro ao processar requisicao, aplicacao violada | path: {}", request.getRequestURI());
+        logger.warn("400 (BAD_REQUEST) - Erro ao processar requisicao, aplicacao violada | path: {}", request.getRequestURI());
 
-        URI type = new URI(BASE_URL + "/application");
+        return responseBuilder(
+                URI.create(BASE_URL + "/business-rule"),
+                URI.create(request.getRequestURI()),
+                "Falha durante execução da aplicação",
+                HttpStatus.BAD_REQUEST,
+                e.getMessage()
+        );
+    }
+
+    @ExceptionHandler(MovieNotFoundException.class)
+    public ResponseEntity<ProblemDetail> handleMovieNotFoundException(MovieNotFoundException e, HttpServletRequest request) throws URISyntaxException {
+        logger.warn("404 (NOT_FOUND) - Erro ao processar requisicao, recurso nao encontrado | path: {}", request.getRequestURI());
+
+        return responseBuilder(
+                URI.create(BASE_URL + "/resource-not-found"),
+                URI.create(request.getRequestURI()),
+                "Recurso não encontrado",
+                HttpStatus.NOT_FOUND,
+                e.getMessage()
+        );
+    }
+
+    @ExceptionHandler(MovieDataAlreadyUsedException.class)
+    public ResponseEntity<ProblemDetail> handleMovieDataAlreadyUsedException(MovieDataAlreadyUsedException e, HttpServletRequest request) throws URISyntaxException {
+        logger.warn("409 (CONFLICT) (FILME) - Erro ao processar requisicao, dados já registrados no banco | path: {}", request.getRequestURI());
+
+        URI type = new URI(BASE_URL + "/data-already-used");
         URI instance = new URI(request.getRequestURI());
-        String title = "Falha durante execução da aplicação";
+        String title = "Dados já registrados no servidor";
         String detail = e.getMessage();
-        HttpStatus status = HttpStatus.BAD_REQUEST;
+        HttpStatus status = HttpStatus.CONFLICT;
 
         ProblemDetail problemDetail = ProblemDetail.forStatus(status);
         problemDetail.setType(type);
@@ -78,17 +118,17 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ProblemDetail> handleNoResourceFoundException(HttpServletRequest httpRequest) throws URISyntaxException {
-        logger.warn("Erro ao processar requisicao, recurso nao encontrado | path: {}", httpRequest.getRequestURI());
+        logger.warn("404 (NOT_FOUND) - Erro ao processar requisicao, endpoint nao encontrado | path: {}", httpRequest.getRequestURI());
 
-        URI type = new URI(BASE_URL + "/no-resource-found");
-        URI instace = new URI(httpRequest.getRequestURI());
-        String title = "Recurso não encontrado";
-        HttpStatus status = HttpStatus.BAD_REQUEST;
+        URI type = new URI(BASE_URL + "/endpoint-not-found");
+        URI instance = new URI(httpRequest.getRequestURI());
+        String title = "Endpoint não encontrado";
+        HttpStatus status = HttpStatus.NOT_FOUND;
 
         ProblemDetail problemDetail = ProblemDetail.forStatus(status);
         problemDetail.setType(type);
         problemDetail.setTitle(title);
-        problemDetail.setInstance(instace);
+        problemDetail.setInstance(instance);
 
         return ResponseEntity
                 .status(status)
@@ -97,7 +137,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ProblemDetail> handleMethodNotAllowedException(HttpRequestMethodNotSupportedException e, HttpServletRequest httpRequest) throws URISyntaxException {
-        logger.warn("Erro ao processar requisicao, metodo http nao permitido | metodo: {} | path: {}", httpRequest.getMethod(), httpRequest.getRequestURI());
+        logger.warn("405 (METHOD_NOT_ALLOWED) - Erro ao processar requisicao, metodo http nao permitido | metodo: {} | path: {}", httpRequest.getMethod(), httpRequest.getRequestURI());
 
         URI type = new URI(BASE_URL + "/method-not-allowed");
         URI instance = new URI(httpRequest.getRequestURI());
@@ -118,7 +158,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(FeignException.class)
     public ResponseEntity<ProblemDetail> handleFeignException(FeignException e, HttpServletRequest httpRequest) throws URISyntaxException {
-        logger.error("Erro ao se comunicar com sistema externo: {} | {}", e.request().url(), e.getMessage());
+        logger.error("500 (INTERNAL_SERVER_ERROR) - Erro ao se comunicar com sistema externo: {} | {}", e.request().url(), e.getMessage());
 
 
         URI type = new URI(BASE_URL + "/external-server");
@@ -138,7 +178,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ProblemDetail> handleMessageNotReadableException(HttpServletRequest httpRequest) throws URISyntaxException {
-        logger.warn("Erro ao processar requisião, body inválido | path: {}", httpRequest.getRequestURI());
+        logger.warn("400 (BAD_REQUEST) - Erro ao processar requisião, body inválido | path: {}", httpRequest.getRequestURI());
 
         URI type = new URI(BASE_URL + "/invalid-body");
         URI instace = new URI(httpRequest.getRequestURI());
@@ -157,7 +197,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ProblemDetail> handleException(Exception e, HttpServletRequest httpRequest) throws URISyntaxException {
-        logger.error("Erro interno do servidor: {}", e.getMessage());
+        logger.error("500 (INTERNAL_SERVER_ERROR) - Erro interno do servidor: {}", e.getMessage());
 
         URI type = new URI(BASE_URL + "/internal-server");
         URI instance = new URI(httpRequest.getRequestURI());

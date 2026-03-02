@@ -1,7 +1,7 @@
 package ctw.screenscoreapi.Movies.application.exceptions;
 
-public class MovieNotFoundByTitle extends MovieApplicationException {
-    public MovieNotFoundByTitle() {
+public class MovieNotFoundByTitleException extends MovieNotFoundException {
+    public MovieNotFoundByTitleException() {
         super("Não foi possível identificar um filme com este título");
     }
 }

@@ -1,5 +1,6 @@
 package ctw.screenscoreapi.Movies.domain.repository;
 
+import ctw.screenscoreapi.Movies.application.dtos.get.GetListOfMoviesResponse;
 import ctw.screenscoreapi.Movies.domain.MovieEntity;
 
 import java.util.List;
@@ -7,8 +8,9 @@ import java.util.Optional;
 
 public interface MovieRepository {
     void create(MovieEntity movie);
-    Optional<List<MovieEntity>> findByLikeTitle(String title);
+    List<MovieEntity> findByLikeTitle(String title);
     Optional<MovieEntity> findByExactTitle(String title);
     long delete(long id);
     Optional<MovieEntity> findById(long id);
+    List<MovieEntity> getAllMovies();
 }

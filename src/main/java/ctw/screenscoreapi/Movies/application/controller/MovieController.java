@@ -131,13 +131,14 @@ public class MovieController {
         return ResponseEntity.ok(response);
     }
     @Operation(
-            summary = "Retorna uma lista de filmes cadastrados no sistema pelo título.",
-            description = "Retorna os detalhes dos filmes cujo título contenha parcialmente o valor informado como parâmetro na URL."
+            summary = "Retorna filmes cadastrados no sistema",
+            description = "Retorna uma lista de filmes do sistema. Se o parâmetro 'title' for fornecido, retorna apenas os filmes cujo título corresponda; caso contrário, retorna todos os filmes cadastrados."
     )
     @ApiResponses({
             @ApiResponse(
-                    responseCode = "204",
-                    content = @Content(mediaType = "application/json")
+                    responseCode = "200",
+                    description = "Lista de filmes retornada com sucesso",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = GetListOfMoviesResponse.class))
             ),
             @ApiResponse(
                     responseCode = "400",
@@ -153,14 +154,13 @@ public class MovieController {
             )
     })
     @GetMapping()
-    public ResponseEntity<GetListOfMoviesResponse> getMoviesByTitle(
-            @NotBlank(message = "O título é obrigatório")
-            @Parameter(description = "Título do filme", example = "Minions")
-            @RequestParam
+    public ResponseEntity<GetListOfMoviesResponse> getMovies(
+            @Parameter(description = "Título do filme", example = "Minions", required = false)
+            @RequestParam(required = false)
             String title
     ) {
 
-        GetListOfMoviesResponse response = movieService.getByTitle(title);
+        GetListOfMoviesResponse response = movieService.getMoviesWithFilters(title);
 
         return ResponseEntity.ok(response);
     }
@@ -172,7 +172,7 @@ public class MovieController {
     @ApiResponses({
             @ApiResponse(
                     responseCode = "204",
-                    content = @Content(mediaType = "application/json")
+                    description = "Filme deletado com sucesso"
             ),
             @ApiResponse(
                     responseCode = "400",

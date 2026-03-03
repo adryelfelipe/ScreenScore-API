@@ -65,12 +65,17 @@ public class MovieService {
         return movieMapper.toResponse(movie);
     }
 
-    public GetListOfMoviesResponse getByTitle(String title) {
-        Optional<List<MovieEntity>> optionalMovie = movieRepository.findByLikeTitle(title);
-        List<MovieEntity> movieEntities = optionalMovie.orElseThrow(MovieNotFoundByTitleException::new);
-        List<GetMovieResponse> movieResponses = movieEntities.stream().map(movieMapper::toResponse).toList();
+    public GetListOfMoviesResponse getMoviesWithFilters(String title) {
+        if(title != null){
+            List<MovieEntity> movieEntities = movieRepository.findByLikeTitle(title);
+            List<GetMovieResponse> movieResponses = movieEntities.stream().map(movieMapper::toResponse).toList();
 
-        return new GetListOfMoviesResponse(movieResponses);
+            return new GetListOfMoviesResponse(movieResponses);
+        }
+
+        List<MovieEntity> movies = movieRepository.getAllMovies();
+
+        return movieMapper.toResponse(movies);
     }
 
     public void delete(long id) {

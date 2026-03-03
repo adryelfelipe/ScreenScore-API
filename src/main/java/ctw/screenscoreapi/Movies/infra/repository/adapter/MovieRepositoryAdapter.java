@@ -25,7 +25,7 @@ public class MovieRepositoryAdapter implements MovieRepository {
     }
 
     @Override
-    public Optional<List<MovieEntity>> findByLikeTitle(String title) {
+    public List<MovieEntity> findByLikeTitle(String title) {
 
         return movieDao.findByLikeTitle(title);
     }
@@ -45,5 +45,11 @@ public class MovieRepositoryAdapter implements MovieRepository {
     public Optional<MovieEntity> findById(long id) {
 
         return movieDao.findById(id);
+    }
+
+    @Override
+    public List<MovieEntity> getAllMovies() {
+
+        return movieDao.findAllMovies();
     }
 }

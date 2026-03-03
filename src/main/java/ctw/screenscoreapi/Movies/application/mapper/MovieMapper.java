@@ -1,9 +1,12 @@
 package ctw.screenscoreapi.Movies.application.mapper;
 
 import ctw.screenscoreapi.Movies.application.dtos.create.CreateMovieRequest;
+import ctw.screenscoreapi.Movies.application.dtos.get.GetListOfMoviesResponse;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetMovieResponse;
 import ctw.screenscoreapi.Movies.domain.MovieEntity;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class MovieMapper {
@@ -35,5 +38,14 @@ public class MovieMapper {
                 movieEntity.getOverview(),
                 movieEntity.getGenres()
         );
+    }
+
+    public GetListOfMoviesResponse toResponse(List<MovieEntity> movieEntityList) {
+        List<GetMovieResponse> movies = movieEntityList
+                .stream()
+                .map(this::toResponse)
+                .toList();
+
+        return new GetListOfMoviesResponse(movies);
     }
 }

@@ -74,7 +74,8 @@ public class OpenApiConfig {
                                                                                             "type": "/erros/internal-server",
                                                                                             "detail": "Ocorreu um erro interno no servidor. Tente novamente mais tarde."
                                                                                         }
-                                                                                        """)
+                                                                                        """
+                                                                                )
                                                                 )
                                                 )
                                 )
@@ -102,7 +103,8 @@ public class OpenApiConfig {
                                                                                             "detail": "Consulte a documentação do endpoint para visualizar os formatos esperados",
                                                                                             "erros": []                                                     \s
                                                                                         }
-                                                                                       """)
+                                                                                       """
+                                                                                )
                                                                 )
                                                 )
                                 )
@@ -129,7 +131,8 @@ public class OpenApiConfig {
                                                                                             "type": "/erros/resource-not-found",
                                                                                             "detail": "details of the problem"
                                                                                         }
-                                                                                        """)
+                                                                                        """
+                                                                                )
                                                                 )
                                                 )
                                 )
@@ -156,7 +159,58 @@ public class OpenApiConfig {
                                                                                             "type": "/erros/data-already-used",
                                                                                             "detail": "details of the problem"
                                                                                         }
-                                                                                        """)
+                                                                                        """
+                                                                                )
+                                                                )
+                                                )
+                                )
+
+                                .addResponses(
+                                        "422",
+                                        new ApiResponse()
+                                                .description("Não há nenhum conteúdo para atualizar")
+                                                .content(
+                                                        new Content()
+                                                                .addMediaType(
+                                                                        "application/json",
+                                                                        new MediaType()
+                                                                                .schema(problemDetail.schema)
+                                                                                .example(
+                                                                                        """
+                                                                                       {
+                                                                                           "instance": "path-instance",
+                                                                                           "status": 422,
+                                                                                           "title": "Falha durante a execução da aplicação",
+                                                                                           "type": "/erros/no-content-to-update",
+                                                                                           "detail": "details of the problem"
+                                                                                       }
+                                                                                       """
+                                                                                )
+                                                                )
+                                                )
+                                )
+
+                                .addResponses(
+                                        "502",
+                                        new ApiResponse()
+                                                .description("Não foi possível se comunicar com uma api externa")
+                                                .content(
+                                                        new Content()
+                                                                .addMediaType(
+                                                                        "application/json",
+                                                                        new MediaType()
+                                                                                .schema(problemDetail.schema)
+                                                                                .example(
+                                                                                        """
+                                                                                       {
+                                                                                           "instance": "path-instance",
+                                                                                           "status": 502,
+                                                                                           "title": "Erro ao se comunicar com sistema externo",
+                                                                                           "type": "/erros/external-server",
+                                                                                           "detail": "Falha ao comunicar com serviço externo. Tente novamente mais tarde."
+                                                                                       }
+                                                                                       """
+                                                                                )
                                                                 )
                                                 )
                                 )

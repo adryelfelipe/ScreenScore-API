@@ -82,6 +82,10 @@ public class MovieController {
             @ApiResponse(
                     responseCode = "500",
                     ref = "#/components/responses/500"
+            ),
+            @ApiResponse(
+                    responseCode = "502",
+                    ref = "#/components/responses/502"
             )
     })
     public ResponseEntity<GetListOfExternalMoviesResponse> getExternalMovie(
@@ -202,6 +206,32 @@ public class MovieController {
                 .build();
     }
 
+    @Operation(
+            summary = "Atualiza filmes através do ID",
+            description = "Atualiza filmes cadastrados no sistema a partir do ID enviado como parâmetro na URL."
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "400",
+                    ref = "#/components/responses/400"
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    ref = "#/components/responses/404"
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    ref = "#/components/responses/409"
+            ),
+            @ApiResponse(
+                    responseCode = "422",
+                    ref = "#/components/responses/422"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    ref = "#/components/responses/500"
+            )
+    })
     @PutMapping("/{id}")
     public ResponseEntity<Void> update(@PathVariable long id, @RequestBody UpdateMovieRequest request) {
         movieService.update(id, request);

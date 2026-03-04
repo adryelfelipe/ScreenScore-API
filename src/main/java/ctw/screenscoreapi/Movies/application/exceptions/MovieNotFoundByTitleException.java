@@ -1,6 +1,8 @@
 package ctw.screenscoreapi.Movies.application.exceptions;
 
-public class MovieNotFoundByTitleException extends MovieNotFoundException {
+import ctw.screenscoreapi.Share.exception.categories.DomainResourceNotFoundException;
+
+public class MovieNotFoundByTitleException extends DomainResourceNotFoundException {
     public MovieNotFoundByTitleException() {
         super("Não foi possível identificar um filme com este título");
     }

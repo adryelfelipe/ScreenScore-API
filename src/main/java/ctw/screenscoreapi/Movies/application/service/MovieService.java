@@ -7,7 +7,7 @@ import ctw.screenscoreapi.Movies.application.dtos.get.GetListOfMoviesResponse;
 import ctw.screenscoreapi.Movies.application.dtos.update.UpdateMovieRequest;
 import ctw.screenscoreapi.Movies.application.exceptions.MovieNotFoundByIdException;
 import ctw.screenscoreapi.Movies.application.exceptions.MovieTitleAlreadyUsedException;
-import ctw.screenscoreapi.Share.exception.NoFieldsToUpdateException;
+import ctw.screenscoreapi.Share.exception.categories.NoContentToUpdateException;
 import ctw.screenscoreapi.Movies.application.mapper.MovieMapper;
 import ctw.screenscoreapi.Movies.domain.MovieEntity;
 import ctw.screenscoreapi.Movies.domain.repository.MovieRepository;
@@ -99,7 +99,7 @@ public class MovieService {
                 request.overview() == null &&
                 request.genres() == null) {
 
-            throw new NoFieldsToUpdateException();
+            throw new NoContentToUpdateException();
         }
 
         if(request.title() != null) {

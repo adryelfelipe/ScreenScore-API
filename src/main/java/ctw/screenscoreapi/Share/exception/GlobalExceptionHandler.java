@@ -1,8 +1,9 @@
 package ctw.screenscoreapi.Share.exception;
 
 import ctw.screenscoreapi.Movies.application.exceptions.MovieApplicationException;
-import ctw.screenscoreapi.Movies.application.exceptions.MovieDataAlreadyUsedException;
-import ctw.screenscoreapi.Movies.application.exceptions.MovieNotFoundException;
+import ctw.screenscoreapi.Share.exception.categories.DataAlreadyUsedException;
+import ctw.screenscoreapi.Share.exception.categories.DomainResourceNotFoundException;
+import ctw.screenscoreapi.Share.exception.categories.NoContentToUpdateException;
 import feign.FeignException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -67,7 +68,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MovieApplicationException.class)
     public ResponseEntity<ProblemDetail> handleMovieApplicationException(MovieApplicationException e, HttpServletRequest request) throws URISyntaxException {
-        logger.warn("400 (BAD_REQUEST) - Erro ao processar requisicao, aplicacao violada | path: {}", request.getRequestURI());
+        logger.warn("400 (BAD_REQUEST) - Erro ao processar requisicao, aplicacao de filme violada | path: {}", request.getRequestURI());
 
         ProblemDetail problemDetail = problemDetailBuilder(
                 URI.create("/erros/movie-application"),
@@ -82,9 +83,9 @@ public class GlobalExceptionHandler {
                 .body(problemDetail);
     }
 
-    @ExceptionHandler(NoFieldsToUpdateException.class)
-    public ResponseEntity<ProblemDetail> handleNoFieldsToUpdateException(NoFieldsToUpdateException e, HttpServletRequest request) throws URISyntaxException {
-        logger.warn("422 (Unprocessable Entity) - Erro ao processar requisicao, aplicacao violada | path: {}", request.getRequestURI());
+    @ExceptionHandler(NoContentToUpdateException.class)
+    public ResponseEntity<ProblemDetail> handleNoContentToUpdateException(NoContentToUpdateException e, HttpServletRequest request) throws URISyntaxException {
+        logger.warn("422 (Unprocessable Entity) - Erro ao processar requisicao, nenhum conteúdo para atualizar | path: {}", request.getRequestURI());
 
         ProblemDetail problemDetail = problemDetailBuilder(
                 URI.create("/erros/no-content-to-update"),
@@ -100,8 +101,8 @@ public class GlobalExceptionHandler {
     }
 
 
-    @ExceptionHandler(MovieNotFoundException.class)
-    public ResponseEntity<ProblemDetail> handleMovieNotFoundException(MovieNotFoundException e, HttpServletRequest request) throws URISyntaxException {
+    @ExceptionHandler(DomainResourceNotFoundException.class)
+    public ResponseEntity<ProblemDetail> handleDomainResourceNotFoundException(DomainResourceNotFoundException e, HttpServletRequest request) throws URISyntaxException {
         logger.warn("404 (NOT_FOUND) - Erro ao processar requisicao, recurso nao encontrado | path: {}", request.getRequestURI());
 
         ProblemDetail problemDetail = problemDetailBuilder(
@@ -114,11 +115,11 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .status(problemDetail.getStatus())
-                .build();
+                .body(problemDetail);
     }
 
-    @ExceptionHandler(MovieDataAlreadyUsedException.class)
-    public ResponseEntity<ProblemDetail> handleMovieDataAlreadyUsedException(MovieDataAlreadyUsedException e, HttpServletRequest httpRequest) throws URISyntaxException {
+    @ExceptionHandler(DataAlreadyUsedException.class)
+    public ResponseEntity<ProblemDetail> handleDataAlreadyUsedException(DataAlreadyUsedException e, HttpServletRequest httpRequest) throws URISyntaxException {
         logger.warn("409 (CONFLICT) (FILME) - Erro ao processar requisicao, dados já registrados no banco | path: {}", httpRequest.getRequestURI());
 
         ProblemDetail problemDetail = problemDetailBuilder(
@@ -170,7 +171,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(FeignException.class)
     public ResponseEntity<ProblemDetail> handleFeignException(FeignException e, HttpServletRequest httpRequest) throws URISyntaxException {
-        logger.error("500 (INTERNAL_SERVER_ERROR) - Erro ao se comunicar com sistema externo: {} | {}", e.request().url(), e.getMessage());
+        logger.error("502 (EXTERNAL_SERVER_ERROR) - Erro ao se comunicar com sistema externo: {} | {}", e.request().url(), e.getMessage());
 
         ProblemDetail problemDetail = problemDetailBuilder(
                 URI.create("/erros/external-server"),

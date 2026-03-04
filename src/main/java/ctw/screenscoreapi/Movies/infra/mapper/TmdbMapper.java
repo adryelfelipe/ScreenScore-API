@@ -2,7 +2,7 @@ package ctw.screenscoreapi.Movies.infra.mapper;
 
 import ctw.screenscoreapi.Movies.application.dtos.get.GetExternalMovieResponse;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetListOfExternalMoviesResponse;
-import ctw.screenscoreapi.Movies.application.exceptions.TmdbUnkwonGenreException;
+import ctw.screenscoreapi.Movies.infra.feign.TmdbUnkwonGenreException;
 import ctw.screenscoreapi.Movies.domain.MovieEntity;
 import ctw.screenscoreapi.Movies.domain.enums.Genre;
 import ctw.screenscoreapi.Movies.infra.feign.MovieApiEntity;

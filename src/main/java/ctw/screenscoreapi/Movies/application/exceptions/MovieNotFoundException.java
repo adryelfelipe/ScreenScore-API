@@ -1,6 +1,8 @@
 package ctw.screenscoreapi.Movies.application.exceptions;
 
-public class MovieNotFoundException extends MovieApplicationException {
+import ctw.screenscoreapi.Share.exception.categories.DomainResourceNotFoundException;
+
+public class MovieNotFoundException extends DomainResourceNotFoundException {
     public MovieNotFoundException(String message) {
         super(message);
     }

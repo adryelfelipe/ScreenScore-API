@@ -68,10 +68,10 @@ public class OpenApiConfig {
                                                                                 .example(
                                                                                         """
                                                                                         {
-                                                                                            "instance": "/filmes/{id}",
-                                                                                            "status": 500,
+                                                                                            "instance": "path-instance",
+                                                                                            "status": "500",
                                                                                             "title": "Erro interno do servidor",
-                                                                                            "type": "http://localhost:8080/errors/internal-server",
+                                                                                            "type": "/erros/internal-server",
                                                                                             "detail": "Ocorreu um erro interno no servidor. Tente novamente mais tarde."
                                                                                         }
                                                                                         """)
@@ -95,16 +95,14 @@ public class OpenApiConfig {
                                                                                 .example(
                                                                                         """
                                                                                         {
-                                                                                            "instance": "/filmes/externo",
+                                                                                            "instance": "path-instance",
                                                                                             "status": 400,
                                                                                             "title": "A requisição contém campos inválidos",
-                                                                                            "type": "http://localhost:8080/errors/invalid-argument",
+                                                                                            "type": "/erros/invalid-argument",
                                                                                             "detail": "Consulte a documentação do endpoint para visualizar os formatos esperados",
-                                                                                            "erros": {
-                                                                                                "title": "O título do filme é obrigatório"
-                                                                                            }
+                                                                                            "erros": []                                                     \s
                                                                                         }
-                                                                                        """)
+                                                                                       """)
                                                                 )
                                                 )
                                 )
@@ -125,11 +123,11 @@ public class OpenApiConfig {
                                                                                 .example(
                                                                                         """
                                                                                         {
-                                                                                            "instance": "/filmes",
+                                                                                            "instance": "path-instance",
                                                                                             "status": 404,
-                                                                                            "title": "Filme não encontrado",
-                                                                                            "type": "http://localhost:8080/errors/resource-not-found",
-                                                                                            "detail": "Não foi possível identificar um filme com este título"
+                                                                                            "title": "Recurso não encontrado",
+                                                                                            "type": "/erros/resource-not-found",
+                                                                                            "detail": "details of the problem"
                                                                                         }
                                                                                         """)
                                                                 )
@@ -152,11 +150,11 @@ public class OpenApiConfig {
                                                                                 .example(
                                                                                         """
                                                                                         {
-                                                                                            "instance": "/filmes",
+                                                                                            "instance": "path-instance",
                                                                                             "status": 409,
                                                                                             "title": "Dados já registrados no servidor",
-                                                                                            "type": "http://localhost:8080/errors/data-already-used",
-                                                                                            "detail": "O título do filme já foi utilizado"
+                                                                                            "type": "/erros/data-already-used",
+                                                                                            "detail": "details of the problem"
                                                                                         }
                                                                                         """)
                                                                 )

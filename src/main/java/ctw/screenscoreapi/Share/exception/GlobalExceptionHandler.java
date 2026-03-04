@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
 
 
         ProblemDetail problemDetail = problemDetailBuilder(
-                URI.create("/invalid-argument"),
+                URI.create("/erros/invalid-argument"),
                 URI.create(httpRequest.getRequestURI()),
                 "A requisição contém campos inválidos",
                 HttpStatus.BAD_REQUEST,
@@ -70,7 +70,7 @@ public class GlobalExceptionHandler {
         logger.warn("400 (BAD_REQUEST) - Erro ao processar requisicao, aplicacao violada | path: {}", request.getRequestURI());
 
         ProblemDetail problemDetail = problemDetailBuilder(
-                URI.create("/movie-application"),
+                URI.create("/erros/movie-application"),
                 URI.create(request.getRequestURI()),
                 "Falha durante execução da aplicação",
                 HttpStatus.BAD_REQUEST,
@@ -87,7 +87,7 @@ public class GlobalExceptionHandler {
         logger.warn("422 (Unprocessable Entity) - Erro ao processar requisicao, aplicacao violada | path: {}", request.getRequestURI());
 
         ProblemDetail problemDetail = problemDetailBuilder(
-                URI.create("/no-content-to-update"),
+                URI.create("/erros/no-content-to-update"),
                 URI.create(request.getRequestURI()),
                 "Falha durante execução da aplicação",
                 HttpStatus.UNPROCESSABLE_ENTITY,
@@ -105,7 +105,7 @@ public class GlobalExceptionHandler {
         logger.warn("404 (NOT_FOUND) - Erro ao processar requisicao, recurso nao encontrado | path: {}", request.getRequestURI());
 
         ProblemDetail problemDetail = problemDetailBuilder(
-                URI.create("/resource-not-found"),
+                URI.create("/erros/resource-not-found"),
                 URI.create(request.getRequestURI()),
                 "Recurso não encontrado",
                 HttpStatus.NOT_FOUND,
@@ -122,7 +122,7 @@ public class GlobalExceptionHandler {
         logger.warn("409 (CONFLICT) (FILME) - Erro ao processar requisicao, dados já registrados no banco | path: {}", httpRequest.getRequestURI());
 
         ProblemDetail problemDetail = problemDetailBuilder(
-                URI.create("/data-already-used"),
+                URI.create("/erros/data-already-used"),
                 URI.create(httpRequest.getRequestURI()),
                 "Dados já registrados no servidor",
                 HttpStatus.CONFLICT,
@@ -139,7 +139,7 @@ public class GlobalExceptionHandler {
         logger.warn("404 (NOT_FOUND) - Erro ao processar requisicao, endpoint nao encontrado | path: {}", httpRequest.getRequestURI());
 
         ProblemDetail problemDetail = problemDetailBuilder(
-                URI.create("/endpoint-not-found"),
+                URI.create("/erros/endpoint-not-found"),
                 URI.create(httpRequest.getRequestURI()),
                 "Endpoint não encontrado",
                 HttpStatus.NOT_FOUND,
@@ -156,7 +156,7 @@ public class GlobalExceptionHandler {
         logger.warn("405 (METHOD_NOT_ALLOWED) - Erro ao processar requisicao, metodo http nao permitido | metodo: {} | path: {}", httpRequest.getMethod(), httpRequest.getRequestURI());
 
         ProblemDetail problemDetail = problemDetailBuilder(
-                URI.create("/method-not-allowed"),
+                URI.create("/erros/method-not-allowed"),
                 URI.create(httpRequest.getRequestURI()),
                 "O método " + httpRequest.getMethod() + " não é permitido",
                 HttpStatus.METHOD_NOT_ALLOWED,
@@ -173,7 +173,7 @@ public class GlobalExceptionHandler {
         logger.error("500 (INTERNAL_SERVER_ERROR) - Erro ao se comunicar com sistema externo: {} | {}", e.request().url(), e.getMessage());
 
         ProblemDetail problemDetail = problemDetailBuilder(
-                URI.create("/external-server"),
+                URI.create("/erros/external-server"),
                 URI.create(httpRequest.getRequestURI()),
                 "Erro ao se comunicar com sistema externo",
                 HttpStatus.INTERNAL_SERVER_ERROR,
@@ -190,7 +190,7 @@ public class GlobalExceptionHandler {
         logger.warn("400 (BAD_REQUEST) - Erro ao processar requisião, body inválido | path: {}", httpRequest.getRequestURI());
 
         ProblemDetail problemDetail = problemDetailBuilder(
-                URI.create("/invalid-body"),
+                URI.create("/erros/invalid-body"),
                 URI.create(httpRequest.getRequestURI()),
                 "O body da requisição está ausente ou mal formatado",
                 HttpStatus.BAD_REQUEST,
@@ -207,7 +207,7 @@ public class GlobalExceptionHandler {
         logger.error("500 (INTERNAL_SERVER_ERROR) - Erro interno do servidor: {}", e.getMessage());
 
         ProblemDetail problemDetail = problemDetailBuilder(
-                URI.create("/internal-server"),
+                URI.create("/erros/internal-server"),
                 URI.create(httpRequest.getRequestURI()),
                 "Erro interno do servidor",
                 HttpStatus.INTERNAL_SERVER_ERROR,

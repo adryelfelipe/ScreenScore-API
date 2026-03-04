@@ -53,7 +53,7 @@ public class OpenApiConfig {
                                 .addSchemas("ProblemDetail", problemDetail.schema)
 
                                 .addResponses(
-                                        "Movie_500",
+                                        "500",
                                         new ApiResponse()
                                                 .description("Erro interno do servidor")
                                                 .content(
@@ -80,7 +80,7 @@ public class OpenApiConfig {
                                 )
 
                                 .addResponses(
-                                        "Movie_400",
+                                        "400",
                                         new ApiResponse()
                                                 .description("Os dados fornecidos estão inválidos")
                                                 .content(
@@ -108,9 +108,9 @@ public class OpenApiConfig {
                                 )
 
                                 .addResponses(
-                                        "Movie_404",
+                                        "404",
                                         new ApiResponse()
-                                                .description("Filme não encontrado")
+                                                .description("Recurso não encontrado")
                                                 .content(
                                                         new Content()
                                                                 .addMediaType(
@@ -135,7 +135,7 @@ public class OpenApiConfig {
                                 )
 
                                 .addResponses(
-                                        "Movie_409",
+                                        "409",
                                         new ApiResponse()
                                                 .description("Dados já registrados no servidor")
                                                 .content(
@@ -160,6 +160,7 @@ public class OpenApiConfig {
                                                                 )
                                                 )
                                 )
+
                 );
     }
 }

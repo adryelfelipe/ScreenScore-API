@@ -45,15 +45,15 @@ public class MovieController {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    ref = "#/components/responses/Movie_400"
+                    ref = "#/components/responses/400"
             ),
             @ApiResponse(
                     responseCode = "409",
-                    ref = "#/components/responses/Movie_409"
+                    ref = "#/components/responses/409"
             ),
             @ApiResponse (
                     responseCode = "500",
-                    ref = "#/components/responses/Movie_500"
+                    ref = "#/components/responses/500"
             )
     })
     public ResponseEntity<Void> create(@Valid @RequestBody CreateMovieRequest request) {
@@ -77,11 +77,11 @@ public class MovieController {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    ref = "#/components/responses/Movie_400"
+                    ref = "#/components/responses/400"
             ),
             @ApiResponse(
                     responseCode = "500",
-                    ref = "#/components/responses/Movie_500"
+                    ref = "#/components/responses/500"
             )
     })
     public ResponseEntity<GetListOfExternalMoviesResponse> getExternalMovie(
@@ -108,15 +108,15 @@ public class MovieController {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    ref = "#/components/responses/Movie_400"
+                    ref = "#/components/responses/400"
             ),
             @ApiResponse(
                     responseCode = "404",
-                    ref = "#/components/responses/Movie_404"
+                    ref = "#/components/responses/404"
             ),
             @ApiResponse(
                     responseCode = "500",
-                    ref = "#/components/responses/Movie_500"
+                    ref = "#/components/responses/500"
             )
     })
     @GetMapping("/{id}")
@@ -143,15 +143,15 @@ public class MovieController {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    ref = "#/components/responses/Movie_400"
+                    ref = "#/components/responses/400"
             ),
             @ApiResponse(
                     responseCode = "404",
-                    ref = "#/components/responses/Movie_404"
+                    ref = "#/components/responses/404"
             ),
             @ApiResponse(
                     responseCode = "500",
-                    ref = "#/components/responses/Movie_500"
+                    ref = "#/components/responses/500"
             )
     })
     @GetMapping()
@@ -177,15 +177,15 @@ public class MovieController {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    ref = "#/components/responses/Movie_400"
+                    ref = "#/components/responses/400"
             ),
             @ApiResponse(
                     responseCode = "404",
-                    ref = "#/components/responses/Movie_404"
+                    ref = "#/components/responses/404"
             ),
             @ApiResponse(
                     responseCode = "500",
-                    ref = "#/components/responses/Movie_500"
+                    ref = "#/components/responses/500"
             )
     })
     @DeleteMapping("/{id}")

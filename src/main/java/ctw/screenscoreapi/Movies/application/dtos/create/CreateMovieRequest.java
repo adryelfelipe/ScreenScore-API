@@ -35,12 +35,13 @@ public record CreateMovieRequest(@NotBlank(message = "O título do filme é obri
                                  @Schema(description = "Referência da imagem obtida ao se comunicar com ThemovieDB", example = "/referencia-da-imagem-do-themoviedb.jpg")
                                  String posterImage,
 
-                                 @Size(min = 3, message = "A visão geral do filme deve possuir no mínimo 5 caracteres")
+                                 @Size(min = 5, message = "A visão geral do filme deve possuir no mínimo 5 caracteres")
                                  @NotBlank(message = "A visão geral do filme é obrigatória")
                                  @Schema(example = "ScreenScore é um filme de ficação científica")
                                  String overview,
 
                                  @NotNull(message = "O gênero do filme é obrigatório")
+                                 @Size(min = 1, message = "O gênero do filme é obrigatório")
                                  @Schema(example =
                                  """
                                  [

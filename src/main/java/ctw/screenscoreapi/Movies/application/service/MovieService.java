@@ -4,9 +4,10 @@ import ctw.screenscoreapi.Movies.application.dtos.create.CreateMovieRequest;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetListOfExternalMoviesResponse;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetMovieResponse;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetListOfMoviesResponse;
+import ctw.screenscoreapi.Movies.application.dtos.update.UpdateMovieRequest;
 import ctw.screenscoreapi.Movies.application.exceptions.MovieNotFoundByIdException;
-import ctw.screenscoreapi.Movies.application.exceptions.MovieNotFoundByTitleException;
 import ctw.screenscoreapi.Movies.application.exceptions.MovieTitleAlreadyUsedException;
+import ctw.screenscoreapi.Share.exception.NoFieldsToUpdateException;
 import ctw.screenscoreapi.Movies.application.mapper.MovieMapper;
 import ctw.screenscoreapi.Movies.domain.MovieEntity;
 import ctw.screenscoreapi.Movies.domain.repository.MovieRepository;
@@ -84,5 +85,61 @@ public class MovieService {
         if(deletedMovies == 0) {
             throw new MovieNotFoundByIdException(id);
         }
+    }
+
+    public void update(long id, UpdateMovieRequest request) {
+        MovieEntity movie = movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundByIdException(id));
+
+        if (request.title() == null &&
+                request.originalLanguage() == null &&
+                request.originalTitle() == null &&
+                request.adult() == null &&
+                request.releaseDate() == null &&
+                request.posterImage() == null &&
+                request.overview() == null &&
+                request.genres() == null) {
+
+            throw new NoFieldsToUpdateException();
+        }
+
+        if(request.title() != null) {
+            Optional<MovieEntity> optionalMovie = movieRepository.findByExactTitle(request.title());
+
+            if(optionalMovie.isPresent()) {
+                throw new MovieTitleAlreadyUsedException(request.title());
+            }
+
+            movie.setTitle(request.title());
+        }
+
+        if(request.originalLanguage() != null) {
+            movie.setOriginalLanguage(request.originalLanguage());
+        }
+
+        if(request.originalTitle() != null) {
+            movie.setOriginalTitle(request.originalTitle());
+        }
+
+        if(request.adult() != null) {
+            movie.setAdult(request.adult());
+        }
+
+        if(request.releaseDate() != null) {
+            movie.setReleaseDate(request.releaseDate());
+        }
+
+        if(request.posterImage() != null) {
+            movie.setPosterImage(request.posterImage());
+        }
+
+        if(request.overview() != null) {
+            movie.setOverview(request.overview());
+        }
+
+        if(request.genres() != null) {
+            movie.setGenres(request.genres());
+        }
+
+        movieRepository.update(movie);
     }
 }

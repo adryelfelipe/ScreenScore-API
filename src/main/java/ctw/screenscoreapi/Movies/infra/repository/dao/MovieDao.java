@@ -150,7 +150,7 @@ public class MovieDao {
             return movies;
 
         } catch (SQLException e) {
-            logger.error("Erro ao inserir filme no banco de dados | {}", e.getMessage());
+            logger.error("Erro ao encontrar filmes no banco de dados | {}", e.getMessage());
 
             throw new DatabaseException(e.getMessage());
         }
@@ -217,7 +217,7 @@ public class MovieDao {
             ps.setLong(1, id);
             return ps.executeUpdate();
         } catch (SQLException e) {
-            logger.error("Erro ao inserir filme no banco de dados | {}", e.getMessage());
+            logger.error("Erro ao deletar filme no banco de dados | {}", e.getMessage());
 
             throw new DatabaseException(e.getMessage());
         }
@@ -265,7 +265,51 @@ public class MovieDao {
 
             return Optional.of(movie);
         } catch (SQLException e) {
-            logger.error("Erro ao inserir filme no banco de dados | {}", e.getMessage());
+            logger.error("Erro ao encontrar filme no banco de dados | {}", e.getMessage());
+
+            throw new DatabaseException(e.getMessage());
+        }
+    }
+
+    public void update(MovieEntity movie) {
+        String sqlMovies =
+                "UPDATE Filmes SET titulo = ?," +
+                " lingua_original = ?," +
+                " titulo_original = ?," +
+                " adulto = ?," +
+                " data_lancamento = ?," +
+                " poster = ?," +
+                " visao_geral = ? WHERE id = ?";
+
+        String sqlGenre1 = "DELETE FROM Filme_Genero WHERE id_filme = ?";
+        String sqlGenre2 = "INSERT INTO Filme_Genero(id_filme, id_genero) VALUES(?,?)";
+
+        try(Connection conn = ConnectionFactory.getConnection();
+            PreparedStatement psMovie = conn.prepareStatement(sqlMovies);
+            PreparedStatement psGenre1 = conn.prepareStatement(sqlGenre1);
+            PreparedStatement psGenre2 = conn.prepareStatement(sqlGenre2)) {
+
+            psMovie.setString(1, movie.getTitle());
+            psMovie.setString(2, movie.getOriginalLanguage());
+            psMovie.setString(3, movie.getOriginalTitle());
+            psMovie.setBoolean(4, movie.isAdult());
+            psMovie.setString(5, movie.getReleaseDate());
+            psMovie.setString(6, movie.getPosterImage());
+            psMovie.setString(7, movie.getOverview());
+            psMovie.setLong(8, movie.getId());
+            psMovie.executeUpdate();
+
+            psGenre1.setLong(1, movie.getId());
+            psGenre1.executeUpdate();
+
+            for(Genre genre : movie.getGenres()) {
+                psGenre2.setLong(1, movie.getId());
+                psGenre2.setLong(2, genre.getId());
+                psGenre2.executeUpdate();
+            }
+
+        } catch (SQLException e) {
+            logger.error("Erro ao atualizar filme no banco de dados | {}", e.getMessage());
 
             throw new DatabaseException(e.getMessage());
         }

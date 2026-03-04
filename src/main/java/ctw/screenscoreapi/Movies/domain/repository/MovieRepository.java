@@ -13,4 +13,5 @@ public interface MovieRepository {
     long delete(long id);
     Optional<MovieEntity> findById(long id);
     List<MovieEntity> getAllMovies();
+    void update(MovieEntity movie);
 }

@@ -52,4 +52,9 @@ public class MovieRepositoryAdapter implements MovieRepository {
 
         return movieDao.findAllMovies();
     }
+
+    @Override
+    public void update(MovieEntity movie) {
+        movieDao.update(movie);
+    }
 }

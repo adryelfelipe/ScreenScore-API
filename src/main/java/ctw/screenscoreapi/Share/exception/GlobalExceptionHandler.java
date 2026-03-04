@@ -7,7 +7,6 @@ import feign.FeignException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
@@ -71,7 +70,7 @@ public class GlobalExceptionHandler {
         logger.warn("400 (BAD_REQUEST) - Erro ao processar requisicao, aplicacao violada | path: {}", request.getRequestURI());
 
         ProblemDetail problemDetail = problemDetailBuilder(
-                URI.create("/business-rule"),
+                URI.create("/movie-application"),
                 URI.create(request.getRequestURI()),
                 "Falha durante execução da aplicação",
                 HttpStatus.BAD_REQUEST,
@@ -80,7 +79,7 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .status(problemDetail.getStatus())
-                .build();
+                .body(problemDetail);
     }
 
     @ExceptionHandler(MovieNotFoundException.class)

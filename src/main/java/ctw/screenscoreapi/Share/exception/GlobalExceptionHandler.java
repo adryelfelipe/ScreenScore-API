@@ -82,6 +82,24 @@ public class GlobalExceptionHandler {
                 .body(problemDetail);
     }
 
+    @ExceptionHandler(NoFieldsToUpdateException.class)
+    public ResponseEntity<ProblemDetail> handleNoFieldsToUpdateException(NoFieldsToUpdateException e, HttpServletRequest request) throws URISyntaxException {
+        logger.warn("422 (Unprocessable Entity) - Erro ao processar requisicao, aplicacao violada | path: {}", request.getRequestURI());
+
+        ProblemDetail problemDetail = problemDetailBuilder(
+                URI.create("/no-content-to-update"),
+                URI.create(request.getRequestURI()),
+                "Falha durante execução da aplicação",
+                HttpStatus.UNPROCESSABLE_ENTITY,
+                e.getMessage()
+        );
+
+        return ResponseEntity
+                .status(problemDetail.getStatus())
+                .body(problemDetail);
+    }
+
+
     @ExceptionHandler(MovieNotFoundException.class)
     public ResponseEntity<ProblemDetail> handleMovieNotFoundException(MovieNotFoundException e, HttpServletRequest request) throws URISyntaxException {
         logger.warn("404 (NOT_FOUND) - Erro ao processar requisicao, recurso nao encontrado | path: {}", request.getRequestURI());

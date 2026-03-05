@@ -37,7 +37,7 @@ public class OpenApiConfig {
                                         
                                         - **Gerenciamento de Filmes e Séries**: Criar, consultar, atualizar e remover filmes e séries
                                         - **Avaliações de Usuários**: Usuários podem enviar, editar e remover avaliações e comentários
-                                        - **Filtragem e Ordenação**: Filtrar por gênero, ano, diretor ou faixa etária; ordenar por avaliação média
+                                        - **Filtragem e Ordenação**: Filtrar por gênero, título ou ano; ordenar por avaliação média
                                         - **Rankings e Estatísticas**: Top 10 filmes, média de avaliações por gênero e outras estatísticas agregadas
                                         """)
                                 .version("v1.0.0")

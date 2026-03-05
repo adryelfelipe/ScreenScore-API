@@ -64,7 +64,7 @@ public class MovieController {
                 .build();
     }
 
-    @GetMapping("/externo")
+    @GetMapping("/externos")
     @Operation(
             summary = "Retorna filmes de uma api externa a partir do título.",
             description = "Retorna uma lista de filmes de uma api externa a partir do título fornecido, caso encontre."
@@ -88,9 +88,9 @@ public class MovieController {
                     ref = "#/components/responses/502"
             )
     })
-    public ResponseEntity<GetListOfExternalMoviesResponse> getExternalMovie(
+    public ResponseEntity<GetListOfExternalMoviesResponse> getExternalMovies(
             @NotBlank
-            @Parameter(description = "Título do filme", example = "Piratas do Caribe")
+            @Parameter(description = "Título do filme", example = "Piratas do Caribe", required = true)
             @RequestParam
             String title
     ) {
@@ -126,7 +126,7 @@ public class MovieController {
     @GetMapping("/{id}")
     public ResponseEntity<GetMovieResponse> getMovieById(
             @Positive(message = "O ID deve ser um número positivo")
-            @Parameter(description = "Número identificador do filme", example = "4")
+            @Parameter(description = "Número identificador do filme", example = "4", required = true)
             @PathVariable
             long id
     ) {
@@ -148,10 +148,6 @@ public class MovieController {
             @ApiResponse(
                     responseCode = "400",
                     ref = "#/components/responses/400"
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    ref = "#/components/responses/404"
             ),
             @ApiResponse(
                     responseCode = "500",
@@ -194,7 +190,7 @@ public class MovieController {
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
-            @Parameter(description = "ID do filme", example = "256")
+            @Parameter(description = "ID do filme", example = "256", required = true)
             @Positive(message = "O id do filme deve ser um número positivo")
             @PathVariable
             long id
@@ -211,6 +207,10 @@ public class MovieController {
             description = "Atualiza filmes cadastrados no sistema a partir do ID enviado como parâmetro na URL."
     )
     @ApiResponses({
+            @ApiResponse(
+              responseCode = "204",
+              description = "Filme atualizado com sucesso"
+            ),
             @ApiResponse(
                     responseCode = "400",
                     ref = "#/components/responses/400"
@@ -233,7 +233,15 @@ public class MovieController {
             )
     })
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable long id, @RequestBody UpdateMovieRequest request) {
+    public ResponseEntity<Void> update(
+            @Parameter(required = true)
+            @PathVariable
+            long id,
+
+            @RequestBody
+            @Valid
+            UpdateMovieRequest request
+    ) {
         movieService.update(id, request);
 
         return ResponseEntity.noContent().build();

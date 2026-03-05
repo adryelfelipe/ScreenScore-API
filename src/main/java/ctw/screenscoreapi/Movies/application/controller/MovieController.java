@@ -6,6 +6,7 @@ import ctw.screenscoreapi.Movies.application.dtos.get.GetListOfExternalMoviesRes
 import ctw.screenscoreapi.Movies.application.dtos.get.GetListOfMoviesResponse;
 import ctw.screenscoreapi.Movies.application.dtos.update.UpdateMovieRequest;
 import ctw.screenscoreapi.Movies.application.service.MovieService;
+import ctw.screenscoreapi.Movies.domain.enums.Genre;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -16,11 +17,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @CrossOrigin
 @RestController
@@ -161,10 +162,14 @@ public class MovieController {
     public ResponseEntity<GetListOfMoviesResponse> getMovies(
             @Parameter(description = "Título do filme", example = "Minions", required = false)
             @RequestParam(required = false)
-            String title
+            String title,
+
+            @Parameter(description = "Gêneros do filme", required = false)
+            @RequestParam(required = false)
+            List<Genre> genre
     ) {
 
-        GetListOfMoviesResponse response = movieService.getMoviesWithFilters(title);
+        GetListOfMoviesResponse response = movieService.getMovies(title, genre);
 
         return ResponseEntity.ok(response);
     }

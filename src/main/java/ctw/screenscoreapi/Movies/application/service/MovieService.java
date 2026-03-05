@@ -7,6 +7,7 @@ import ctw.screenscoreapi.Movies.application.dtos.get.GetListOfMoviesResponse;
 import ctw.screenscoreapi.Movies.application.dtos.update.UpdateMovieRequest;
 import ctw.screenscoreapi.Movies.application.exceptions.MovieNotFoundByIdException;
 import ctw.screenscoreapi.Movies.application.exceptions.MovieTitleAlreadyUsedException;
+import ctw.screenscoreapi.Movies.domain.enums.Genre;
 import ctw.screenscoreapi.Share.exception.categories.NoContentToUpdateException;
 import ctw.screenscoreapi.Movies.application.mapper.MovieMapper;
 import ctw.screenscoreapi.Movies.domain.MovieEntity;
@@ -66,9 +67,9 @@ public class MovieService {
         return movieMapper.toResponse(movie);
     }
 
-    public GetListOfMoviesResponse getMoviesWithFilters(String title) {
-        if(title != null){
-            List<MovieEntity> movieEntities = movieRepository.findByLikeTitle(title);
+    public GetListOfMoviesResponse getMovies(String title, List<Genre> genres) {
+        if(title != null || genres != null){
+            List<MovieEntity> movieEntities = movieRepository.findMovieByFilter(title, genres);
             List<GetMovieResponse> movieResponses = movieEntities.stream().map(movieMapper::toResponse).toList();
 
             return new GetListOfMoviesResponse(movieResponses);

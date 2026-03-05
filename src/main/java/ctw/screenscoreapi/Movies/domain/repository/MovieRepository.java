@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MovieRepository {
-    void create(MovieEntity movie);
+    long create(MovieEntity movie);
     List<MovieEntity> findByLikeTitle(String title);
     Optional<MovieEntity> findByExactTitle(String title);
     long delete(long id);

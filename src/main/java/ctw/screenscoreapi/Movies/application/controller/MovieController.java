@@ -20,6 +20,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+
 @RestController
 @RequestMapping("/filmes")
 @Tag(name = "Filmes", description = "Endpoints para gerenciamento de filmes")
@@ -57,11 +59,11 @@ public class MovieController {
             )
     })
     public ResponseEntity<Void> create(@Valid @RequestBody CreateMovieRequest request) {
-       movieService.create(request);
+       long movieId = movieService.create(request);
 
        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .build();
+               .created(URI.create("/filmes/" + movieId))
+               .build();
     }
 
     @GetMapping("/externos")

@@ -20,8 +20,8 @@ public class MovieRepositoryAdapter implements MovieRepository {
 
     // Metodos
     @Override
-    public void create(MovieEntity movie) {
-        movieDao.create(movie);
+    public long create(MovieEntity movie) {
+        return movieDao.create(movie);
     }
 
     @Override

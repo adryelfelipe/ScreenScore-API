@@ -41,7 +41,7 @@ public class MovieService {
     }
 
     // Metodos
-    public void create(CreateMovieRequest request) {
+    public long create(CreateMovieRequest request) {
         String title = request.title();
         Optional<MovieEntity> optionalMovie = movieRepository.findByExactTitle(title);
 
@@ -50,7 +50,7 @@ public class MovieService {
         }
 
         MovieEntity movie = movieMapper.toEntity(request);
-        movieRepository.create(movie);
+        return movieRepository.create(movie);
     }
 
     public GetListOfExternalMoviesResponse getExternal(String title) {

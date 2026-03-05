@@ -20,7 +20,7 @@ public class MovieDao {
     private Logger logger = LoggerFactory.getLogger(MovieDao.class);
 
     // Metodos
-    public void create(MovieEntity movie) {
+    public long create(MovieEntity movie) {
         String sqlMoviesInsert = "INSERT INTO Filmes (titulo, adulto, data_lancamento, lingua_original, titulo_original, poster, visao_geral) VALUES (?, ?, ?, ?, ?, ?, ?)";
         String sqlGenresInsert = "INSERT INTO Filme_Genero(id_filme, id_genero) VALUES(?, ?)";
 
@@ -47,6 +47,8 @@ public class MovieDao {
                 psGeneres.setLong(2, genre.getId());
                 psGeneres.executeUpdate();
             }
+
+            return movieId;
 
         } catch(SQLException e) {
             logger.error("Erro ao inserir filme no banco de dados | {}", e.getMessage());

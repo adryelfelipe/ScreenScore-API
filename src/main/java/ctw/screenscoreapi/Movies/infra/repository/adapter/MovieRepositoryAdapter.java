@@ -1,6 +1,7 @@
 package ctw.screenscoreapi.Movies.infra.repository.adapter;
 
 import ctw.screenscoreapi.Movies.domain.MovieEntity;
+import ctw.screenscoreapi.Movies.domain.enums.Genre;
 import ctw.screenscoreapi.Movies.domain.repository.MovieRepository;
 import ctw.screenscoreapi.Movies.infra.repository.dao.MovieDao;
 import org.springframework.stereotype.Component;
@@ -25,9 +26,9 @@ public class MovieRepositoryAdapter implements MovieRepository {
     }
 
     @Override
-    public List<MovieEntity> findByLikeTitle(String title) {
+    public List<MovieEntity> findMovieByFilter(String title, List<Genre> genres) {
 
-        return movieDao.findByLikeTitle(title);
+        return movieDao.findMovieByFilter(title, genres);
     }
 
     @Override

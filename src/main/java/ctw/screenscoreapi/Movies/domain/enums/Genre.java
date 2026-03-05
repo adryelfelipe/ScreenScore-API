@@ -47,4 +47,9 @@ public enum Genre {
 
         return genre;
     }
+
+    @Override
+    public String toString() {
+        return this.name();
+    }
 }

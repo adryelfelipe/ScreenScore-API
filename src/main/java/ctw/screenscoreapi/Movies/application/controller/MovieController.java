@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/filmes")
 @Tag(name = "Filmes", description = "Endpoints para gerenciamento de filmes")

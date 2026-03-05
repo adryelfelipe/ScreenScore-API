@@ -141,7 +141,17 @@ public class MovieController {
     }
     @Operation(
             summary = "Retorna filmes cadastrados no sistema",
-            description = "Retorna uma lista de filmes do sistema. Se o parâmetro 'title' for fornecido, retorna apenas os filmes cujo título corresponda; caso contrário, retorna todos os filmes cadastrados."
+            description =
+            """
+            Retorna uma lista de filmes disponíveis no sistema.
+            
+            - Se o parâmetro 'title' for fornecido, retorna apenas os filmes cujo título contenha a string informada (busca case-insensitive).
+            - Se o parâmetro 'genre' for fornecido, retorna apenas os filmes que possuam **pelo menos um** dos gêneros informados.
+            - Se ambos os parâmetros forem fornecidos, aplica ambos os filtros combinados.
+            - Se nenhum parâmetro for informado, retorna todos os filmes cadastrados.
+            
+            Cada filme retornado inclui informações como título, título original, idioma original, data de lançamento, poster, overview e lista de gêneros associados.
+            """
     )
     @ApiResponses({
             @ApiResponse(

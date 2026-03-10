@@ -1,6 +1,7 @@
 package ctw.screenscoreapi.Movies.application.controller;
 
 import ctw.screenscoreapi.Movies.application.dtos.create.CreateMovieRequest;
+import ctw.screenscoreapi.Movies.application.dtos.get.GetExternalMovieResponse;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetMovieResponse;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetListOfExternalMoviesResponse;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetListOfMoviesResponse;
@@ -92,18 +93,32 @@ public class MovieController {
                     ref = "#/components/responses/502"
             )
     })
-    public ResponseEntity<GetListOfExternalMoviesResponse> getExternalMovies(
-            @NotBlank
+    public ResponseEntity<GetListOfExternalMoviesResponse> getExternalMoviesByTitle(
+            @NotBlank()
             @Parameter(description = "Título do filme", example = "Piratas do Caribe", required = true)
             @RequestParam
             String title
     ) {
-        GetListOfExternalMoviesResponse response = movieService.getExternal(title);
+        GetListOfExternalMoviesResponse response = movieService.getExternalByTitle(title);
 
         return ResponseEntity
                 .ok()
                 .body(response);
     }
+
+    public ResponseEntity<GetExternalMovieResponse> getExternalMoviesById(
+            @Positive(message = "O número identificador deve ser maior que zero")
+            @Parameter(description = "Número identificador do filme", example = "25", required = true)
+            @PathVariable
+            long id
+    ) {
+        GetExternalMovieResponse response = movieService.getExternalById(id);
+
+        return ResponseEntity
+                .ok()
+                .body(response);
+    }
+
     @Operation(
             summary = "Retorna um filme cadastrado no sistema a partir do ID.",
             description = "Retorna os detalhes de um filme previamente cadastrado no sistema, com base no ID informado na URL."

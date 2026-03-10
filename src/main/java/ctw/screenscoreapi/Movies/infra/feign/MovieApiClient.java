@@ -1,7 +1,10 @@
 package ctw.screenscoreapi.Movies.infra.feign;
 
+import ctw.screenscoreapi.Movies.infra.feign.models.MovieApiResponse;
+import ctw.screenscoreapi.Movies.infra.feign.models.detailed.DetailedMovieApiEntity;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -10,4 +13,7 @@ public interface MovieApiClient {
 
     @GetMapping("/search/movie")
     MovieApiResponse search(@RequestParam String query, @RequestParam String language, @RequestHeader("Authorization") String api_key);
+
+    @GetMapping("/movie/{id}")
+    DetailedMovieApiEntity search(@PathVariable long id, @RequestParam String language, @RequestHeader("Authorization") String api_key);
 }

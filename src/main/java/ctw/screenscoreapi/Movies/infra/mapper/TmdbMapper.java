@@ -5,7 +5,9 @@ import ctw.screenscoreapi.Movies.application.dtos.get.GetListOfExternalMoviesRes
 import ctw.screenscoreapi.Movies.infra.feign.TmdbUnkwonGenreException;
 import ctw.screenscoreapi.Movies.domain.MovieEntity;
 import ctw.screenscoreapi.Movies.domain.enums.Genre;
-import ctw.screenscoreapi.Movies.infra.feign.MovieApiEntity;
+import ctw.screenscoreapi.Movies.infra.feign.models.MovieApiEntity;
+import ctw.screenscoreapi.Movies.infra.feign.models.detailed.DetailedMovieApiEntity;
+import ctw.screenscoreapi.Movies.infra.feign.models.detailed.DetailedMovieApiGenre;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -14,6 +16,22 @@ import java.util.List;
 public class TmdbMapper {
     public MovieEntity toDomainEntity(MovieApiEntity apiEntity) {
         List<Genre> genres = apiEntity.getGenre_ids().stream().map(this::toDomainGenre).toList();
+
+        return new MovieEntity(
+                apiEntity.getId(),
+                apiEntity.getPoster_path(),
+                apiEntity.getRelease_date(),
+                apiEntity.isAdult(),
+                apiEntity.getOriginal_title(),
+                apiEntity.getOriginal_language(),
+                apiEntity.getTitle(),
+                apiEntity.getOverview(),
+                genres
+        );
+    }
+
+    public MovieEntity toDomainEntity(DetailedMovieApiEntity apiEntity) {
+        List<Genre> genres = apiEntity.getGenres().stream().map(this::toDomainGenre).toList();
 
         return new MovieEntity(
                 apiEntity.getId(),
@@ -75,6 +93,35 @@ public class TmdbMapper {
             case 10770 -> Genre.CINEMA_TV;
             case null -> null;
             default -> throw new TmdbUnkwonGenreException(apiGenreId);
+        };
+    }
+
+    private Genre toDomainGenre (DetailedMovieApiGenre apiGenre) {
+        if(apiGenre == null) {
+            return null;
+        }
+
+        return switch (apiGenre.getId()) {
+            case 12 -> Genre.AVENTURA;
+            case 14 -> Genre.FANTASIA;
+            case 16 -> Genre.ANIMACAO;
+            case 18 -> Genre.DRAMA;
+            case 27 -> Genre.TERROR;
+            case 28 -> Genre.ACAO;
+            case 35 -> Genre.COMEDIA;
+            case 36 -> Genre.HISTORIA;
+            case 37 -> Genre.FAROESTE;
+            case 53 -> Genre.THRILLER;
+            case 80 -> Genre.CRIME;
+            case 99 -> Genre.DOCUMENTARIO;
+            case 878 -> Genre.FICCAO_CIENTIFICA;
+            case 9648 -> Genre.MISTERIO;
+            case 10402 -> Genre.MUSICA;
+            case 10749 -> Genre.ROMANCE;
+            case 10751 -> Genre.FAMILIA;
+            case 10752 -> Genre.GUERRA;
+            case 10770 -> Genre.CINEMA_TV;
+            default -> throw new TmdbUnkwonGenreException(apiGenre.getId());
         };
     }
 }

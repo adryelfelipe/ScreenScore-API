@@ -16,7 +16,7 @@ public class TmdbMapper {
         List<Genre> genres = apiEntity.getGenre_ids().stream().map(this::toDomainGenre).toList();
 
         return new MovieEntity(
-                null,
+                apiEntity.getId(),
                 apiEntity.getPoster_path(),
                 apiEntity.getRelease_date(),
                 apiEntity.isAdult(),
@@ -35,6 +35,7 @@ public class TmdbMapper {
     public GetExternalMovieResponse toResponseEntity(MovieEntity movieEntity) {
         return new GetExternalMovieResponse(
                 movieEntity.getTitle(),
+                movieEntity.getId(),
                 movieEntity.getOriginalLanguage(),
                 movieEntity.getOriginalTitle(),
                 movieEntity.isAdult(),

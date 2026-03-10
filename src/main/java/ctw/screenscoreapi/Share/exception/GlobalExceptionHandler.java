@@ -15,6 +15,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
@@ -196,6 +197,23 @@ public class GlobalExceptionHandler {
                 "O body da requisição está ausente ou mal formatado",
                 HttpStatus.BAD_REQUEST,
                 "Consulte a documentação do endpoint para visualizar o formato esperado"
+        );
+
+        return ResponseEntity
+                .status(problemDetail.getStatus())
+                .body(problemDetail);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ProblemDetail> handleMessageNotReadableException(MissingServletRequestParameterException e, HttpServletRequest httpRequest) throws URISyntaxException {
+        logger.warn("400 (BAD_REQUEST) - Erro ao processar requisião, parametros invalidos | path: {}", httpRequest.getRequestURI());
+
+        ProblemDetail problemDetail = problemDetailBuilder(
+                URI.create("/erros/invalid-params"),
+                URI.create(httpRequest.getRequestURI()),
+                "Os parâmetros da requisição estão ausentes",
+                HttpStatus.BAD_REQUEST,
+                "Consulte a documentação do endpoint para visualizar os parâmetros esperados"
         );
 
         return ResponseEntity

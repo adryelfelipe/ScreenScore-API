@@ -106,6 +106,30 @@ public class MovieController {
                 .body(response);
     }
 
+    @GetMapping("/externos/{id}")
+    @Operation(
+            summary = "Retorna um filme de uma api externa a partir do id.",
+            description = "Retorna um filme de uma api externa a partir do id fornecido, caso encontre."
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Filme retornada com sucesso",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = GetExternalMovieResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    ref = "#/components/responses/400"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    ref = "#/components/responses/500"
+            ),
+            @ApiResponse(
+                    responseCode = "502",
+                    ref = "#/components/responses/502"
+            )
+    })
     public ResponseEntity<GetExternalMovieResponse> getExternalMoviesById(
             @Positive(message = "O número identificador deve ser maior que zero")
             @Parameter(description = "Número identificador do filme", example = "25", required = true)

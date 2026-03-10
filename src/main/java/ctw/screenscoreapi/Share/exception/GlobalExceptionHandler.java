@@ -119,6 +119,23 @@ public class GlobalExceptionHandler {
                 .body(problemDetail);
     }
 
+    @ExceptionHandler(FeignException.NotFound.class)
+    public ResponseEntity<ProblemDetail> handleTmdbResourceNotFoundException(FeignException.NotFound e, HttpServletRequest request) throws URISyntaxException {
+        logger.warn("404 (NOT_FOUND) - Erro ao processar requisicao, recurso nao encontrado | path: {}", request.getRequestURI());
+
+        ProblemDetail problemDetail = problemDetailBuilder(
+                URI.create("/erros/resource-not-found"),
+                URI.create(request.getRequestURI()),
+                "Recurso não encontrado",
+                HttpStatus.NOT_FOUND,
+                "Filme não identificado através do id pela api externa"
+        );
+
+        return ResponseEntity
+                .status(problemDetail.getStatus())
+                .body(problemDetail);
+    }
+
     @ExceptionHandler(DataAlreadyUsedException.class)
     public ResponseEntity<ProblemDetail> handleDataAlreadyUsedException(DataAlreadyUsedException e, HttpServletRequest httpRequest) throws URISyntaxException {
         logger.warn("409 (CONFLICT) (FILME) - Erro ao processar requisicao, dados já registrados no banco | path: {}", httpRequest.getRequestURI());
@@ -186,6 +203,8 @@ public class GlobalExceptionHandler {
                 .status(problemDetail.getStatus())
                 .body(problemDetail);
     }
+
+
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ProblemDetail> handleMessageNotReadableException(HttpMessageNotReadableException e, HttpServletRequest httpRequest) throws URISyntaxException {

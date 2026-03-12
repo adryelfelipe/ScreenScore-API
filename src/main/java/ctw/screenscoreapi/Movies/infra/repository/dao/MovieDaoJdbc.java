@@ -15,9 +15,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
-public class MovieDao {
+public class MovieDaoJdbc {
     // Atributos
-    private Logger logger = LoggerFactory.getLogger(MovieDao.class);
+    private Logger logger = LoggerFactory.getLogger(MovieDaoJdbc.class);
 
     // Metodos
     public long create(MovieEntity movie) {

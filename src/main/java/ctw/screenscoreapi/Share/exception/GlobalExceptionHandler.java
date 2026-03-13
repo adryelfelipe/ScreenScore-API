@@ -15,6 +15,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
@@ -118,6 +119,23 @@ public class GlobalExceptionHandler {
                 .body(problemDetail);
     }
 
+    @ExceptionHandler(FeignException.NotFound.class)
+    public ResponseEntity<ProblemDetail> handleTmdbResourceNotFoundException(FeignException.NotFound e, HttpServletRequest request) throws URISyntaxException {
+        logger.warn("404 (NOT_FOUND) - Erro ao processar requisicao, recurso nao encontrado | path: {}", request.getRequestURI());
+
+        ProblemDetail problemDetail = problemDetailBuilder(
+                URI.create("/erros/resource-not-found"),
+                URI.create(request.getRequestURI()),
+                "Recurso não encontrado",
+                HttpStatus.NOT_FOUND,
+                "Filme não identificado através do id pela api externa"
+        );
+
+        return ResponseEntity
+                .status(problemDetail.getStatus())
+                .body(problemDetail);
+    }
+
     @ExceptionHandler(DataAlreadyUsedException.class)
     public ResponseEntity<ProblemDetail> handleDataAlreadyUsedException(DataAlreadyUsedException e, HttpServletRequest httpRequest) throws URISyntaxException {
         logger.warn("409 (CONFLICT) (FILME) - Erro ao processar requisicao, dados já registrados no banco | path: {}", httpRequest.getRequestURI());
@@ -186,6 +204,8 @@ public class GlobalExceptionHandler {
                 .body(problemDetail);
     }
 
+
+
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ProblemDetail> handleMessageNotReadableException(HttpMessageNotReadableException e, HttpServletRequest httpRequest) throws URISyntaxException {
         logger.warn("400 (BAD_REQUEST) - Erro ao processar requisião, body inválido | path: {}", httpRequest.getRequestURI());
@@ -196,6 +216,23 @@ public class GlobalExceptionHandler {
                 "O body da requisição está ausente ou mal formatado",
                 HttpStatus.BAD_REQUEST,
                 "Consulte a documentação do endpoint para visualizar o formato esperado"
+        );
+
+        return ResponseEntity
+                .status(problemDetail.getStatus())
+                .body(problemDetail);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ProblemDetail> handleMessageNotReadableException(MissingServletRequestParameterException e, HttpServletRequest httpRequest) throws URISyntaxException {
+        logger.warn("400 (BAD_REQUEST) - Erro ao processar requisião, parametros invalidos | path: {}", httpRequest.getRequestURI());
+
+        ProblemDetail problemDetail = problemDetailBuilder(
+                URI.create("/erros/invalid-params"),
+                URI.create(httpRequest.getRequestURI()),
+                "Os parâmetros da requisição estão ausentes",
+                HttpStatus.BAD_REQUEST,
+                "Consulte a documentação do endpoint para visualizar os parâmetros esperados"
         );
 
         return ResponseEntity

@@ -1,6 +1,7 @@
 package ctw.screenscoreapi.Movies.application.service;
 
 import ctw.screenscoreapi.Movies.application.dtos.create.CreateMovieRequest;
+import ctw.screenscoreapi.Movies.application.dtos.get.GetExternalMovieResponse;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetListOfExternalMoviesResponse;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetMovieResponse;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetListOfMoviesResponse;
@@ -8,12 +9,14 @@ import ctw.screenscoreapi.Movies.application.dtos.update.UpdateMovieRequest;
 import ctw.screenscoreapi.Movies.application.exceptions.MovieNotFoundByIdException;
 import ctw.screenscoreapi.Movies.application.exceptions.MovieTitleAlreadyUsedException;
 import ctw.screenscoreapi.Movies.domain.enums.Genre;
+import ctw.screenscoreapi.Movies.infra.feign.models.MovieApiEntity;
+import ctw.screenscoreapi.Movies.infra.feign.models.detailed.DetailedMovieApiEntity;
 import ctw.screenscoreapi.Share.exception.categories.NoContentToUpdateException;
 import ctw.screenscoreapi.Movies.application.mapper.MovieMapper;
 import ctw.screenscoreapi.Movies.domain.MovieEntity;
 import ctw.screenscoreapi.Movies.domain.repository.MovieRepository;
 import ctw.screenscoreapi.Movies.infra.feign.MovieApiClient;
-import ctw.screenscoreapi.Movies.infra.feign.MovieApiResponse;
+import ctw.screenscoreapi.Movies.infra.feign.models.MovieApiResponse;
 import ctw.screenscoreapi.Movies.infra.mapper.TmdbMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -54,11 +57,18 @@ public class MovieService {
         return movieRepository.create(movie);
     }
 
-    public GetListOfExternalMoviesResponse getExternal(String title) {
+    public GetListOfExternalMoviesResponse getExternalByTitle(String title) {
         MovieApiResponse movieApiResponse = movieApiClient.search(title, "pt-BR", themoviedbApiKey);
         List<MovieEntity> movies = tmdbMapper.toDomainEntities(movieApiResponse.getResults());
 
         return tmdbMapper.toResponseEntities(movies);
+    }
+
+    public GetExternalMovieResponse getExternalById(long id) {
+        DetailedMovieApiEntity movieApiEntity = movieApiClient.search(id, "pt-BR", themoviedbApiKey);
+        MovieEntity movieEntity = tmdbMapper.toDomainEntity(movieApiEntity);
+
+        return tmdbMapper.toResponseEntity(movieEntity);
     }
 
     public GetMovieResponse getById(long id) {
@@ -68,7 +78,7 @@ public class MovieService {
     }
 
     public GetListOfMoviesResponse getMovies(String title, List<Genre> genres) {
-        if(title != null || genres == null){
+        if(title != null || genres != null){
             List<MovieEntity> movieEntities = movieRepository.findMovieByFilter(title, genres);
             List<GetMovieResponse> movieResponses = movieEntities.stream().map(movieMapper::toResponse).toList();
 

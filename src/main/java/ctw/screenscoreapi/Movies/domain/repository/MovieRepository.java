@@ -10,7 +10,7 @@ public interface MovieRepository {
     long create(MovieEntity movie);
     List<MovieEntity> findMovieByFilter(String title, List<Genre> genres);
     Optional<MovieEntity> findByExactTitle(String title);
-    long delete(long id);
+    int delete(long id);
     Optional<MovieEntity> findById(long id);
     List<MovieEntity> getAllMovies();
     void update(MovieEntity movie);

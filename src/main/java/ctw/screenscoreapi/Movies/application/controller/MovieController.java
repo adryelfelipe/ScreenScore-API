@@ -1,6 +1,7 @@
 package ctw.screenscoreapi.Movies.application.controller;
 
 import ctw.screenscoreapi.Movies.application.dtos.create.CreateMovieRequest;
+import ctw.screenscoreapi.Movies.application.dtos.get.GetExternalMovieResponse;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetMovieResponse;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetListOfExternalMoviesResponse;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetListOfMoviesResponse;
@@ -92,18 +93,56 @@ public class MovieController {
                     ref = "#/components/responses/502"
             )
     })
-    public ResponseEntity<GetListOfExternalMoviesResponse> getExternalMovies(
-            @NotBlank
+    public ResponseEntity<GetListOfExternalMoviesResponse> getExternalMoviesByTitle(
+            @NotBlank()
             @Parameter(description = "Título do filme", example = "Piratas do Caribe", required = true)
             @RequestParam
             String title
     ) {
-        GetListOfExternalMoviesResponse response = movieService.getExternal(title);
+        GetListOfExternalMoviesResponse response = movieService.getExternalByTitle(title);
 
         return ResponseEntity
                 .ok()
                 .body(response);
     }
+
+    @GetMapping("/externos/{id}")
+    @Operation(
+            summary = "Retorna um filme de uma api externa a partir do id.",
+            description = "Retorna um filme de uma api externa a partir do id fornecido, caso encontre."
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Filme retornada com sucesso",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = GetExternalMovieResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    ref = "#/components/responses/400"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    ref = "#/components/responses/500"
+            ),
+            @ApiResponse(
+                    responseCode = "502",
+                    ref = "#/components/responses/502"
+            )
+    })
+    public ResponseEntity<GetExternalMovieResponse> getExternalMoviesById(
+            @Positive(message = "O número identificador deve ser maior que zero")
+            @Parameter(description = "Número identificador do filme", example = "25", required = true)
+            @PathVariable
+            long id
+    ) {
+        GetExternalMovieResponse response = movieService.getExternalById(id);
+
+        return ResponseEntity
+                .ok()
+                .body(response);
+    }
+
     @Operation(
             summary = "Retorna um filme cadastrado no sistema a partir do ID.",
             description = "Retorna os detalhes de um filme previamente cadastrado no sistema, com base no ID informado na URL."
@@ -141,7 +180,17 @@ public class MovieController {
     }
     @Operation(
             summary = "Retorna filmes cadastrados no sistema",
-            description = "Retorna uma lista de filmes do sistema. Se o parâmetro 'title' for fornecido, retorna apenas os filmes cujo título corresponda; caso contrário, retorna todos os filmes cadastrados."
+            description =
+            """
+            Retorna uma lista de filmes disponíveis no sistema.
+            
+            - Se o parâmetro 'title' for fornecido, retorna apenas os filmes cujo título contenha a string informada (busca case-insensitive).
+            - Se o parâmetro 'genre' for fornecido, retorna apenas os filmes que possuam **pelo menos um** dos gêneros informados.
+            - Se ambos os parâmetros forem fornecidos, aplica ambos os filtros combinados.
+            - Se nenhum parâmetro for informado, retorna todos os filmes cadastrados.
+            
+            Cada filme retornado inclui informações como título, título original, idioma original, data de lançamento, poster, overview e lista de gêneros associados.
+            """
     )
     @ApiResponses({
             @ApiResponse(
@@ -166,10 +215,10 @@ public class MovieController {
 
             @Parameter(description = "Gêneros do filme", required = false)
             @RequestParam(required = false)
-            List<Genre> genres
+            List<Genre> genre
     ) {
 
-        GetListOfMoviesResponse response = movieService.getMovies(title, genres);
+        GetListOfMoviesResponse response = movieService.getMovies(title, genre);
 
         return ResponseEntity.ok(response);
     }

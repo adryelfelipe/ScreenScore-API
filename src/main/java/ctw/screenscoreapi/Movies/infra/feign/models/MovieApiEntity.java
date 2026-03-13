@@ -1,4 +1,4 @@
-package ctw.screenscoreapi.Movies.infra.feign;
+package ctw.screenscoreapi.Movies.infra.feign.models;
 
 import java.util.List;
 

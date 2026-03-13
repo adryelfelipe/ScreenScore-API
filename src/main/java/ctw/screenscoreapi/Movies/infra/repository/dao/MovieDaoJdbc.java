@@ -15,9 +15,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
-public class MovieDao {
+public class MovieDaoJdbc {
     // Atributos
-    private Logger logger = LoggerFactory.getLogger(MovieDao.class);
+    private Logger logger = LoggerFactory.getLogger(MovieDaoJdbc.class);
 
     // Metodos
     public long create(MovieEntity movie) {
@@ -60,7 +60,7 @@ public class MovieDao {
     public List<MovieEntity> findMovieByFilter(String title, List<Genre> genres) {
         if(title != null && genres == null){
             String sqlMovies = "SELECT * FROM Filmes WHERE LOWER(titulo) LIKE ?";
-            String sqlGenres = "SELECT id_genero FROM Filme_Genero WHERE id_filme = ?";
+            String sqlGenres = "SELECT distinct id_genero FROM Filme_Genero WHERE id_filme = ?";
 
             try (Connection connection = ConnectionFactory.getConnection();
                  PreparedStatement psMovies = connection.prepareStatement(sqlMovies);
@@ -71,10 +71,11 @@ public class MovieDao {
                 List<MovieEntity> movies = new ArrayList<>();
 
                 while (rsMovie.next()) {
+                    List<Integer> genreIds = new ArrayList<>();
+
                     long movieId = rsMovie.getLong("id");
                     psGenre.setLong(1, movieId);
                     ResultSet rsGenre = psGenre.executeQuery();
-                    List<Integer> genreIds = new ArrayList<>();
 
                     while (rsGenre.next()) {
                         int genreId = rsGenre.getInt("id_genero");
@@ -124,15 +125,33 @@ public class MovieDao {
                     Join Filme_Genero FG ON F.id = FG.id_filme
                     Where FG.id_genero IN (""" + genresList + ")";
 
+            String sqlGenre = "SELECT distinct id_genero FROM Filme_Genero WHERE id_filme = ?";
+
             try (Connection connection = ConnectionFactory.getConnection();
-                 PreparedStatement psMovies = connection.prepareStatement(sql)) {
+                 PreparedStatement psMovies = connection.prepareStatement(sql);
+                 PreparedStatement psGenre = connection.prepareStatement(sqlGenre)){
                 ResultSet rsMovie = psMovies.executeQuery();
 
                 List<MovieEntity> movies = new ArrayList<>();
 
                 while (rsMovie.next()) {
+                    List<Integer> genreIds = new ArrayList<>();
+
+                    long movieId = rsMovie.getLong("id");
+                    psGenre.setLong(1, movieId);
+                    ResultSet rsGenre = psGenre.executeQuery();
+
+                    while(rsGenre.next()) {
+                        genreIds.add(rsGenre.getInt("id_genero"));
+                    }
+
+                    List<Genre> genresl = genreIds
+                            .stream()
+                            .map(Genre::getGenreById)
+                            .toList();
+
                     MovieEntity movie = new MovieEntity(
-                            rsMovie.getLong("id"),
+                            movieId,
                             rsMovie.getString("poster"),
                             rsMovie.getDate("data_lancamento").toString(),
                             rsMovie.getBoolean("adulto"),
@@ -140,7 +159,7 @@ public class MovieDao {
                             rsMovie.getString("lingua_original"),
                             rsMovie.getString("titulo"),
                             rsMovie.getString("visao_geral"),
-                            genres
+                            genresl
                     );
 
                     movies.add(movie);
@@ -154,50 +173,72 @@ public class MovieDao {
                 }
             }
 
-        String genresList = genres
-                .stream()
-                .map(id -> id.toString())
-                .collect(Collectors.joining(","));
+        if(title != null && genres != null) {
+            String genresList = genres
+                    .stream()
+                    .map(genre -> String.valueOf(genre.getId()))
+                    .collect(Collectors.joining(","));
 
-        String sql =
-                """
-                Select distinct
-                    F.* 
-                From 
-                    Filmes F 
-                Join Filme_Genero FG ON F.id = FG.id_filme
-                Where Lower(F.titulo) LIKE ? and FG.id_genero IN (""" + genresList + ")";
+            String sql =
+                    """
+                    Select distinct
+                        F.* 
+                    From 
+                        Filmes F 
+                    Join Filme_Genero FG ON F.id = FG.id_filme
+                    Where Lower(F.titulo) LIKE ? and FG.id_genero IN (""" + genresList + ")";
 
-        try (Connection connection = ConnectionFactory.getConnection();
-             PreparedStatement psMovies = connection.prepareStatement(sql)) {
 
-            psMovies.setString(1, "%" + title.toLowerCase() + "%");
-            ResultSet rsMovie = psMovies.executeQuery();
+            String sqlGenre = "SELECT id_genero FROM Filme_Genero WHERE id_filme = ?";
+            try (Connection connection = ConnectionFactory.getConnection();
+                 PreparedStatement psMovies = connection.prepareStatement(sql);
+                 PreparedStatement psGenre = connection.prepareStatement(sqlGenre)) {
 
-            List<MovieEntity> movies = new ArrayList<>();
+                psMovies.setString(1, "%" + title.toLowerCase() + "%");
+                ResultSet rsMovie = psMovies.executeQuery();
 
-            while (rsMovie.next()) {
-                MovieEntity movie = new MovieEntity(
-                        rsMovie.getLong("id"),
-                        rsMovie.getString("poster"),
-                        rsMovie.getDate("data_lancamento").toString(),
-                        rsMovie.getBoolean("adulto"),
-                        rsMovie.getString("titulo_original"),
-                        rsMovie.getString("lingua_original"),
-                        rsMovie.getString("titulo"),
-                        rsMovie.getString("visao_geral"),
-                        genres
-                );
+                List<MovieEntity> movies = new ArrayList<>();
 
-                movies.add(movie);
+                while (rsMovie.next()) {
+                    List<Integer> genreIds = new ArrayList<>();
+
+                    long movieId = rsMovie.getLong("id");
+                    psGenre.setLong(1, movieId);
+                    ResultSet rsGenre = psGenre.executeQuery();
+
+                    while(rsGenre.next()) {
+                        genreIds.add(rsGenre.getInt("id_genero"));
+                    }
+
+                    List<Genre> genresl = genreIds
+                            .stream()
+                            .map(Genre::getGenreById)
+                            .toList();
+
+                    MovieEntity movie = new MovieEntity(
+                            movieId,
+                            rsMovie.getString("poster"),
+                            rsMovie.getDate("data_lancamento").toString(),
+                            rsMovie.getBoolean("adulto"),
+                            rsMovie.getString("titulo_original"),
+                            rsMovie.getString("lingua_original"),
+                            rsMovie.getString("titulo"),
+                            rsMovie.getString("visao_geral"),
+                            genresl
+                    );
+
+                    movies.add(movie);
+                }
+
+                return movies;
+            } catch (SQLException e) {
+                logger.error("Erro ao buscar filme com título e gênero | {}", e.getMessage());
+
+                throw new DatabaseException(e.getMessage());
             }
-
-            return movies;
-        } catch (SQLException e) {
-            logger.error("Erro ao buscar filme com título e gênero | {}", e.getMessage());
-
-            throw new DatabaseException(e.getMessage());
         }
+
+        return null;
     }
 
     public List<MovieEntity> findAllMovies() {
@@ -213,11 +254,12 @@ public class MovieDao {
             List<MovieEntity> movies = new ArrayList<>();
 
             while(rsMovies.next()) {
+                List<Integer> genreIds = new ArrayList<>();
+
                 long movieId = rsMovies.getLong("id");
 
                 psGenre.setLong(1, movieId);
                 ResultSet rsGenres = psGenre.executeQuery();
-                List<Integer> genreIds = new ArrayList<>();
 
                 while(rsGenres.next()) {
                     int genreId = rsGenres.getInt("id_genero");
@@ -302,7 +344,7 @@ public class MovieDao {
         }
     }
 
-    public long delete(long id) {
+    public int delete(long id) {
         String sql = "DELETE FROM Filmes WHERE ID = ?";
 
         try(Connection conn = ConnectionFactory.getConnection();

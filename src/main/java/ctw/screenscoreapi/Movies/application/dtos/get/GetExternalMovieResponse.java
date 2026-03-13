@@ -9,6 +9,8 @@ public record GetExternalMovieResponse(
     @Schema(example = "ScreenScore, batalha nas estrelas")
     String title,
 
+    Long id,
+
     @Schema(example = "eu")
     String originalLanguage,
 

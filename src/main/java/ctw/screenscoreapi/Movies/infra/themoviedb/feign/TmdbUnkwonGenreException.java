@@ -1,4 +1,4 @@
-package ctw.screenscoreapi.Movies.infra.feign;
+package ctw.screenscoreapi.Movies.infra.themoviedb.feign;
 
 public class TmdbUnkwonGenreException extends RuntimeException {
     public TmdbUnkwonGenreException(int id) {

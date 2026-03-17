@@ -1,4 +1,4 @@
-package ctw.screenscoreapi.Movies.infra.feign.models.detailed;
+package ctw.screenscoreapi.Movies.infra.themoviedb.feign.models.detailed;
 
 public class ProductionCountry {
     private String iso_3166_1;

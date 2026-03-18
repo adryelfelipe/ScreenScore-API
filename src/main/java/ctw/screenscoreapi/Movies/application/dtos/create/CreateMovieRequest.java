@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -32,8 +33,8 @@ public record CreateMovieRequest(@NotBlank(message = "O título do filme é obri
                                  @Schema(example = "2025-02-24")
                                  String releaseDate,
 
-                                 @Schema(description = "Referência da imagem obtida ao se comunicar com ThemovieDB", example = "/referencia-da-imagem-do-themoviedb.jpg")
-                                 String posterImage,
+                                 @Schema(description = "Imagem que represente o poster do filme")
+                                 MultipartFile file,
 
                                  @Size(min = 5, message = "A visão geral do filme deve possuir no mínimo 5 caracteres")
                                  @NotBlank(message = "A visão geral do filme é obrigatória")

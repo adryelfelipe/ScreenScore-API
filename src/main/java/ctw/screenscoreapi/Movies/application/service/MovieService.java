@@ -9,6 +9,7 @@ import ctw.screenscoreapi.Movies.application.dtos.update.UpdateMovieRequest;
 import ctw.screenscoreapi.Movies.application.exceptions.MovieNotFoundByIdException;
 import ctw.screenscoreapi.Movies.application.exceptions.MovieTitleAlreadyUsedException;
 import ctw.screenscoreapi.Movies.domain.enums.Genre;
+import ctw.screenscoreapi.Movies.infra.aws.service.S3Service;
 import ctw.screenscoreapi.Movies.infra.themoviedb.feign.models.detailed.DetailedMovieApiEntity;
 import ctw.screenscoreapi.Share.exception.categories.NoContentToUpdateException;
 import ctw.screenscoreapi.Movies.application.mapper.MovieMapper;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import tools.jackson.databind.cfg.MapperBuilder;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,20 +33,22 @@ public class MovieService {
     private MovieMapper movieMapper;
     private TmdbMapper tmdbMapper;
     private MovieRepository movieRepository;
+    private S3Service s3Service;
 
     @Value("${themoviedb.apikey}")
     private String themoviedbApiKey;
 
     // Construtor
-    public MovieService(MovieApiClient movieApiClient, MovieMapper movieMapper, MovieRepository movieRepository, TmdbMapper tmdbMapper, MovieRepository movieDao, MapperBuilder mapperBuilder) {
+    public MovieService(MovieApiClient movieApiClient, MovieMapper movieMapper, MovieRepository movieRepository, TmdbMapper tmdbMapper, S3Service s3Service) {
         this.movieApiClient = movieApiClient;
         this.movieMapper = movieMapper;
         this.movieRepository = movieRepository;
         this.tmdbMapper = tmdbMapper;
+        this.s3Service = s3Service;
     }
 
     // Metodos
-    public long create(CreateMovieRequest request) {
+    public long create(CreateMovieRequest request) throws IOException {
         String title = request.title();
         Optional<MovieEntity> optionalMovie = movieRepository.findByExactTitle(title);
 
@@ -52,7 +56,9 @@ public class MovieService {
             throw new MovieTitleAlreadyUsedException(title);
         }
 
-        MovieEntity movie = movieMapper.toEntity(request);
+        String posterKey = s3Service.putObject(request.file());
+
+        MovieEntity movie = movieMapper.toEntity(request, posterKey);
         return movieRepository.create(movie);
     }
 

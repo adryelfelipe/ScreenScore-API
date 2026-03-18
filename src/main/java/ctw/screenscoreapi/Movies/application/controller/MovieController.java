@@ -21,6 +21,7 @@ import jakarta.validation.constraints.Positive;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
@@ -61,7 +62,7 @@ public class MovieController {
                     ref = "#/components/responses/500"
             )
     })
-    public ResponseEntity<Void> create(@Valid @RequestBody CreateMovieRequest request) {
+    public ResponseEntity<Void> create(@Valid @RequestBody CreateMovieRequest request) throws IOException {
        long movieId = movieService.create(request);
 
        return ResponseEntity

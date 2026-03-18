@@ -1,4 +1,4 @@
-package ctw.screenscoreapi.Movies.infra.aws;
+package ctw.screenscoreapi.Movies.infra.aws.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -18,7 +18,6 @@ public class AwsConfig {
 
     @Value("${aws.s3.keyacess}")
     private String region;
-
 
     @Bean
     public S3Client s3Client() {

@@ -97,11 +97,10 @@ public class MovieService {
     }
 
     public void delete(long id) {
-        long deletedMovies = movieRepository.delete(id);
-
-        if(deletedMovies == 0) {
-            throw new MovieNotFoundByIdException(id);
-        }
+        MovieEntity movie = movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundByIdException(id));
+        movieRepository.delete(id);
+        String posterKey = movie.getPosterImage();
+        s3Service.deleteObject(posterKey);
     }
 
     public void update(long id, UpdateMovieRequest request) {

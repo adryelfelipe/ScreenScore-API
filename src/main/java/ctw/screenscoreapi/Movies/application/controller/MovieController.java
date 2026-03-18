@@ -306,4 +306,11 @@ public class MovieController {
 
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/top10")
+    public ResponseEntity<GetListOfMoviesResponse> getTop10Movies() {
+        GetListOfMoviesResponse movies = movieService.getTop10Movies();
+
+        return ResponseEntity.ok(movies);
+    }
 }

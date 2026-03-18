@@ -163,4 +163,9 @@ public class MovieService {
 
         movieRepository.update(movie);
     }
+
+    public GetListOfMoviesResponse getTop10Movies() {
+        // Implement after create the avaliations module
+        return getMovies(null ,null);
+    }
 }

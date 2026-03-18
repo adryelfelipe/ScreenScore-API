@@ -20,7 +20,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
@@ -61,8 +63,8 @@ public class MovieController {
                     ref = "#/components/responses/500"
             )
     })
-    public ResponseEntity<Void> create(@Valid @RequestBody CreateMovieRequest request) {
-       long movieId = movieService.create(request);
+    public ResponseEntity<Void> create(@Valid @RequestPart("data") CreateMovieRequest request, @RequestPart MultipartFile file) throws IOException {
+       long movieId = movieService.create(request, file);
 
        return ResponseEntity
                .created(URI.create("/filmes/" + movieId))

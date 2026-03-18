@@ -10,11 +10,11 @@ import java.util.List;
 
 @Component
 public class MovieMapper {
-    public MovieEntity toEntity(CreateMovieRequest request) {
+    public MovieEntity toEntity(CreateMovieRequest request, String fileKey) {
 
         return new MovieEntity(
                 null,
-                request.posterImage(),
+                fileKey,
                 request.releaseDate(),
                 request.adult(),
                 request.originalTitle(),

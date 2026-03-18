@@ -79,6 +79,8 @@ public class MovieService {
 
     public GetMovieResponse getById(long id) {
         MovieEntity movie = movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundByIdException(id));                                             ;
+        String posterUrl = s3Service.getObject(movie.getPosterImage());
+        movie.setPosterImage(posterUrl);
 
         return movieMapper.toResponse(movie);
     }
@@ -86,12 +88,15 @@ public class MovieService {
     public GetListOfMoviesResponse getMovies(String title, List<Genre> genres) {
         if(title != null || genres != null){
             List<MovieEntity> movieEntities = movieRepository.findMovieByFilter(title, genres);
+            movieEntities.stream().forEach(m -> m.setPosterImage(s3Service.getObject(m.getPosterImage())));
             List<GetMovieResponse> movieResponses = movieEntities.stream().map(movieMapper::toResponse).toList();
 
             return new GetListOfMoviesResponse(movieResponses);
         }
 
         List<MovieEntity> movies = movieRepository.getAllMovies();
+        movies.stream().forEach(m -> m.setPosterImage(s3Service.getObject(m.getPosterImage())));
+        List<GetMovieResponse> movieResponses = movies.stream().map(movieMapper::toResponse).toList();
 
         return movieMapper.toResponse(movies);
     }

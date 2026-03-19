@@ -11,5 +11,5 @@ public record CreateMovieMultipartRequest(
 
         @NotNull(message = "O poster do filme é obrigatório")
         @Schema(description = "Poster do filme")
-        MultipartFile multipartFile
+        MultipartFile file
 ) {}

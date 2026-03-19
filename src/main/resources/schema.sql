@@ -9,7 +9,7 @@ CREATE TABLE Usuarios (
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(254) NOT NULL,
     senha VARCHAR(255) NOT NULL,
-    tipo_usuario VARCHAR(20) NOT NULL CHECK (tipo_usuario IN ('admin','cliente')),
+    tipo_usuario VARCHAR(20) NOT NULL CHECK (tipo_usuario IN ('ADMIN','CLIENTE')),
     PRIMARY KEY (id)
 );
 

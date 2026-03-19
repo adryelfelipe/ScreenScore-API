@@ -1,5 +1,6 @@
 package ctw.screenscoreapi.Movies.application.controller;
 
+import ctw.screenscoreapi.Movies.application.dtos.create.CreateMovieMultipartRequest;
 import ctw.screenscoreapi.Movies.application.dtos.create.CreateMovieRequest;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetExternalMovieResponse;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetMovieResponse;
@@ -18,6 +19,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -62,9 +64,9 @@ public class MovieController {
                     ref = "#/components/responses/500"
             )
     })
-    @PostMapping
-    public ResponseEntity<Void> create(@Valid @RequestPart("data") CreateMovieRequest request, @RequestPart MultipartFile file) throws IOException {
-       long movieId = movieService.create(request, file);
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> create(CreateMovieMultipartRequest request) throws IOException {
+       long movieId = movieService.create(request.data(), request.multipartFile());
 
        return ResponseEntity
                .created(URI.create("/filmes/" + movieId))

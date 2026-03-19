@@ -1,6 +1,7 @@
 package ctw.screenscoreapi.Users.application.mapper;
 
-import ctw.screenscoreapi.Users.application.dtos.CreateUserRequest;
+import ctw.screenscoreapi.Users.application.dtos.create.CreateUserRequest;
+import ctw.screenscoreapi.Users.application.dtos.get.GetUserResponse;
 import ctw.screenscoreapi.Users.domain.entity.UserEntity;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +15,15 @@ public class UserMapper {
                 request.name(),
                 request.email(),
                 request.role()
+        );
+    }
+
+    public GetUserResponse toResponse(UserEntity entity) {
+
+        return new GetUserResponse(
+                entity.getId(),
+                entity.getName(),
+                entity.getEmail()
         );
     }
 }

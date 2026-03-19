@@ -1,13 +1,12 @@
 package ctw.screenscoreapi.Users.application.controller;
 
-import ctw.screenscoreapi.Users.application.dtos.CreateUserRequest;
+import ctw.screenscoreapi.Users.application.dtos.create.CreateUserRequest;
+import ctw.screenscoreapi.Users.application.dtos.get.GetUserResponse;
 import ctw.screenscoreapi.Users.application.service.UserService;
+import ctw.screenscoreapi.Users.domain.entity.UserEntity;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
@@ -27,5 +26,12 @@ public class UserController {
         return ResponseEntity
                 .created(URI.create("/usuarios/" + id))
                 .build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<GetUserResponse> getById(@PathVariable long id) {
+        GetUserResponse response = userService.get(id);
+
+        return ResponseEntity.ok(response);
     }
 }

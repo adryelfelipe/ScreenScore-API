@@ -1,13 +1,16 @@
 package ctw.screenscoreapi.Users.infra.repository.dao;
 
 import ctw.screenscoreapi.Users.domain.entity.UserEntity;
+import ctw.screenscoreapi.Users.domain.enums.Role;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class UserDaoSpringJdbc {
@@ -29,5 +32,21 @@ public class UserDaoSpringJdbc {
         params.put("tipo_usuario", user.getRole());
 
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
+    }
+
+    public Optional<UserEntity> findById(long id) {
+        String sql = "SELECT * FROM Usuarios WHERE id = ?";
+        List<UserEntity> users = jdbcTemplate.query(sql, (rs, rowNumber) -> {
+
+            return new UserEntity(
+                    rs.getLong("id"),
+                    rs.getString("senha"),
+                    rs.getString("nome"),
+                    rs.getString("email"),
+                    Role.valueOf(rs.getString("tipo_usuario"))
+            );
+        }, id);
+
+        return users.stream().findFirst();
     }
 }

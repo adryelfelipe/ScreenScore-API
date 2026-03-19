@@ -1,10 +1,14 @@
 package ctw.screenscoreapi.Users.application.service;
 
-import ctw.screenscoreapi.Users.application.dtos.CreateUserRequest;
+import ctw.screenscoreapi.Users.application.dtos.create.CreateUserRequest;
+import ctw.screenscoreapi.Users.application.dtos.get.GetUserResponse;
+import ctw.screenscoreapi.Users.application.exception.UserNotFoundById;
 import ctw.screenscoreapi.Users.application.mapper.UserMapper;
 import ctw.screenscoreapi.Users.domain.entity.UserEntity;
 import ctw.screenscoreapi.Users.domain.repository.UserRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -20,5 +24,12 @@ public class UserService {
         UserEntity user = userMapper.toEntity(request);
 
         return userRepository.create(user);
+    }
+
+    public GetUserResponse get(long id) {
+        Optional<UserEntity> optionalUser = userRepository.getById(id);
+        UserEntity user = optionalUser.orElseThrow(() -> new UserNotFoundById(id));
+
+        return userMapper.toResponse(user);
     }
 }

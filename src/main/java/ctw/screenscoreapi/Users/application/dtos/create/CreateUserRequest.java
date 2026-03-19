@@ -1,4 +1,4 @@
-package ctw.screenscoreapi.Users.application.dtos;
+package ctw.screenscoreapi.Users.application.dtos.create;
 
 import ctw.screenscoreapi.Users.domain.enums.Role;
 import jakarta.validation.constraints.*;

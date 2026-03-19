@@ -5,6 +5,8 @@ import ctw.screenscoreapi.Users.domain.repository.UserRepository;
 import ctw.screenscoreapi.Users.infra.repository.dao.UserDaoSpringJdbc;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public class UserRepositoryAdapter implements UserRepository {
     private UserDaoSpringJdbc userDaoSpringJdbc;
@@ -16,5 +18,10 @@ public class UserRepositoryAdapter implements UserRepository {
     @Override
     public long create(UserEntity user) {
         return userDaoSpringJdbc.create(user);
+    }
+
+    @Override
+    public Optional<UserEntity> getById(long id) {
+        return userDaoSpringJdbc.findById(id);
     }
 }

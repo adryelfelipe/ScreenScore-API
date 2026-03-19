@@ -20,6 +20,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.URI;
@@ -39,7 +40,6 @@ public class MovieController {
     }
 
     // Endpoints
-    @PostMapping
     @Operation(
             summary = "Cadastra um novo filme.",
             description = "Cadastra um novo filme no sistema caso não exista nenhum outro registrado com o mesmo título."
@@ -62,15 +62,15 @@ public class MovieController {
                     ref = "#/components/responses/500"
             )
     })
-    public ResponseEntity<Void> create(@Valid @RequestBody CreateMovieRequest request) throws IOException {
-       long movieId = movieService.create(request);
+    @PostMapping
+    public ResponseEntity<Void> create(@Valid @RequestPart("data") CreateMovieRequest request, @RequestPart MultipartFile file) throws IOException {
+       long movieId = movieService.create(request, file);
 
        return ResponseEntity
                .created(URI.create("/filmes/" + movieId))
                .build();
     }
 
-    @GetMapping("/externos")
     @Operation(
             summary = "Retorna filmes de uma api externa a partir do título.",
             description = "Retorna uma lista de filmes de uma api externa a partir do título fornecido, caso encontre."
@@ -94,6 +94,7 @@ public class MovieController {
                     ref = "#/components/responses/502"
             )
     })
+    @GetMapping("/externos")
     public ResponseEntity<GetListOfExternalMoviesResponse> getExternalMoviesByTitle(
             @NotBlank()
             @Parameter(description = "Título do filme", example = "Piratas do Caribe", required = true)
@@ -107,7 +108,6 @@ public class MovieController {
                 .body(response);
     }
 
-    @GetMapping("/externos/{id}")
     @Operation(
             summary = "Retorna um filme de uma api externa a partir do id.",
             description = "Retorna um filme de uma api externa a partir do id fornecido, caso encontre."
@@ -131,6 +131,7 @@ public class MovieController {
                     ref = "#/components/responses/502"
             )
     })
+    @GetMapping("/externos/{id}")
     public ResponseEntity<GetExternalMovieResponse> getExternalMoviesById(
             @Positive(message = "O número identificador deve ser maior que zero")
             @Parameter(description = "Número identificador do filme", example = "25", required = true)
@@ -179,6 +180,7 @@ public class MovieController {
 
         return ResponseEntity.ok(response);
     }
+
     @Operation(
             summary = "Retorna filmes cadastrados no sistema",
             description =
@@ -303,5 +305,12 @@ public class MovieController {
         movieService.update(id, request);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/top10")
+    public ResponseEntity<GetListOfMoviesResponse> getTop10Movies() {
+        GetListOfMoviesResponse movies = movieService.getTop10Movies();
+
+        return ResponseEntity.ok(movies);
     }
 }

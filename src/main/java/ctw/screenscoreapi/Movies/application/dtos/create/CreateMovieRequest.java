@@ -33,9 +33,6 @@ public record CreateMovieRequest(@NotBlank(message = "O título do filme é obri
                                  @Schema(example = "2025-02-24")
                                  String releaseDate,
 
-                                 @Schema(description = "Imagem que represente o poster do filme")
-                                 MultipartFile file,
-
                                  @Size(min = 5, message = "A visão geral do filme deve possuir no mínimo 5 caracteres")
                                  @NotBlank(message = "A visão geral do filme é obrigatória")
                                  @Schema(example = "ScreenScore é um filme de ficação científica")

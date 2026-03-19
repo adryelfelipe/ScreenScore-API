@@ -20,6 +20,7 @@ import ctw.screenscoreapi.Movies.infra.themoviedb.feign.models.MovieApiResponse;
 import ctw.screenscoreapi.Movies.infra.themoviedb.mapper.TmdbMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import tools.jackson.databind.cfg.MapperBuilder;
 
 import java.io.IOException;
@@ -48,7 +49,7 @@ public class MovieService {
     }
 
     // Metodos
-    public long create(CreateMovieRequest request) throws IOException {
+    public long create(CreateMovieRequest request, MultipartFile file) throws IOException {
         String title = request.title();
         Optional<MovieEntity> optionalMovie = movieRepository.findByExactTitle(title);
 
@@ -56,7 +57,7 @@ public class MovieService {
             throw new MovieTitleAlreadyUsedException(title);
         }
 
-        String posterKey = s3Service.putObject(request.file());
+        String posterKey = s3Service.putObject(file);
 
         MovieEntity movie = movieMapper.toEntity(request, posterKey);
         return movieRepository.create(movie);
@@ -78,6 +79,8 @@ public class MovieService {
 
     public GetMovieResponse getById(long id) {
         MovieEntity movie = movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundByIdException(id));                                             ;
+        String posterUrl = s3Service.getObject(movie.getPosterImage());
+        movie.setPosterImage(posterUrl);
 
         return movieMapper.toResponse(movie);
     }
@@ -85,22 +88,24 @@ public class MovieService {
     public GetListOfMoviesResponse getMovies(String title, List<Genre> genres) {
         if(title != null || genres != null){
             List<MovieEntity> movieEntities = movieRepository.findMovieByFilter(title, genres);
+            movieEntities.stream().forEach(m -> m.setPosterImage(s3Service.getObject(m.getPosterImage())));
             List<GetMovieResponse> movieResponses = movieEntities.stream().map(movieMapper::toResponse).toList();
 
             return new GetListOfMoviesResponse(movieResponses);
         }
 
         List<MovieEntity> movies = movieRepository.getAllMovies();
+        movies.stream().forEach(m -> m.setPosterImage(s3Service.getObject(m.getPosterImage())));
+        List<GetMovieResponse> movieResponses = movies.stream().map(movieMapper::toResponse).toList();
 
         return movieMapper.toResponse(movies);
     }
 
     public void delete(long id) {
-        long deletedMovies = movieRepository.delete(id);
-
-        if(deletedMovies == 0) {
-            throw new MovieNotFoundByIdException(id);
-        }
+        MovieEntity movie = movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundByIdException(id));
+        movieRepository.delete(id);
+        String posterKey = movie.getPosterImage();
+        s3Service.deleteObject(posterKey);
     }
 
     public void update(long id, UpdateMovieRequest request) {
@@ -157,5 +162,10 @@ public class MovieService {
         }
 
         movieRepository.update(movie);
+    }
+
+    public GetListOfMoviesResponse getTop10Movies() {
+        // Implement after create the avaliations module
+        return getMovies(null ,null);
     }
 }

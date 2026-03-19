@@ -1,13 +1,13 @@
-package ctw.screenscoreapi.Movies.infra.mapper;
+package ctw.screenscoreapi.Movies.infra.themoviedb.mapper;
 
 import ctw.screenscoreapi.Movies.application.dtos.get.GetExternalMovieResponse;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetListOfExternalMoviesResponse;
-import ctw.screenscoreapi.Movies.infra.feign.TmdbUnkwonGenreException;
+import ctw.screenscoreapi.Movies.infra.themoviedb.feign.TmdbUnkwonGenreException;
 import ctw.screenscoreapi.Movies.domain.MovieEntity;
 import ctw.screenscoreapi.Movies.domain.enums.Genre;
-import ctw.screenscoreapi.Movies.infra.feign.models.MovieApiEntity;
-import ctw.screenscoreapi.Movies.infra.feign.models.detailed.DetailedMovieApiEntity;
-import ctw.screenscoreapi.Movies.infra.feign.models.detailed.DetailedMovieApiGenre;
+import ctw.screenscoreapi.Movies.infra.themoviedb.feign.models.MovieApiEntity;
+import ctw.screenscoreapi.Movies.infra.themoviedb.feign.models.detailed.DetailedMovieApiEntity;
+import ctw.screenscoreapi.Movies.infra.themoviedb.feign.models.detailed.DetailedMovieApiGenre;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

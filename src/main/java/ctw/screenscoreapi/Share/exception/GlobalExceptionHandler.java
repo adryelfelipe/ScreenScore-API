@@ -6,6 +6,8 @@ import ctw.screenscoreapi.Share.exception.categories.DomainResourceNotFoundExcep
 import ctw.screenscoreapi.Share.exception.categories.NoContentToUpdateException;
 import feign.FeignException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.net.URI;
@@ -61,6 +64,28 @@ public class GlobalExceptionHandler {
         }
 
         problemDetail.setProperty("erros", errors);
+
+        return ResponseEntity
+                .status(problemDetail.getStatus())
+                .body(problemDetail);
+    }
+
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    public ResponseEntity<ProblemDetail> handleHandlerMethodValidation(
+            HandlerMethodValidationException e,
+            HttpServletRequest httpRequest) throws URISyntaxException {
+
+        logger.warn("400 (BAD_REQUEST) - Erro ao processar requisicao, parametros violados | path: {}", httpRequest.getRequestURI());
+
+        ProblemDetail problemDetail = problemDetailBuilder(
+                URI.create("/erros/invalid-argument"),
+                URI.create(httpRequest.getRequestURI()),
+                "A requisição contém campos inválidos",
+                HttpStatus.BAD_REQUEST,
+                "Consulte a documentação do endpoint para visualizar os formatos esperados"
+        );
+
+        problemDetail.setProperty("erros", e.getMessage());
 
         return ResponseEntity
                 .status(problemDetail.getStatus())

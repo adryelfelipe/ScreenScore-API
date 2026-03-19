@@ -1,7 +1,7 @@
-package ctw.screenscoreapi.Movies.infra.feign;
+package ctw.screenscoreapi.Movies.infra.themoviedb.feign;
 
-import ctw.screenscoreapi.Movies.infra.feign.models.MovieApiResponse;
-import ctw.screenscoreapi.Movies.infra.feign.models.detailed.DetailedMovieApiEntity;
+import ctw.screenscoreapi.Movies.infra.themoviedb.feign.models.MovieApiResponse;
+import ctw.screenscoreapi.Movies.infra.themoviedb.feign.models.detailed.DetailedMovieApiEntity;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

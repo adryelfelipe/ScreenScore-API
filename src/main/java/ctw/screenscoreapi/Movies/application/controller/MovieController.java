@@ -309,6 +309,20 @@ public class MovieController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(
+            summary = "Retorna os 10 filmes mais bem avaliados",
+            description = "Retorna os 10 filmes mais bem avaliados pelos usuários da plataforma"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = GetListOfMoviesResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    ref = "#/components/responses/500"
+            )
+    })
     @GetMapping("/top10")
     public ResponseEntity<GetListOfMoviesResponse> getTop10Movies() {
         GetListOfMoviesResponse movies = movieService.getTop10Movies();

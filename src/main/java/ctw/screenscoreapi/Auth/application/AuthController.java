@@ -1,5 +1,6 @@
-package ctw.screenscoreapi.Auth;
+package ctw.screenscoreapi.Auth.application;
 
+import ctw.screenscoreapi.Auth.dtos.LoginRequest;
 import ctw.screenscoreapi.Auth.dtos.RegisterRequest;
 import ctw.screenscoreapi.Auth.service.AuthService;
 import jakarta.validation.Valid;
@@ -27,5 +28,12 @@ public class AuthController {
         return ResponseEntity
                 .created(URI.create("/users/" + id))
                 .build();
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Void> login(@Valid @RequestBody LoginRequest request) {
+        authService.login(request);
+
+        return ResponseEntity.ok().build();
     }
 }

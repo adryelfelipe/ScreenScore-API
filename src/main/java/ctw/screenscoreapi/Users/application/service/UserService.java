@@ -3,6 +3,7 @@ package ctw.screenscoreapi.Users.application.service;
 import ctw.screenscoreapi.Users.application.dtos.create.CreateUserRequest;
 import ctw.screenscoreapi.Users.application.dtos.get.GetUserResponse;
 import ctw.screenscoreapi.Users.application.exception.UserEmailAlreadyUsed;
+import ctw.screenscoreapi.Users.application.exception.UserNotFoundByEmail;
 import ctw.screenscoreapi.Users.application.exception.UserNotFoundById;
 import ctw.screenscoreapi.Users.application.mapper.UserMapper;
 import ctw.screenscoreapi.Users.domain.entity.UserEntity;
@@ -33,10 +34,23 @@ public class UserService {
         return userRepository.create(user);
     }
 
-    public GetUserResponse get(long id) {
+    public GetUserResponse getById(long id) {
         Optional<UserEntity> optionalUser = userRepository.findById(id);
         UserEntity user = optionalUser.orElseThrow(() -> new UserNotFoundById(id));
 
         return userMapper.toResponse(user);
+    }
+
+    public GetUserResponse getByEmail(String email) {
+        Optional<UserEntity> optionalUser = userRepository.findByEmail(email);
+        UserEntity user = optionalUser.orElseThrow(() -> new UserNotFoundByEmail(email));
+
+        return userMapper.toResponse(user);
+    }
+
+    public UserEntity getFullUserByEmail(String email) {
+        Optional<UserEntity> optionalUser = userRepository.findByEmail(email);
+
+        return optionalUser.orElseThrow(() -> new UserNotFoundByEmail(email));
     }
 }

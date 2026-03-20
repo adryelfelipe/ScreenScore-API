@@ -49,4 +49,20 @@ public class UserDaoSpringJdbc {
 
         return users.stream().findFirst();
     }
+
+    public Optional<UserEntity> findByEmail(String email) {
+        String sql = "SELECT * FROM Usuarios WHERE email = ?";
+        List<UserEntity> users = jdbcTemplate.query(sql, (rs, rowNumber) -> {
+
+            return new UserEntity(
+                    rs.getLong("id"),
+                    rs.getString("senha"),
+                    rs.getString("nome"),
+                    rs.getString("email"),
+                    Role.valueOf(rs.getString("tipo_usuario"))
+            );
+        }, email);
+
+        return users.stream().findFirst();
+    }
 }

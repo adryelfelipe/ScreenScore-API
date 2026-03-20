@@ -20,8 +20,14 @@ public class UserRepositoryAdapter implements UserRepository {
         return userDaoSpringJdbc.create(user);
     }
 
+
     @Override
-    public Optional<UserEntity> getById(long id) {
+    public Optional<UserEntity> findByEmail(String email) {
+        return userDaoSpringJdbc.findByEmail(email);
+    }
+
+    @Override
+    public Optional<UserEntity> findById(long id) {
         return userDaoSpringJdbc.findById(id);
     }
 }

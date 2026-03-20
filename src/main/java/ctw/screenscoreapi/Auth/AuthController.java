@@ -4,6 +4,7 @@ import ctw.screenscoreapi.Auth.dtos.RegisterRequest;
 import ctw.screenscoreapi.Auth.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,7 +20,7 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @RequestMapping("/register")
+    @PostMapping("/register")
     public ResponseEntity<Void> register(@Valid @RequestBody RegisterRequest request) {
         long id = authService.register(request);
 

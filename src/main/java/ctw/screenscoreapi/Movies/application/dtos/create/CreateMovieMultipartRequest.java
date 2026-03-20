@@ -13,3 +13,5 @@ public record CreateMovieMultipartRequest(
         @Schema(description = "Poster do filme")
         MultipartFile file
 ) {}
+
+

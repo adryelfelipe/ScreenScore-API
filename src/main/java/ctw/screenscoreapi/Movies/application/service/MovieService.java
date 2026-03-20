@@ -21,7 +21,6 @@ import ctw.screenscoreapi.Movies.infra.themoviedb.mapper.TmdbMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import tools.jackson.databind.cfg.MapperBuilder;
 
 import java.io.IOException;
 import java.util.List;
@@ -79,7 +78,7 @@ public class MovieService {
 
     public GetMovieResponse getById(long id) {
         MovieEntity movie = movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundByIdException(id));                                             ;
-        String posterUrl = s3Service.getObject(movie.getPosterImage());
+        String posterUrl = s3Service.getPresignedUrl(movie.getPosterImage());
         movie.setPosterImage(posterUrl);
 
         return movieMapper.toResponse(movie);
@@ -88,14 +87,14 @@ public class MovieService {
     public GetListOfMoviesResponse getMovies(String title, List<Genre> genres) {
         if(title != null || genres != null){
             List<MovieEntity> movieEntities = movieRepository.findMovieByFilter(title, genres);
-            movieEntities.stream().forEach(m -> m.setPosterImage(s3Service.getObject(m.getPosterImage())));
+            movieEntities.stream().forEach(m -> m.setPosterImage(s3Service.getPresignedUrl(m.getPosterImage())));
             List<GetMovieResponse> movieResponses = movieEntities.stream().map(movieMapper::toResponse).toList();
 
             return new GetListOfMoviesResponse(movieResponses);
         }
 
         List<MovieEntity> movies = movieRepository.getAllMovies();
-        movies.stream().forEach(m -> m.setPosterImage(s3Service.getObject(m.getPosterImage())));
+        movies.stream().forEach(m -> m.setPosterImage(s3Service.getPresignedUrl(m.getPosterImage())));
         List<GetMovieResponse> movieResponses = movies.stream().map(movieMapper::toResponse).toList();
 
         return movieMapper.toResponse(movies);

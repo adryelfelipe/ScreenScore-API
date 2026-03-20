@@ -52,7 +52,7 @@ public class S3Service {
         s3Client.deleteObject(configRequest);
     }
 
-    public String getObject(String posterKey) {
+    public String getPresignedUrl(String posterKey) {
         GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                 .bucket(bucketName)
                 .key(posterKey)

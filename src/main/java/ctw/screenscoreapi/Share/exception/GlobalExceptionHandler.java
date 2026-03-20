@@ -1,5 +1,6 @@
 package ctw.screenscoreapi.Share.exception;
 
+import ctw.screenscoreapi.Auth.exception.AuthApplicationException;
 import ctw.screenscoreapi.Movies.application.exceptions.MovieApplicationException;
 import ctw.screenscoreapi.Share.exception.categories.DataAlreadyUsedException;
 import ctw.screenscoreapi.Share.exception.categories.DomainResourceNotFoundException;
@@ -43,7 +44,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ProblemDetail> handleMethodArgumentNotValidException(MethodArgumentNotValidException e, HttpServletRequest httpRequest) throws URISyntaxException {
+    public ResponseEntity<ProblemDetail> handleMethodArgumentNotValidException(MethodArgumentNotValidException e, HttpServletRequest httpRequest){
         logger.warn("400 (BAD_REQUEST) - Erro ao processar requisicao, campos violados | path: {}", httpRequest.getRequestURI());
 
 
@@ -93,7 +94,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MovieApplicationException.class)
-    public ResponseEntity<ProblemDetail> handleMovieApplicationException(MovieApplicationException e, HttpServletRequest request) throws URISyntaxException {
+    public ResponseEntity<ProblemDetail> handleMovieApplicationException(MovieApplicationException e, HttpServletRequest request) {
         logger.warn("400 (BAD_REQUEST) - Erro ao processar requisicao, aplicacao de filme violada | path: {}", request.getRequestURI());
 
         ProblemDetail problemDetail = problemDetailBuilder(
@@ -109,8 +110,25 @@ public class GlobalExceptionHandler {
                 .body(problemDetail);
     }
 
+    @ExceptionHandler(AuthApplicationException.class)
+    public ResponseEntity<ProblemDetail> handleAuthApplicationException(AuthApplicationException e, HttpServletRequest request) {
+        logger.warn("400 (BAD_REQUEST) - Erro ao processar requisicao, aplicacao de autenticação violada | path: {}", request.getRequestURI());
+
+        ProblemDetail problemDetail = problemDetailBuilder(
+                URI.create("/erros/auth-application"),
+                URI.create(request.getRequestURI()),
+                "Falha durante execução da autenticação",
+                HttpStatus.BAD_REQUEST,
+                e.getMessage()
+        );
+
+        return ResponseEntity
+                .status(problemDetail.getStatus())
+                .body(problemDetail);
+    }
+
     @ExceptionHandler(NoContentToUpdateException.class)
-    public ResponseEntity<ProblemDetail> handleNoContentToUpdateException(NoContentToUpdateException e, HttpServletRequest request) throws URISyntaxException {
+    public ResponseEntity<ProblemDetail> handleNoContentToUpdateException(NoContentToUpdateException e, HttpServletRequest request) {
         logger.warn("422 (Unprocessable Entity) - Erro ao processar requisicao, nenhum conteúdo para atualizar | path: {}", request.getRequestURI());
 
         ProblemDetail problemDetail = problemDetailBuilder(
@@ -128,7 +146,7 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler(DomainResourceNotFoundException.class)
-    public ResponseEntity<ProblemDetail> handleDomainResourceNotFoundException(DomainResourceNotFoundException e, HttpServletRequest request) throws URISyntaxException {
+    public ResponseEntity<ProblemDetail> handleDomainResourceNotFoundException(DomainResourceNotFoundException e, HttpServletRequest request) {
         logger.warn("404 (NOT_FOUND) - Erro ao processar requisicao, recurso nao encontrado | path: {}", request.getRequestURI());
 
         ProblemDetail problemDetail = problemDetailBuilder(
@@ -145,7 +163,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(FeignException.NotFound.class)
-    public ResponseEntity<ProblemDetail> handleTmdbResourceNotFoundException(FeignException.NotFound e, HttpServletRequest request) throws URISyntaxException {
+    public ResponseEntity<ProblemDetail> handleTmdbResourceNotFoundException(FeignException.NotFound e, HttpServletRequest request) {
         logger.warn("404 (NOT_FOUND) - Erro ao processar requisicao, recurso nao encontrado | path: {}", request.getRequestURI());
 
         ProblemDetail problemDetail = problemDetailBuilder(
@@ -162,7 +180,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(DataAlreadyUsedException.class)
-    public ResponseEntity<ProblemDetail> handleDataAlreadyUsedException(DataAlreadyUsedException e, HttpServletRequest httpRequest) throws URISyntaxException {
+    public ResponseEntity<ProblemDetail> handleDataAlreadyUsedException(DataAlreadyUsedException e, HttpServletRequest httpRequest) {
         logger.warn("409 (CONFLICT) (FILME) - Erro ao processar requisicao, dados já registrados no banco | path: {}", httpRequest.getRequestURI());
 
         ProblemDetail problemDetail = problemDetailBuilder(
@@ -196,7 +214,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<ProblemDetail> handleMethodNotAllowedException(HttpRequestMethodNotSupportedException e, HttpServletRequest httpRequest) throws URISyntaxException {
+    public ResponseEntity<ProblemDetail> handleMethodNotAllowedException(HttpRequestMethodNotSupportedException e, HttpServletRequest httpRequest) {
         logger.warn("405 (METHOD_NOT_ALLOWED) - Erro ao processar requisicao, metodo http nao permitido | metodo: {} | path: {}", httpRequest.getMethod(), httpRequest.getRequestURI());
 
         ProblemDetail problemDetail = problemDetailBuilder(
@@ -213,7 +231,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(FeignException.class)
-    public ResponseEntity<ProblemDetail> handleFeignException(FeignException e, HttpServletRequest httpRequest) throws URISyntaxException {
+    public ResponseEntity<ProblemDetail> handleFeignException(FeignException e, HttpServletRequest httpRequest){
         logger.error("502 (EXTERNAL_SERVER_ERROR) - Erro ao se comunicar com sistema externo: {} | {}", e.request().url(), e.getMessage());
 
         ProblemDetail problemDetail = problemDetailBuilder(
@@ -232,7 +250,7 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ProblemDetail> handleMessageNotReadableException(HttpMessageNotReadableException e, HttpServletRequest httpRequest) throws URISyntaxException {
+    public ResponseEntity<ProblemDetail> handleMessageNotReadableException(HttpMessageNotReadableException e, HttpServletRequest httpRequest) {
         logger.warn("400 (BAD_REQUEST) - Erro ao processar requisião, body inválido | path: {}", httpRequest.getRequestURI());
 
         ProblemDetail problemDetail = problemDetailBuilder(
@@ -249,7 +267,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
-    public ResponseEntity<ProblemDetail> handleMessageNotReadableException(MissingServletRequestParameterException e, HttpServletRequest httpRequest) throws URISyntaxException {
+    public ResponseEntity<ProblemDetail> handleMessageNotReadableException(MissingServletRequestParameterException e, HttpServletRequest httpRequest) {
         logger.warn("400 (BAD_REQUEST) - Erro ao processar requisião, parametros invalidos | path: {}", httpRequest.getRequestURI());
 
         ProblemDetail problemDetail = problemDetailBuilder(
@@ -266,7 +284,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ProblemDetail> handleException(Exception e, HttpServletRequest httpRequest) throws URISyntaxException {
+    public ResponseEntity<ProblemDetail> handleException(Exception e, HttpServletRequest httpRequest) {
         logger.error("500 (INTERNAL_SERVER_ERROR) - Erro interno do servidor: {}", e.getMessage());
 
         ProblemDetail problemDetail = problemDetailBuilder(

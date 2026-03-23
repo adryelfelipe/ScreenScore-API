@@ -4,7 +4,7 @@ import ctw.screenscoreapi.Auth.dtos.LoginRequest;
 import ctw.screenscoreapi.Auth.dtos.RegisterRequest;
 import ctw.screenscoreapi.Auth.mapper.AuthMapper;
 import ctw.screenscoreapi.Users.application.dtos.create.CreateUserRequest;
-import ctw.screenscoreapi.Auth.exception.InvalidCredentialsApplicationException;
+import ctw.screenscoreapi.Auth.exception.InvalidCredentialsException;
 import ctw.screenscoreapi.Users.application.exception.UserNotFoundByEmail;
 import ctw.screenscoreapi.Users.application.service.UserService;
 import ctw.screenscoreapi.Users.domain.entity.UserEntity;
@@ -31,10 +31,10 @@ public class AuthService {
             UserEntity user = userService.getFullUserByEmail(request.email());
 
             if(!user.getPassword().equals(request.password())) {
-                throw new InvalidCredentialsApplicationException();
+                throw new InvalidCredentialsException();
             }
         } catch (UserNotFoundByEmail e) {
-            throw new InvalidCredentialsApplicationException();
+            throw new InvalidCredentialsException();
         }
     }
 }

@@ -1,14 +1,13 @@
 package ctw.screenscoreapi.Share.exception;
 
-import ctw.screenscoreapi.Auth.exception.AuthApplicationException;
+import ctw.screenscoreapi.Auth.exception.AuthException;
+import ctw.screenscoreapi.Auth.exception.InvalidCredentialsException;
 import ctw.screenscoreapi.Movies.application.exceptions.MovieApplicationException;
 import ctw.screenscoreapi.Share.exception.categories.DataAlreadyUsedException;
 import ctw.screenscoreapi.Share.exception.categories.DomainResourceNotFoundException;
 import ctw.screenscoreapi.Share.exception.categories.NoContentToUpdateException;
 import feign.FeignException;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -110,23 +109,6 @@ public class GlobalExceptionHandler {
                 .body(problemDetail);
     }
 
-    @ExceptionHandler(AuthApplicationException.class)
-    public ResponseEntity<ProblemDetail> handleAuthApplicationException(AuthApplicationException e, HttpServletRequest request) {
-        logger.warn("400 (BAD_REQUEST) - Erro ao processar requisicao, aplicacao de autenticação violada | path: {}", request.getRequestURI());
-
-        ProblemDetail problemDetail = problemDetailBuilder(
-                URI.create("/erros/auth-application"),
-                URI.create(request.getRequestURI()),
-                "Falha durante execução da autenticação",
-                HttpStatus.BAD_REQUEST,
-                e.getMessage()
-        );
-
-        return ResponseEntity
-                .status(problemDetail.getStatus())
-                .body(problemDetail);
-    }
-
     @ExceptionHandler(NoContentToUpdateException.class)
     public ResponseEntity<ProblemDetail> handleNoContentToUpdateException(NoContentToUpdateException e, HttpServletRequest request) {
         logger.warn("422 (Unprocessable Entity) - Erro ao processar requisicao, nenhum conteúdo para atualizar | path: {}", request.getRequestURI());
@@ -136,6 +118,23 @@ public class GlobalExceptionHandler {
                 URI.create(request.getRequestURI()),
                 "Falha durante execução da aplicação",
                 HttpStatus.UNPROCESSABLE_ENTITY,
+                e.getMessage()
+        );
+
+        return ResponseEntity
+                .status(problemDetail.getStatus())
+                .body(problemDetail);
+    }
+
+    @ExceptionHandler(AuthException.class)
+    public ResponseEntity<ProblemDetail> handleAuthException(AuthException e, HttpServletRequest request) {
+        logger.warn("401 (Unauthorized) - Erro ao processar requisicao, autenticaçao invalida | path: {}", request.getRequestURI());
+
+        ProblemDetail problemDetail = problemDetailBuilder(
+                URI.create("/erros/unauthorized-user"),
+                URI.create(request.getRequestURI()),
+                "Falha durante a autenticação",
+                HttpStatus.UNAUTHORIZED,
                 e.getMessage()
         );
 

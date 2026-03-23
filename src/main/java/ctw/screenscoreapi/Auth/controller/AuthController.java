@@ -57,6 +57,28 @@ public class AuthController {
                 .build();
     }
 
+    @Operation(
+            summary = "Autentica usuário no sistema",
+            description = "Autentica usuário no sistema, permitindo que ele usufrua das demais funcionalidades disponíveis"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Usuário autenticado com sucesso!"
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    ref = "#/components/responses/400"
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    ref = "#/components/responses/401"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    ref = "#/components/responses/500"
+            )
+    })
     @PostMapping("/login")
     public ResponseEntity<Void> login(@Valid @RequestBody LoginRequest request) {
         authService.login(request);

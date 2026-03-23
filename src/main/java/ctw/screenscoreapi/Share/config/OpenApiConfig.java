@@ -69,7 +69,7 @@ public class OpenApiConfig {
                                                                                         """
                                                                                         {
                                                                                             "instance": "path-instance",
-                                                                                            "status": "500",
+                                                                                            "status": 500,
                                                                                             "title": "Erro interno do servidor",
                                                                                             "type": "/erros/internal-server",
                                                                                             "detail": "Ocorreu um erro interno no servidor. Tente novamente mais tarde."
@@ -110,6 +110,34 @@ public class OpenApiConfig {
                                 )
 
                                 .addResponses(
+                                        "401",
+                                        new ApiResponse()
+                                                .description("A autenticação falhou")
+                                                .content(
+                                                        new Content()
+                                                                .addMediaType(
+                                                                        "application/json",
+                                                                        new MediaType()
+                                                                                .schema(
+                                                                                        new Schema<>()
+                                                                                                .$ref("#/components/schemas/ProblemDetail")
+                                                                                )
+                                                                                .example(
+                                                                                        """
+                                                                                        {
+                                                                                            "instance": "path-instance",
+                                                                                            "status": 401,
+                                                                                            "title": "A autenticação falhou",
+                                                                                            "type": "/erros/unauthorized-user",
+                                                                                            "detail": "details of the problem"
+                                                                                        }
+                                                                                        """
+                                                                                )
+                                                                )
+                                                )
+                                )
+
+                                .addResponses(
                                         "404",
                                         new ApiResponse()
                                                 .description("Recurso não encontrado")
@@ -135,6 +163,7 @@ public class OpenApiConfig {
                                                                                 )
                                                                 )
                                                 )
+
                                 )
 
                                 .addResponses(

@@ -4,10 +4,14 @@ import ctw.screenscoreapi.Users.application.dtos.create.CreateUserRequest;
 import ctw.screenscoreapi.Users.application.dtos.get.GetUserResponse;
 import ctw.screenscoreapi.Users.application.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -58,8 +62,37 @@ public class UserController {
                 .build();
     }
 
+    @Operation(
+            summary = "Retorna um usuário cadastrado a partir do ID",
+            description = "Retorna os detalhes de um usuário previamente cadastrado no sistema, com base no ID informado na URL."
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    content = @Content(schema = @Schema(implementation = GetUserResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    ref = "#/components/responses/400"
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    ref = "#/components/responses/401"
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    ref = "#/components/responses/404"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    ref = "#/components/responses/500"
+            )
+    })
     @GetMapping("/{id}")
-    public ResponseEntity<GetUserResponse> getById(@PathVariable long id) {
+    public ResponseEntity<GetUserResponse> getById(
+            @Positive(message = "O ID deve ser um número positivo")
+            @Parameter(description = "Número identificador do usuário", example = "1")
+            @PathVariable long id) {
         GetUserResponse response = userService.getById(id);
 
         return ResponseEntity.ok(response);

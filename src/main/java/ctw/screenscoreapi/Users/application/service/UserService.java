@@ -53,4 +53,12 @@ public class UserService {
 
         return optionalUser.orElseThrow(() -> new UserNotFoundByEmail(email));
     }
+
+    public void deleteById(long id) {
+        long affectedUsers = userRepository.deleteById(id);
+
+        if(affectedUsers < 1) {
+            throw new UserNotFoundById(id);
+        }
+    }
 }

@@ -8,4 +8,5 @@ public interface UserRepository {
     long create(UserEntity user);
     Optional<UserEntity> findById(long id);
     Optional<UserEntity> findByEmail(String email);
+    long deleteById(long id);
 }

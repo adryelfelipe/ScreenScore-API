@@ -65,4 +65,10 @@ public class UserDaoSpringJdbc {
 
         return users.stream().findFirst();
     }
+
+    public long deleteById(long id) {
+        String sql = "DELETE FROM Usuarios WHERE ID = ?";
+
+        return jdbcTemplate.update(sql, id);
+    }
 }

@@ -27,6 +27,11 @@ public class UserRepositoryAdapter implements UserRepository {
     }
 
     @Override
+    public long deleteById(long id) {
+        return userDaoSpringJdbc.deleteById(id);
+    }
+
+    @Override
     public Optional<UserEntity> findById(long id) {
         return userDaoSpringJdbc.findById(id);
     }

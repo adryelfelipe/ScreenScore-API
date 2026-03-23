@@ -98,8 +98,33 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(
+            summary = "Deleta usuários através do ID",
+            description = "Deleta usuários cadastrados no sistema a partir do ID enviado como parâmetro na URL"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "Usuário deletado com sucesso!"
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    ref = "#/components/responses/401"
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    ref = "#/components/responses/404"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    ref = "#/components/responses/500"
+            )
+    })
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable long id) {
+    public ResponseEntity<Void> deleteById(
+            @Positive(message = "O ID deve ser um número positivo")
+            @Parameter(example = "1", description = "Número identificar do usuário")
+            @PathVariable long id) {
         userService.deleteById(id);
 
         return ResponseEntity

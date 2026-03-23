@@ -29,7 +29,7 @@ public class UserDaoSpringJdbc {
         params.put("nome", user.getName());
         params.put("email", user.getEmail());
         params.put("senha", user.getPassword());
-        params.put("tipo_usuario", user.getRole());
+        params.put("tipo_usuario", user.getRole().name());
 
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }

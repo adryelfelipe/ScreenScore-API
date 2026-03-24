@@ -71,4 +71,19 @@ public class UserDaoSpringJdbc {
 
         return jdbcTemplate.update(sql, id);
     }
+
+    public List<UserEntity> getAll() {
+        String sql = "SELECT * FROM Usuarios";
+        List<UserEntity> users = jdbcTemplate.query(sql, (rs, num) -> {
+            return new UserEntity(
+                    rs.getLong("id"),
+                    rs.getString("senha"),
+                    rs.getString("nome"),
+                    rs.getString("email"),
+                    Role.valueOf(rs.getString("tipo_usuario"))
+            );
+        });
+
+        return users;
+    }
 }

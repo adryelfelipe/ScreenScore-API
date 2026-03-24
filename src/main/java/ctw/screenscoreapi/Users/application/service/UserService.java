@@ -1,6 +1,7 @@
 package ctw.screenscoreapi.Users.application.service;
 
 import ctw.screenscoreapi.Users.application.dtos.create.CreateUserRequest;
+import ctw.screenscoreapi.Users.application.dtos.get.GetListOfUsersResponse;
 import ctw.screenscoreapi.Users.application.dtos.get.GetUserResponse;
 import ctw.screenscoreapi.Users.application.exception.UserEmailAlreadyUsed;
 import ctw.screenscoreapi.Users.application.exception.UserNotFoundByEmail;
@@ -10,6 +11,7 @@ import ctw.screenscoreapi.Users.domain.entity.UserEntity;
 import ctw.screenscoreapi.Users.domain.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -60,5 +62,17 @@ public class UserService {
         if(affectedUsers < 1) {
             throw new UserNotFoundById(id);
         }
+    }
+
+    public GetListOfUsersResponse getAll() {
+        List<UserEntity> users = userRepository.getAll();
+        List<GetUserResponse> usersResponse = users
+                .stream()
+                .map(userMapper::toResponse)
+                .toList();
+
+        return new GetListOfUsersResponse(
+                usersResponse
+        );
     }
 }

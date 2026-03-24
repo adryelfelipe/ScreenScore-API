@@ -1,6 +1,7 @@
 package ctw.screenscoreapi.Users.application.controller;
 
 import ctw.screenscoreapi.Users.application.dtos.create.CreateUserRequest;
+import ctw.screenscoreapi.Users.application.dtos.get.GetListOfUsersResponse;
 import ctw.screenscoreapi.Users.application.dtos.get.GetUserResponse;
 import ctw.screenscoreapi.Users.application.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -130,5 +131,12 @@ public class UserController {
         return ResponseEntity
                 .noContent()
                 .build();
+    }
+
+    @GetMapping
+    public ResponseEntity<GetListOfUsersResponse> getAll() {
+        GetListOfUsersResponse users = userService.getAll();
+
+        return ResponseEntity.ok(users);
     }
 }

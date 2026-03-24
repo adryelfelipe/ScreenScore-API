@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -133,6 +134,25 @@ public class UserController {
                 .build();
     }
 
+    @Operation(
+            summary = "Retorna todos os usuários do sistema",
+            description = "Retorna todos os usuários cadastrados no sistema, caso exista algum"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Lista de usuários retornada com sucesso",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = GetListOfUsersResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    ref = "#/components/responses/401"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    ref = "#/components/responses/500"
+            )
+    })
     @GetMapping
     public ResponseEntity<GetListOfUsersResponse> getAll() {
         GetListOfUsersResponse users = userService.getAll();

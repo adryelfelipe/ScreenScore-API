@@ -86,4 +86,9 @@ public class UserDaoSpringJdbc {
 
         return users;
     }
+
+    public void update(UserEntity user) {
+        String sql = "UPDATE Usuarios SET nome = ?, email = ?, senha = ?, tipo_usuario = ? WHERE id = ?";
+        jdbcTemplate.update(sql, user.getName(), user.getEmail(), user.getPassword(), user.getRole().name(), user.getId());
+    }
 }

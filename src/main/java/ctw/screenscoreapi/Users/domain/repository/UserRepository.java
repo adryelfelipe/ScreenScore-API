@@ -11,4 +11,5 @@ public interface UserRepository {
     Optional<UserEntity> findByEmail(String email);
     long deleteById(long id);
     List<UserEntity> getAll();
+    void update(UserEntity user);
 }

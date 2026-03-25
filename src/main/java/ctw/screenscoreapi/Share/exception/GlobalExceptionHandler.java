@@ -73,7 +73,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HandlerMethodValidationException.class)
     public ResponseEntity<ProblemDetail> handleHandlerMethodValidation(
             HandlerMethodValidationException e,
-            HttpServletRequest httpRequest) throws URISyntaxException {
+            HttpServletRequest httpRequest) {
 
         logger.warn("400 (BAD_REQUEST) - Erro ao processar requisicao, parametros violados | path: {}", httpRequest.getRequestURI());
 

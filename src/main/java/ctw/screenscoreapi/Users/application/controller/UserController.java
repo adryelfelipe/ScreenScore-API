@@ -3,7 +3,9 @@ package ctw.screenscoreapi.Users.application.controller;
 import ctw.screenscoreapi.Users.application.dtos.create.CreateUserRequest;
 import ctw.screenscoreapi.Users.application.dtos.get.GetListOfUsersResponse;
 import ctw.screenscoreapi.Users.application.dtos.get.GetUserResponse;
+import ctw.screenscoreapi.Users.application.dtos.update.UpdateUserRequest;
 import ctw.screenscoreapi.Users.application.service.UserService;
+import ctw.screenscoreapi.Users.domain.enums.Role;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -158,5 +160,20 @@ public class UserController {
         GetListOfUsersResponse users = userService.getAll();
 
         return ResponseEntity.ok(users);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> update(
+            @PathVariable long id,
+
+            @Valid
+            @RequestBody
+            UpdateUserRequest request) {
+
+        userService.update(id, request);
+
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 }

@@ -38,6 +38,11 @@ public class UserRepositoryAdapter implements UserRepository {
     }
 
     @Override
+    public void update(UserEntity user) {
+        userDaoSpringJdbc.update(user);
+    }
+
+    @Override
     public Optional<UserEntity> findById(long id) {
         return userDaoSpringJdbc.findById(id);
     }

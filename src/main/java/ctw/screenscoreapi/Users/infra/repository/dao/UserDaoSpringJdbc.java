@@ -29,7 +29,7 @@ public class UserDaoSpringJdbc {
         params.put("nome", user.getName());
         params.put("email", user.getEmail());
         params.put("senha", user.getPassword());
-        params.put("tipo_usuario", user.getRole());
+        params.put("tipo_usuario", user.getRole().name());
 
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
@@ -64,5 +64,31 @@ public class UserDaoSpringJdbc {
         }, email);
 
         return users.stream().findFirst();
+    }
+
+    public long deleteById(long id) {
+        String sql = "DELETE FROM Usuarios WHERE ID = ?";
+
+        return jdbcTemplate.update(sql, id);
+    }
+
+    public List<UserEntity> getAll() {
+        String sql = "SELECT * FROM Usuarios";
+        List<UserEntity> users = jdbcTemplate.query(sql, (rs, num) -> {
+            return new UserEntity(
+                    rs.getLong("id"),
+                    rs.getString("senha"),
+                    rs.getString("nome"),
+                    rs.getString("email"),
+                    Role.valueOf(rs.getString("tipo_usuario"))
+            );
+        });
+
+        return users;
+    }
+
+    public void update(UserEntity user) {
+        String sql = "UPDATE Usuarios SET nome = ?, email = ?, senha = ?, tipo_usuario = ? WHERE id = ?";
+        jdbcTemplate.update(sql, user.getName(), user.getEmail(), user.getPassword(), user.getRole().name(), user.getId());
     }
 }

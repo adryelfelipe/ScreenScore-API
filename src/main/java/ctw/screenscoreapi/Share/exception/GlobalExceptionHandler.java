@@ -26,6 +26,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestControllerAdvice
@@ -85,7 +86,12 @@ public class GlobalExceptionHandler {
                 "Consulte a documentação do endpoint para visualizar os formatos esperados"
         );
 
-        problemDetail.setProperty("erros", e.getMessage());
+        List<String> erros = e.getParameterValidationResults().stream()
+                .flatMap(result -> result.getResolvableErrors().stream())
+                .map(error -> error.getDefaultMessage())
+                .toList();
+
+        problemDetail.setProperty("erros", erros);
 
         return ResponseEntity
                 .status(problemDetail.getStatus())

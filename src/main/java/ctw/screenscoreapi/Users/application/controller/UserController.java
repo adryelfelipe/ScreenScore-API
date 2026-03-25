@@ -208,7 +208,9 @@ public class UserController {
     })
     @PutMapping("/{id}")
     public ResponseEntity<Void> update(
-            @PathVariable long id,
+            @Positive(message = "O número identificador de usuário deve ser positivo")
+            @PathVariable
+            long id,
 
             @Valid
             @RequestBody

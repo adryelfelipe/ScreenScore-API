@@ -6,6 +6,7 @@ import ctw.screenscoreapi.Movies.application.dtos.get.GetListOfExternalMoviesRes
 import ctw.screenscoreapi.Movies.application.dtos.get.GetMovieResponse;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetListOfMoviesResponse;
 import ctw.screenscoreapi.Movies.application.dtos.update.UpdateMovieRequest;
+import ctw.screenscoreapi.Movies.application.exceptions.MovieNoContentToUpdateException;
 import ctw.screenscoreapi.Movies.application.exceptions.MovieNotFoundByIdException;
 import ctw.screenscoreapi.Movies.application.exceptions.MovieTitleAlreadyUsedException;
 import ctw.screenscoreapi.Movies.domain.enums.Genre;
@@ -109,8 +110,6 @@ public class MovieService {
     }
 
     public void update(long id, UpdateMovieRequest request) {
-        MovieEntity movie = movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundByIdException(id));
-
         if (request.title() == null &&
                 request.originalLanguage() == null &&
                 request.originalTitle() == null &&
@@ -120,8 +119,10 @@ public class MovieService {
                 request.overview() == null &&
                 request.genres() == null) {
 
-            throw new NoContentToUpdateException();
+            throw new MovieNoContentToUpdateException();
         }
+
+        MovieEntity movie = movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundByIdException(id));
 
         if(request.title() != null) {
             Optional<MovieEntity> optionalMovie = movieRepository.findByExactTitle(request.title());

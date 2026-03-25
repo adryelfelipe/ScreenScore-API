@@ -162,6 +162,50 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
+    @Operation(
+            summary = "Atualiza um usuário cadastrado no sistema a partir do ID",
+            description =
+            """
+            Atualiza os dados de um usuário previamente cadastrado no sistema a partir do ID.
+            Você deve enviar pelo menos **um parâmetro** para atualizar.
+           
+            Os campos disponíveis são:
+            
+            - **name**: novo nome do usuário (opcional)
+            - **email**: novo email do usuário (opcional, mas deve ser válido se fornecido)
+            - **password**: nova senha (opcional, deve ter entre 8 e 100 caracteres, conter pelo menos 1 letra maiúscula, 1 minúscula, 1 número e 1 símbolo)
+            - **role**: novo papel/permissão do usuário (opcional)
+            
+            Campos não enviados permanecerão inalterados.
+            A requisição falhará se nenhum parâmetro for enviado ou se algum campo enviado não atender às regras de validação.
+            """
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "Usuário alterado com sucesso"
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    ref = "#/components/responses/401"
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    ref = "#/components/responses/404"
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    ref = "#/components/responses/409"
+            ),
+            @ApiResponse(
+                    responseCode = "422",
+                    ref = "#/components/responses/422"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    ref = "#/components/responses/500"
+            )
+    })
     @PutMapping("/{id}")
     public ResponseEntity<Void> update(
             @PathVariable long id,

@@ -5,7 +5,7 @@ import ctw.screenscoreapi.Auth.dtos.RegisterRequest;
 import ctw.screenscoreapi.Auth.mapper.AuthMapper;
 import ctw.screenscoreapi.Users.application.dtos.create.CreateUserRequest;
 import ctw.screenscoreapi.Auth.exception.InvalidCredentialsException;
-import ctw.screenscoreapi.Users.application.exception.UserNotFoundByEmail;
+import ctw.screenscoreapi.Users.application.exception.UserNotFoundByEmailException;
 import ctw.screenscoreapi.Users.application.service.UserService;
 import ctw.screenscoreapi.Users.domain.entity.UserEntity;
 import org.springframework.stereotype.Service;
@@ -33,7 +33,7 @@ public class AuthService {
             if(!user.getPassword().equals(request.password())) {
                 throw new InvalidCredentialsException();
             }
-        } catch (UserNotFoundByEmail e) {
+        } catch (UserNotFoundByEmailException e) {
             throw new InvalidCredentialsException();
         }
     }

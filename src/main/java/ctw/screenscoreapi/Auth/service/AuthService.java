@@ -8,16 +8,19 @@ import ctw.screenscoreapi.Auth.exception.InvalidCredentialsException;
 import ctw.screenscoreapi.Users.application.exception.UserNotFoundByEmailException;
 import ctw.screenscoreapi.Users.application.service.UserService;
 import ctw.screenscoreapi.Users.domain.entity.UserEntity;
+import ctw.screenscoreapi.Users.infra.session.UserSession;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthService {
     private UserService userService;
     private AuthMapper authMapper;
+    private UserSession userSession;
 
-    public AuthService(UserService userService, AuthMapper authMapper) {
+    public AuthService(UserService userService, AuthMapper authMapper, UserSession userSession) {
         this.userService = userService;
         this.authMapper = authMapper;
+        this.userSession = userSession;
     }
 
     public long register(RegisterRequest request) {
@@ -33,6 +36,8 @@ public class AuthService {
             if(!user.getPassword().equals(request.password())) {
                 throw new InvalidCredentialsException();
             }
+
+            userSession.setUserId(user.getId());
         } catch (UserNotFoundByEmailException e) {
             throw new InvalidCredentialsException();
         }

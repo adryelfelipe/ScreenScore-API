@@ -22,6 +22,28 @@ public class AvaliationController {
         this.avaliationService = avaliationService;
     }
 
+    @Operation(
+            summary = "Cadastra uma avaliação no sistema",
+            description = "Registra a nota e o comentário de um usuário para um filme existente."
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Avaliação cadastrada com sucesso!"
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    ref = "#/components/responses/400"
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    ref = "#/components/responses/401"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    ref = "#/components/responses/500"
+            )
+    })
     @PostMapping
     public ResponseEntity<Void> create(@Valid @RequestBody CreateAvaliationRequest request) {
         long id = avaliationService.create(request);

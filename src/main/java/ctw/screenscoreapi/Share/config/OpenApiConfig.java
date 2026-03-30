@@ -138,6 +138,34 @@ public class OpenApiConfig {
                                 )
 
                                 .addResponses(
+                                        "403",
+                                        new ApiResponse()
+                                                .description("Falha de autorização")
+                                                .content(
+                                                        new Content()
+                                                                .addMediaType(
+                                                                        "application/json",
+                                                                        new MediaType()
+                                                                                .schema(
+                                                                                        new Schema<>()
+                                                                                                .$ref("#/components/schemas/ProblemDetail")
+                                                                                )
+                                                                                .example(
+                                                                                        """
+                                                                                        {
+                                                                                            "instance": "path-instance",
+                                                                                            "status": 403,
+                                                                                            "title": "Você não possui permissão",
+                                                                                            "type": "/erros/forbidden",
+                                                                                            "detail": "details of the problem"
+                                                                                        }
+                                                                                        """
+                                                                                )
+                                                                )
+                                                )
+                                )
+
+                                .addResponses(
                                         "404",
                                         new ApiResponse()
                                                 .description("Recurso não encontrado")

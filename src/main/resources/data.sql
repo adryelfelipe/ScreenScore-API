@@ -32,7 +32,7 @@ INSERT INTO Filmes (titulo, adulto, data_lancamento, lingua_original, titulo_ori
     ('Spirited Away', FALSE, DATE '2001-07-20', 'ja', 'Sen to Chihiro no Kamikakushi', NULL, 'Uma garota entra em um mundo mágico e precisa salvar seus pais.');
 
 INSERT INTO Usuarios (nome, email, senha, tipo_usuario) VALUES
-    ('Admin Principal', 'admin@email.com', 'Admin@123', 'ADMIN'),
+    ('Admin Principal', 'adryelgamer@gmail.com', '123456Aa@', 'ADMIN'),
     ('João Silva', 'joao@email.com', 'Joao@1234', 'CLIENTE'),
     ('Maria Souza', 'maria@email.com', 'Maria@2024', 'CLIENTE'),
     ('Carlos Lima', 'carlos@email.com', 'Carlos@99', 'CLIENTE'),

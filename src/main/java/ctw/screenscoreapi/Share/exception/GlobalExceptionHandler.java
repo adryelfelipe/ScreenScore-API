@@ -2,6 +2,8 @@ package ctw.screenscoreapi.Share.exception;
 
 import ctw.screenscoreapi.Auth.exception.AuthException;
 import ctw.screenscoreapi.Auth.exception.InvalidCredentialsException;
+import ctw.screenscoreapi.Auth.exception.UserNotAuthenticatedException;
+import ctw.screenscoreapi.Auth.exception.UserNotAuthorizedException;
 import ctw.screenscoreapi.Movies.application.exceptions.MovieApplicationException;
 import ctw.screenscoreapi.Share.exception.categories.DataAlreadyUsedException;
 import ctw.screenscoreapi.Share.exception.categories.DomainResourceNotFoundException;
@@ -134,13 +136,30 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AuthException.class)
     public ResponseEntity<ProblemDetail> handleAuthException(AuthException e, HttpServletRequest request) {
-        logger.warn("401 (Unauthorized) - Erro ao processar requisicao, autenticaçao invalida | path: {}", request.getRequestURI());
+        logger.warn("401 (Unauthorized) - Erro ao processar requisicao, falha na autenticação | path: {}", request.getRequestURI());
 
         ProblemDetail problemDetail = problemDetailBuilder(
-                URI.create("/erros/unauthorized-user"),
+                URI.create("/erros/unauthorized"),
                 URI.create(request.getRequestURI()),
                 "Falha durante a autenticação",
                 HttpStatus.UNAUTHORIZED,
+                e.getMessage()
+        );
+
+        return ResponseEntity
+                .status(problemDetail.getStatus())
+                .body(problemDetail);
+    }
+
+    @ExceptionHandler(UserNotAuthorizedException.class)
+    public ResponseEntity<ProblemDetail> handleUserNotAuthorizeddException(UserNotAuthorizedException e, HttpServletRequest request) {
+        logger.warn("403 (Forbidden) - Erro ao processar requisicao, falha de autorização | path: {}", request.getRequestURI());
+
+        ProblemDetail problemDetail = problemDetailBuilder(
+                URI.create("/erros/forbidden"),
+                URI.create(request.getRequestURI()),
+                "Você não possui permissão",
+                HttpStatus.FORBIDDEN,
                 e.getMessage()
         );
 

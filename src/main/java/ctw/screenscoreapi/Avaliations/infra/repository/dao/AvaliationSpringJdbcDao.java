@@ -7,7 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class AvaliationSpringJdbcDao {
@@ -29,5 +31,28 @@ public class AvaliationSpringJdbcDao {
         params.put("comentario", avaliation.getComment());
 
         return simpleJdbcInsert.executeAndReturnKey(params).longValue();
+    }
+
+    public long deleteById(long id) {
+        String sql = "DELETE FROM Avaliacoes WHERE id = ?";
+
+        return jdbcTemplate.update(sql, id);
+    }
+
+    public Optional<AvaliationEntity> findById(long id) {
+        String sql = "SELECT * FROM Avaliacoes WHERE id = ?";
+
+        List<AvaliationEntity> avaliations = jdbcTemplate.query(sql, (rs, num) -> {
+
+            return new AvaliationEntity(
+                    rs.getLong("id"),
+                    rs.getString("comentario"),
+                    rs.getDouble("nota"),
+                    rs.getLong("id_filme"),
+                    rs.getLong("id_usuario")
+            );
+        }, id);
+
+        return avaliations.stream().findFirst();
     }
 }

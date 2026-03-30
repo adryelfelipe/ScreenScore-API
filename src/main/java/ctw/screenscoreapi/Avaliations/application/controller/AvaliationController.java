@@ -4,9 +4,7 @@ import ctw.screenscoreapi.Avaliations.application.dtos.create.CreateAvaliationRe
 import ctw.screenscoreapi.Avaliations.application.service.AvaliationService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
@@ -20,11 +18,20 @@ public class AvaliationController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@Valid CreateAvaliationRequest request) {
+    public ResponseEntity<Void> create(@Valid @RequestBody CreateAvaliationRequest request) {
         long id = avaliationService.create(request);
 
         return ResponseEntity
                 .created(URI.create("/avaliacoes/" + id))
+                .build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        avaliationService.delete(id);
+
+        return ResponseEntity
+                .noContent()
                 .build();
     }
 }

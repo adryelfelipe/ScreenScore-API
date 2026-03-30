@@ -1,5 +1,9 @@
 package ctw.screenscoreapi.Avaliations.domain;
 
+import java.util.Optional;
+
 public interface AvaliationRepository {
     long create(AvaliationEntity avaliation);
+    Optional<AvaliationEntity> findById(long id);
+    long deleteById(long id);
 }

@@ -5,6 +5,8 @@ import ctw.screenscoreapi.Avaliations.domain.AvaliationRepository;
 import ctw.screenscoreapi.Avaliations.infra.repository.dao.AvaliationSpringJdbcDao;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public class AvaliationRepositoryAdapter implements AvaliationRepository {
     private AvaliationSpringJdbcDao avaliationSpringJdbcDao;
@@ -16,5 +18,15 @@ public class AvaliationRepositoryAdapter implements AvaliationRepository {
     @Override
     public long create(AvaliationEntity avaliation) {
         return avaliationSpringJdbcDao.create(avaliation);
+    }
+
+    @Override
+    public Optional<AvaliationEntity> findById(long id) {
+        return avaliationSpringJdbcDao.findById(id);
+    }
+
+    @Override
+    public long deleteById(long id) {
+        return avaliationSpringJdbcDao.deleteById(id);
     }
 }

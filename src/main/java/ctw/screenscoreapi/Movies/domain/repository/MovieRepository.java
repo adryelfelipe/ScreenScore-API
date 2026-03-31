@@ -12,6 +12,7 @@ public interface MovieRepository {
     Optional<MovieEntity> findByExactTitle(String title);
     int delete(long id);
     Optional<MovieEntity> findById(long id);
-    List<MovieEntity> getAllMovies();
+    List<MovieEntity> findAllMovies();
     void update(MovieEntity movie);
+    List<MovieEntity> findTop10Movies();
 }

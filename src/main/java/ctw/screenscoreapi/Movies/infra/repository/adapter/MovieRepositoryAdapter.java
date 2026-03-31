@@ -52,7 +52,7 @@ public class MovieRepositoryAdapter implements MovieRepository {
     }
 
     @Override
-    public List<MovieEntity> getAllMovies() {
+    public List<MovieEntity> findAllMovies() {
 
         return movieDaoSpringJdbc.findAllMovies();
     }
@@ -60,5 +60,10 @@ public class MovieRepositoryAdapter implements MovieRepository {
     @Override
     public void update(MovieEntity movie) {
         movieDaoSpringJdbc.update(movie);
+    }
+
+    @Override
+    public List<MovieEntity> findTop10Movies() {
+        return movieDaoSpringJdbc.findTop10Movies();
     }
 }

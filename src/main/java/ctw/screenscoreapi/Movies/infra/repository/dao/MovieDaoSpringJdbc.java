@@ -51,6 +51,34 @@ public class MovieDaoSpringJdbc {
         return id;
     }
 
+    public List<MovieEntity> findTop10Movies() {
+        String sql = """
+                     Select 
+                        F.*,
+                        AVG(A.nota) as media 
+                     From Filmes F
+                     JOIN Avaliacoes A ON F.id = A.id_filme
+                     GROUP BY F.id
+                     ORDER BY media DESC
+                     LIMIT 10
+                     """;
+
+        return jdbcTemplate.query(
+                sql,
+                (rs,i) -> {
+                    Long movieId = rs.getLong("id");
+                    List<Genre> genres = findGenresByMovie(movieId);
+                    MovieEntity movie = mapMovie(rs);
+                    movie.setGenres(genres);
+                    List<Long> avalations = findAvaliationsByMovie(movieId);
+                    movie.setAvaliationsIds(avalations);
+                    movie.setAverageScore(rs.getBigDecimal("media"));
+
+                    return movie;
+                }
+        );
+    }
+
     public List<MovieEntity> findAllMovies() {
         String sqlMovies = "Select * From Filmes";
 

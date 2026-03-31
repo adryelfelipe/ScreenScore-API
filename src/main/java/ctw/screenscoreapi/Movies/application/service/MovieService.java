@@ -93,9 +93,8 @@ public class MovieService {
             return new GetListOfMoviesResponse(movieResponses);
         }
 
-        List<MovieEntity> movies = movieRepository.getAllMovies();
+        List<MovieEntity> movies = movieRepository.findAllMovies();
         movies.stream().forEach(m -> m.setPosterImage(s3Service.getPresignedUrl(m.getPosterImage())));
-        List<GetMovieResponse> movieResponses = movies.stream().map(movieMapper::toResponse).toList();
 
         return movieMapper.toResponse(movies);
     }
@@ -164,7 +163,9 @@ public class MovieService {
     }
 
     public GetListOfMoviesResponse getTop10Movies() {
-        // Implement after create the avaliations module
-        return getMovies(null ,null);
+        List<MovieEntity> movies = movieRepository.findTop10Movies();
+        movies.forEach(movie -> movie.setPosterImage(s3Service.getPresignedUrl(movie.getPosterImage())));
+
+        return movieMapper.toResponse(movies);
     }
 }

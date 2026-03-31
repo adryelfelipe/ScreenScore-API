@@ -29,7 +29,12 @@ INSERT INTO Filmes (titulo, adulto, data_lancamento, lingua_original, titulo_ori
     ('The Dark Knight', FALSE, DATE '2008-07-18', 'en', 'The Dark Knight', NULL, 'Batman enfrenta o caos causado pelo Coringa.'),
     ('Fight Club', TRUE, DATE '1999-10-15', 'en', 'Fight Club', NULL, 'Um homem cria um clube secreto de luta.'),
     ('Forrest Gump', FALSE, DATE '1994-07-06', 'en', 'Forrest Gump', NULL, 'A vida de um homem simples que testemunha grandes eventos históricos.'),
-    ('Spirited Away', FALSE, DATE '2001-07-20', 'ja', 'Sen to Chihiro no Kamikakushi', NULL, 'Uma garota entra em um mundo mágico e precisa salvar seus pais.');
+    ('Spirited Away', FALSE, DATE '2001-07-20', 'ja', 'Sen to Chihiro no Kamikakushi', NULL, 'Uma garota entra em um mundo mágico e precisa salvar seus pais.'),
+    ('Gladiator', FALSE, DATE '2000-05-05', 'en', 'Gladiator', NULL, 'Um general romano busca vingança contra um imperador corrupto.'),
+    ('Titanic', FALSE, DATE '1997-12-19', 'en', 'Titanic', NULL, 'Uma história de amor a bordo do famoso navio.'),
+    ('The Shawshank Redemption', FALSE, DATE '1994-09-23', 'en', 'The Shawshank Redemption', NULL, 'Um homem preso injustamente encontra esperança na amizade.'),
+    ('Avengers: Endgame', FALSE, DATE '2019-04-26', 'en', 'Avengers: Endgame', NULL, 'Os Vingadores enfrentam Thanos em uma batalha final.'),
+    ('Joker', TRUE, DATE '2019-10-04', 'en', 'Joker', NULL, 'A origem de um dos maiores vilões de Gotham.');
 
 INSERT INTO Usuarios (nome, email, senha, tipo_usuario) VALUES
     ('Admin Principal', 'adryelgamer@gmail.com', '123456Aa@', 'ADMIN'),
@@ -44,6 +49,23 @@ INSERT INTO Avaliacoes (id_usuario, id_filme, nota, comentario) VALUES
 (3, 3, 7, 'Gostei, mas poderia ter sido melhor.'),
 (4, 4, 10, 'Perfeito! Um dos melhores que já vi.'),
 (5, 5, 6, 'Assistível, mas esperava mais da história.');
+
+INSERT INTO Avaliacoes (id_usuario, id_filme, nota, comentario)
+SELECT
+    CAST(FLOOR(RAND() * 5) + 1 AS INT) AS id_usuario,
+    f.id AS id_filme,
+    CAST(FLOOR(RAND() * 11) AS INT) AS nota, -- 0 a 10
+    'Avaliação automática'
+FROM Filmes f
+JOIN (
+    SELECT 1 n UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL
+    SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL
+    SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9 UNION ALL
+    SELECT 10 UNION ALL SELECT 11 UNION ALL SELECT 12 UNION ALL
+    SELECT 13 UNION ALL SELECT 14
+) nums
+ON 1=1
+WHERE f.id <= 15;
 
 INSERT INTO Filme_Genero (id_filme, id_genero) VALUES
 (1, 1), -- Inception → Ação

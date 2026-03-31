@@ -2,6 +2,7 @@ package ctw.screenscoreapi.Avaliations.application.controller;
 
 import ctw.screenscoreapi.Avaliations.application.dtos.create.CreateAvaliationRequest;
 import ctw.screenscoreapi.Avaliations.application.service.AvaliationService;
+import ctw.screenscoreapi.Share.aop.ToAuthenticate;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -45,6 +46,7 @@ public class AvaliationController {
             )
     })
     @PostMapping
+    @ToAuthenticate
     public ResponseEntity<Void> create(@Valid @RequestBody CreateAvaliationRequest request) {
         long id = avaliationService.create(request);
 
@@ -80,6 +82,7 @@ public class AvaliationController {
             )
     })
     @DeleteMapping("/{id}")
+    @ToAuthenticate
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         avaliationService.delete(id);
 

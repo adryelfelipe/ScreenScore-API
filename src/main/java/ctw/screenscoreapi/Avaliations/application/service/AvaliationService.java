@@ -42,7 +42,6 @@ public class AvaliationService {
         return movieRepository;
     }
 
-    @ToAuthenticate
     public long create(CreateAvaliationRequest request) {
         long userId = userSession.getUserId();
 
@@ -61,7 +60,6 @@ public class AvaliationService {
         return avaliationRepository.create(avaliation);
     }
 
-    @ToAuthenticate
     public void delete(long avaliationId) {
         Long userId = userSession.getUserId();
 

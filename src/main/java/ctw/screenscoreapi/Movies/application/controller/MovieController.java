@@ -9,6 +9,7 @@ import ctw.screenscoreapi.Movies.application.dtos.get.GetListOfMoviesResponse;
 import ctw.screenscoreapi.Movies.application.dtos.update.UpdateMovieRequest;
 import ctw.screenscoreapi.Movies.application.service.MovieService;
 import ctw.screenscoreapi.Movies.domain.enums.Genre;
+import ctw.screenscoreapi.Share.aop.ToAuthenticate;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -65,6 +66,7 @@ public class MovieController {
             )
     })
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ToAuthenticate
     public ResponseEntity<Void> create(
             @Parameter(content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
             @RequestPart() CreateMovieRequest data, MultipartFile file) throws IOException {
@@ -100,6 +102,7 @@ public class MovieController {
             )
     })
     @GetMapping("/externos")
+    @ToAuthenticate
     public ResponseEntity<GetListOfExternalMoviesResponse> getExternalMoviesByTitle(
             @NotBlank()
             @Parameter(description = "Título do filme", example = "Piratas do Caribe", required = true)
@@ -137,6 +140,7 @@ public class MovieController {
             )
     })
     @GetMapping("/externos/{id}")
+    @ToAuthenticate
     public ResponseEntity<GetExternalMovieResponse> getExternalMoviesById(
             @Positive(message = "O número identificador deve ser maior que zero")
             @Parameter(description = "Número identificador do filme", example = "25", required = true)
@@ -174,6 +178,7 @@ public class MovieController {
             )
     })
     @GetMapping("/{id}")
+    @ToAuthenticate
     public ResponseEntity<GetMovieResponse> getMovieById(
             @Positive(message = "O ID deve ser um número positivo")
             @Parameter(description = "Número identificador do filme", example = "4", required = true)
@@ -216,6 +221,7 @@ public class MovieController {
             )
     })
     @GetMapping()
+    @ToAuthenticate
     public ResponseEntity<GetListOfMoviesResponse> getMovies(
             @Parameter(description = "Título do filme", example = "Minions", required = false)
             @RequestParam(required = false)
@@ -254,6 +260,7 @@ public class MovieController {
             )
     })
     @DeleteMapping("/{id}")
+    @ToAuthenticate
     public ResponseEntity<Void> delete(
             @Parameter(description = "ID do filme", example = "256", required = true)
             @Positive(message = "O id do filme deve ser um número positivo")
@@ -298,6 +305,7 @@ public class MovieController {
             )
     })
     @PutMapping("/{id}")
+    @ToAuthenticate
     public ResponseEntity<Void> update(
             @Parameter(required = true)
             @PathVariable
@@ -327,6 +335,7 @@ public class MovieController {
             )
     })
     @GetMapping("/top10")
+    @ToAuthenticate
     public ResponseEntity<GetListOfMoviesResponse> getTop10Movies() {
         GetListOfMoviesResponse movies = movieService.getTop10Movies();
 

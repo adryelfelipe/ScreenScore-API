@@ -3,6 +3,7 @@ package ctw.screenscoreapi.Avaliations.application.service;
 import ctw.screenscoreapi.Auth.exception.UserNotAuthorizedException;
 import ctw.screenscoreapi.Avaliations.application.dtos.create.CreateAvaliationRequest;
 import ctw.screenscoreapi.Avaliations.application.dtos.create.CreateAvaliationToEntity;
+import ctw.screenscoreapi.Avaliations.application.dtos.get.GetAvaliationResponse;
 import ctw.screenscoreapi.Avaliations.application.exception.AvaliationNotFoundByIdException;
 import ctw.screenscoreapi.Avaliations.application.mapper.AvaliationMapper;
 import ctw.screenscoreapi.Avaliations.domain.AvaliationEntity;
@@ -15,6 +16,8 @@ import ctw.screenscoreapi.Users.domain.enums.Role;
 import ctw.screenscoreapi.Users.domain.repository.UserRepository;
 import ctw.screenscoreapi.Users.infra.session.UserSession;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class AvaliationService {
@@ -72,5 +75,12 @@ public class AvaliationService {
         }
 
         avaliationRepository.deleteById(avaliationId);
+    }
+
+    public GetAvaliationResponse getById(Long id) {
+        Optional<AvaliationEntity> optionalAvaliation = avaliationRepository.findById(id);
+        AvaliationEntity avaliation = optionalAvaliation.orElseThrow(() -> new AvaliationNotFoundByIdException(id));
+
+        return avaliationMapper.toResponse(avaliation);
     }
 }

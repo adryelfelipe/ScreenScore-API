@@ -1,6 +1,7 @@
 package ctw.screenscoreapi.Avaliations.application.controller;
 
 import ctw.screenscoreapi.Avaliations.application.dtos.create.CreateAvaliationRequest;
+import ctw.screenscoreapi.Avaliations.application.dtos.get.GetAvaliationResponse;
 import ctw.screenscoreapi.Avaliations.application.service.AvaliationService;
 import ctw.screenscoreapi.Share.aop.authentication.ToAuthenticate;
 import io.swagger.v3.oas.annotations.Operation;
@@ -89,5 +90,14 @@ public class AvaliationController {
         return ResponseEntity
                 .noContent()
                 .build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<GetAvaliationResponse> getById(@PathVariable Long id) {
+        GetAvaliationResponse resposne = avaliationService.getById(id);
+
+        return ResponseEntity
+                .ok()
+                .body(resposne);
     }
 }

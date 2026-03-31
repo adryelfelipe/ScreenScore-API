@@ -2,8 +2,11 @@ package ctw.screenscoreapi.Avaliations.application.mapper;
 
 import ctw.screenscoreapi.Avaliations.application.dtos.create.CreateAvaliationToEntity;
 import ctw.screenscoreapi.Avaliations.application.dtos.get.GetAvaliationResponse;
+import ctw.screenscoreapi.Avaliations.application.dtos.get.GetListOfAvaliationResponse;
 import ctw.screenscoreapi.Avaliations.domain.AvaliationEntity;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class AvaliationMapper {
@@ -27,5 +30,10 @@ public class AvaliationMapper {
                 avaliation.getScore(),
                 avaliation.getComment()
         );
+    }
+
+    public GetListOfAvaliationResponse toResponse(List<GetAvaliationResponse> avaliations) {
+
+        return new GetListOfAvaliationResponse(avaliations);
     }
 }

@@ -2,7 +2,9 @@ package ctw.screenscoreapi.Avaliations.application.controller;
 
 import ctw.screenscoreapi.Avaliations.application.dtos.create.CreateAvaliationRequest;
 import ctw.screenscoreapi.Avaliations.application.dtos.get.GetAvaliationResponse;
+import ctw.screenscoreapi.Avaliations.application.dtos.get.GetListOfAvaliationResponse;
 import ctw.screenscoreapi.Avaliations.application.service.AvaliationService;
+import ctw.screenscoreapi.Movies.application.dtos.get.GetListOfMoviesResponse;
 import ctw.screenscoreapi.Share.aop.authentication.ToAuthenticate;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -141,5 +143,15 @@ public class AvaliationController {
         return ResponseEntity
                 .ok()
                 .body(resposne);
+    }
+
+    @GetMapping
+    @ToAuthenticate
+    public ResponseEntity<GetListOfAvaliationResponse> getAll() {
+        GetListOfAvaliationResponse response = avaliationService.getAll();
+
+        return ResponseEntity
+                .ok()
+                .body(response);
     }
 }

@@ -4,10 +4,12 @@ import ctw.screenscoreapi.Auth.exception.UserNotAuthorizedException;
 import ctw.screenscoreapi.Avaliations.application.dtos.create.CreateAvaliationRequest;
 import ctw.screenscoreapi.Avaliations.application.dtos.create.CreateAvaliationToEntity;
 import ctw.screenscoreapi.Avaliations.application.dtos.get.GetAvaliationResponse;
+import ctw.screenscoreapi.Avaliations.application.dtos.get.GetListOfAvaliationResponse;
 import ctw.screenscoreapi.Avaliations.application.exception.AvaliationNotFoundByIdException;
 import ctw.screenscoreapi.Avaliations.application.mapper.AvaliationMapper;
 import ctw.screenscoreapi.Avaliations.domain.AvaliationEntity;
 import ctw.screenscoreapi.Avaliations.domain.AvaliationRepository;
+import ctw.screenscoreapi.Movies.application.dtos.get.GetListOfMoviesResponse;
 import ctw.screenscoreapi.Movies.application.exceptions.MovieNotFoundByIdException;
 import ctw.screenscoreapi.Movies.domain.entity.MovieEntity;
 import ctw.screenscoreapi.Movies.domain.repository.MovieRepository;
@@ -17,6 +19,7 @@ import ctw.screenscoreapi.Users.domain.repository.UserRepository;
 import ctw.screenscoreapi.Users.infra.session.UserSession;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -82,5 +85,12 @@ public class AvaliationService {
         AvaliationEntity avaliation = optionalAvaliation.orElseThrow(() -> new AvaliationNotFoundByIdException(id));
 
         return avaliationMapper.toResponse(avaliation);
+    }
+
+    public GetListOfAvaliationResponse getAll() {
+        List<AvaliationEntity> avaliations = avaliationRepository.findAll();
+        List<GetAvaliationResponse> response = avaliations.stream().map(avaliationMapper::toResponse).toList();
+
+        return avaliationMapper.toResponse(response);
     }
 }

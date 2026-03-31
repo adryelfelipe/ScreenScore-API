@@ -55,4 +55,21 @@ public class AvaliationSpringJdbcDao {
 
         return avaliations.stream().findFirst();
     }
+
+    public List<AvaliationEntity> findAll() {
+        String sql = "SELECT * FROM Avaliacoes";
+
+        List<AvaliationEntity> avaliations = jdbcTemplate.query(sql, (rs, rowNum) -> {
+
+            return new AvaliationEntity(
+                    rs.getLong("id"),
+                    rs.getString("comentario"),
+                    rs.getBigDecimal("nota"),
+                    rs.getLong("id_filme"),
+                    rs.getLong("id_usuario")
+            );
+        });
+
+        return avaliations;
+    }
 }

@@ -117,6 +117,10 @@ public class UserController {
                     description = "Usuário deletado com sucesso!"
             ),
             @ApiResponse(
+                    responseCode = "400",
+                    ref = "#/components/responses/400"
+            ),
+            @ApiResponse(
                     responseCode = "401",
                     ref = "#/components/responses/401"
             ),
@@ -193,6 +197,10 @@ public class UserController {
             @ApiResponse(
                     responseCode = "204",
                     description = "Usuário alterado com sucesso"
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    ref = "#/components/responses/400"
             ),
             @ApiResponse(
                     responseCode = "401",

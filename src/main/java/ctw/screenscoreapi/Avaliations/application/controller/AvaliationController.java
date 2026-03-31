@@ -71,6 +71,10 @@ public class AvaliationController {
                     description = "Avaliação deletada com sucesso!"
             ),
             @ApiResponse(
+                    responseCode = "400",
+                    ref = "#/components/responses/400"
+            ),
+            @ApiResponse(
                     responseCode = "401",
                     ref = "#/components/responses/401"
             ),
@@ -108,6 +112,10 @@ public class AvaliationController {
             @ApiResponse(
                     responseCode = "200",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = GetAvaliationResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    ref = "#/components/responses/400"
             ),
             @ApiResponse(
                     responseCode = "401",

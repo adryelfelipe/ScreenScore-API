@@ -40,8 +40,16 @@ public record GetMovieResponse(
                 """)
         List<Genre> genres,
 
-        List<Long> avaliations,
+        @Schema(example =
+                """
+                [
+                    1,
+                    2
+                ]
+                """)
+        List<Long> avaliationIds,
 
+        @Schema(example = "10.0")
         BigDecimal averageScore
 )  {}
 

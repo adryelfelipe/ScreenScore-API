@@ -338,7 +338,7 @@ public class MovieController {
             )
     })
     @GetMapping("/top10")
-    @ToAuthenticate
+    @ToAuthenticate@Schema(example = "1")
     public ResponseEntity<GetListOfMoviesResponse> getTop10Movies() {
         GetListOfMoviesResponse movies = movieService.getTop10Movies();
 

@@ -1,10 +1,9 @@
 package ctw.screenscoreapi.Movies.application.dtos.get;
 
-import ctw.screenscoreapi.Movies.domain.MovieEntity;
 import ctw.screenscoreapi.Movies.domain.enums.Genre;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public record GetMovieResponse(
@@ -39,6 +38,10 @@ public record GetMovieResponse(
                     "AVENTURA"
                 ]
                 """)
-        List<Genre> genres
+        List<Genre> genres,
+
+        List<Long> avaliations,
+
+        BigDecimal averageScore
 )  {}
 

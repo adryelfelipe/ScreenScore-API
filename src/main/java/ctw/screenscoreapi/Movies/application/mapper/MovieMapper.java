@@ -3,7 +3,7 @@ package ctw.screenscoreapi.Movies.application.mapper;
 import ctw.screenscoreapi.Movies.application.dtos.create.CreateMovieRequest;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetListOfMoviesResponse;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetMovieResponse;
-import ctw.screenscoreapi.Movies.domain.MovieEntity;
+import ctw.screenscoreapi.Movies.domain.entity.MovieEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -21,7 +21,9 @@ public class MovieMapper {
                 request.originalLanguage(),
                 request.title(),
                 request.overview(),
-                request.genres()
+                request.genres(),
+                null,
+                null
         );
     }
 
@@ -36,7 +38,9 @@ public class MovieMapper {
                 movieEntity.getReleaseDate(),
                 movieEntity.getPosterImage(),
                 movieEntity.getOverview(),
-                movieEntity.getGenres()
+                movieEntity.getGenres(),
+                movieEntity.getAvaliationsIds(),
+                movieEntity.getAverageScore()
         );
     }
 

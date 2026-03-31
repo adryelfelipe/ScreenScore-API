@@ -3,7 +3,7 @@ package ctw.screenscoreapi.Movies.infra.themoviedb.mapper;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetExternalMovieResponse;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetListOfExternalMoviesResponse;
 import ctw.screenscoreapi.Movies.infra.themoviedb.feign.TmdbUnkwonGenreException;
-import ctw.screenscoreapi.Movies.domain.MovieEntity;
+import ctw.screenscoreapi.Movies.domain.entity.MovieEntity;
 import ctw.screenscoreapi.Movies.domain.enums.Genre;
 import ctw.screenscoreapi.Movies.infra.themoviedb.feign.models.MovieApiEntity;
 import ctw.screenscoreapi.Movies.infra.themoviedb.feign.models.detailed.DetailedMovieApiEntity;
@@ -26,7 +26,9 @@ public class TmdbMapper {
                 apiEntity.getOriginal_language(),
                 apiEntity.getTitle(),
                 apiEntity.getOverview(),
-                genres
+                genres,
+                null,
+                null
         );
     }
 
@@ -42,7 +44,9 @@ public class TmdbMapper {
                 apiEntity.getOriginal_language(),
                 apiEntity.getTitle(),
                 apiEntity.getOverview(),
-                genres
+                genres,
+                null,
+                null
         );
     }
 

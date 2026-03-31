@@ -1,6 +1,6 @@
 package ctw.screenscoreapi.Movies.infra.repository.dao;
 
-import ctw.screenscoreapi.Movies.domain.MovieEntity;
+import ctw.screenscoreapi.Movies.domain.entity.MovieEntity;
 import ctw.screenscoreapi.Movies.domain.enums.Genre;
 import ctw.screenscoreapi.Movies.infra.repository.exception.DatabaseException;
 import ctw.screenscoreapi.Share.connection.ConnectionFactory;
@@ -19,6 +19,7 @@ public class MovieDaoJdbc {
     // Atributos
     private Logger logger = LoggerFactory.getLogger(MovieDaoJdbc.class);
 
+    /*
     // Metodos
     public long create(MovieEntity movie) {
         String sqlMoviesInsert = "INSERT INTO Filmes (titulo, adulto, data_lancamento, lingua_original, titulo_original, poster, visao_geral) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -95,7 +96,8 @@ public class MovieDaoJdbc {
                             rsMovie.getString("lingua_original"),
                             rsMovie.getString("titulo"),
                             rsMovie.getString("visao_geral"),
-                            genresl
+                            genresl,
+
                     );
 
                     movies.add(movie);
@@ -450,4 +452,6 @@ public class MovieDaoJdbc {
             throw new DatabaseException(e.getMessage());
         }
     }
+
+     */
 }

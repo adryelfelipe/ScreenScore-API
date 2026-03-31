@@ -2,6 +2,7 @@ package ctw.screenscoreapi.Movies.domain.entity;
 
 import ctw.screenscoreapi.Movies.domain.enums.Genre;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class MovieEntity {
@@ -15,9 +16,11 @@ public class MovieEntity {
     private String posterImage;
     private String overview;
     private List<Genre> genres;
+    private List<Long> avaliationsIds;
+    private BigDecimal averageScore;
 
     // Construtor
-    public MovieEntity(Long id, String posterImage, String releaseDate, boolean adult, String originalTitle, String originalLanguage, String title, String overview, List<Genre> genres) {
+    public MovieEntity(Long id, String posterImage, String releaseDate, boolean adult, String originalTitle, String originalLanguage, String title, String overview, List<Genre> genres, List<Long> avaliationsIds, BigDecimal averageScore) {
         this.id = id;
         this.posterImage = posterImage;
         this.releaseDate = releaseDate;
@@ -27,9 +30,27 @@ public class MovieEntity {
         this.title = title;
         this.overview = overview;
         this.genres = genres;
+        this.avaliationsIds = avaliationsIds;
+        this.averageScore = averageScore;
     }
 
     // Getters e Setters
+    public List<Long> getAvaliationsIds() {
+        return avaliationsIds;
+    }
+
+    public void setAvaliationsIds(List<Long> avaliationsIds) {
+        this.avaliationsIds = avaliationsIds;
+    }
+
+    public BigDecimal getAverageScore() {
+        return averageScore;
+    }
+
+    public void setAverageScore(BigDecimal averageScore) {
+        this.averageScore = averageScore;
+    }
+
     public Long getId() {
         return id;
     }

@@ -1,6 +1,6 @@
 package ctw.screenscoreapi.Movies.domain.repository;
 
-import ctw.screenscoreapi.Movies.domain.MovieEntity;
+import ctw.screenscoreapi.Movies.domain.entity.MovieEntity;
 import ctw.screenscoreapi.Movies.domain.enums.Genre;
 
 import java.util.List;

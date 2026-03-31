@@ -8,7 +8,7 @@ import ctw.screenscoreapi.Avaliations.application.mapper.AvaliationMapper;
 import ctw.screenscoreapi.Avaliations.domain.AvaliationEntity;
 import ctw.screenscoreapi.Avaliations.domain.AvaliationRepository;
 import ctw.screenscoreapi.Movies.application.exceptions.MovieNotFoundByIdException;
-import ctw.screenscoreapi.Movies.domain.MovieEntity;
+import ctw.screenscoreapi.Movies.domain.entity.MovieEntity;
 import ctw.screenscoreapi.Movies.domain.repository.MovieRepository;
 import ctw.screenscoreapi.Users.domain.entity.UserEntity;
 import ctw.screenscoreapi.Users.domain.enums.Role;

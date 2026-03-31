@@ -1,11 +1,12 @@
 package ctw.screenscoreapi.Movies.infra.repository.dao;
 
-import ctw.screenscoreapi.Movies.domain.MovieEntity;
+import ctw.screenscoreapi.Movies.domain.entity.MovieEntity;
 import ctw.screenscoreapi.Movies.domain.enums.Genre;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -56,9 +57,14 @@ public class MovieDaoSpringJdbc {
         return jdbcTemplate.query(
                 sqlMovies,
                 (rs,i) -> {
-                    List<Genre> genres = findGenresByMovie(rs.getLong("id"));
+                    Long movieId = rs.getLong("id");
+                    List<Genre> genres = findGenresByMovie(movieId);
                     MovieEntity movie = mapMovie(rs);
                     movie.setGenres(genres);
+                    List<Long> avalations = findAvaliationsByMovie(movieId);
+                    movie.setAvaliationsIds(avalations);
+                    movie.setAverageScore(findAverageScoreByMovie(movieId).orElse(null));
+
                     return movie;
                 }
         );
@@ -97,6 +103,8 @@ public class MovieDaoSpringJdbc {
         );
 
         movies.forEach(movie -> movie.setGenres(findGenresByMovie(movie.getId())));
+        movies.forEach(movie -> movie.setAvaliationsIds(findAvaliationsByMovie(movie.getId())));
+        movies.forEach(movie -> movie.setAverageScore(findAverageScoreByMovie(movie.getId()).orElse(null)));
 
         return movies;
     }
@@ -111,7 +119,9 @@ public class MovieDaoSpringJdbc {
                 rs.getString("lingua_original"),
                 rs.getString("titulo"),
                 rs.getString("visao_geral"),
-                new ArrayList<>()
+                new ArrayList<>(),
+                new ArrayList<>(),
+                null
         );
     }
 
@@ -130,20 +140,40 @@ public class MovieDaoSpringJdbc {
                 .toList();
     }
 
+    private List<Long> findAvaliationsByMovie(long movieId) {
+        String sql = "SELECT id FROM Avaliacoes WHERE id_filme = ?";
+
+        List<Long> avaliations = jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("id"), movieId);
+
+        return avaliations;
+    }
+
+    private Optional<BigDecimal> findAverageScoreByMovie(long movieId) {
+        String sql = "SELECT AVG(nota) AS media FROM Avaliacoes WHERE id_filme = ?";
+
+        BigDecimal averageScore= jdbcTemplate.queryForObject(sql, BigDecimal.class, movieId);
+
+        return Optional.ofNullable(averageScore);
+    }
+
     public Optional<MovieEntity> findByExactTitle(String titulo) {
         String sql = "Select * from Filmes where titulo = ?";
+        String sql2 = "SELECT AVG(nota) FROM Avaliacoes WHERE id_filme = ?";
 
         List<MovieEntity> movies = jdbcTemplate.query(
                 sql,
                 (rs, rowNum) -> {
-                    List<Genre> genres = findGenresByMovie(rs.getLong("id"));
+                    Long movieId = rs.getLong("id");
+                    List<Genre> genres = findGenresByMovie(movieId);
+                    List<Long> avaliations = findAvaliationsByMovie(movieId);
                     MovieEntity movie = mapMovie(rs);
                     movie.setGenres(genres);
+                    movie.setAvaliationsIds(avaliations);
+                    movie.setAverageScore(findAverageScoreByMovie(movieId).orElse(null));
 
                     return movie;
                 },
                 titulo
-
         );
 
         return movies.stream().findFirst();
@@ -193,8 +223,12 @@ public class MovieDaoSpringJdbc {
                 sql,
                 (rs, rowNum) -> {
                     MovieEntity movie = mapMovie(rs);
-                    List<Genre> genres = findGenresByMovie(movie.getId());
+                    Long movieId = rs.getLong("id");
+                    List<Genre> genres = findGenresByMovie(movieId);
+                    List<Long> avaliations = findAvaliationsByMovie(movieId);
                     movie.setGenres(genres);
+                    movie.setAvaliationsIds(avaliations);
+                    movie.setAverageScore(findAverageScoreByMovie(movieId).orElse(null));
 
                     return movie;
                 },

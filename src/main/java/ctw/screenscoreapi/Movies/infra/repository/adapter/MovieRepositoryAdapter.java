@@ -1,6 +1,6 @@
 package ctw.screenscoreapi.Movies.infra.repository.adapter;
 
-import ctw.screenscoreapi.Movies.domain.MovieEntity;
+import ctw.screenscoreapi.Movies.domain.entity.MovieEntity;
 import ctw.screenscoreapi.Movies.domain.enums.Genre;
 import ctw.screenscoreapi.Movies.domain.repository.MovieRepository;
 import ctw.screenscoreapi.Movies.infra.repository.dao.MovieDaoJdbc;

@@ -13,7 +13,7 @@ import ctw.screenscoreapi.Movies.domain.enums.Genre;
 import ctw.screenscoreapi.Movies.infra.aws.service.S3Service;
 import ctw.screenscoreapi.Movies.infra.themoviedb.feign.models.detailed.DetailedMovieApiEntity;
 import ctw.screenscoreapi.Movies.application.mapper.MovieMapper;
-import ctw.screenscoreapi.Movies.domain.MovieEntity;
+import ctw.screenscoreapi.Movies.domain.entity.MovieEntity;
 import ctw.screenscoreapi.Movies.domain.repository.MovieRepository;
 import ctw.screenscoreapi.Movies.infra.themoviedb.feign.MovieApiClient;
 import ctw.screenscoreapi.Movies.infra.themoviedb.feign.models.MovieApiResponse;

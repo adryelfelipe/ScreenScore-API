@@ -9,6 +9,7 @@ import ctw.screenscoreapi.Movies.application.dtos.update.UpdateMovieRequest;
 import ctw.screenscoreapi.Movies.application.service.MovieService;
 import ctw.screenscoreapi.Movies.domain.enums.Genre;
 import ctw.screenscoreapi.Share.aop.authentication.ToAuthenticate;
+import ctw.screenscoreapi.Share.aop.authorization.ToAuthorize;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -66,6 +67,7 @@ public class MovieController {
     })
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ToAuthenticate
+    @ToAuthorize
     public ResponseEntity<Void> create(
             @Parameter(content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
             @RequestPart() CreateMovieRequest data, MultipartFile file) throws IOException {
@@ -260,6 +262,7 @@ public class MovieController {
     })
     @DeleteMapping("/{id}")
     @ToAuthenticate
+    @ToAuthorize
     public ResponseEntity<Void> delete(
             @Parameter(description = "ID do filme", example = "256", required = true)
             @Positive(message = "O id do filme deve ser um número positivo")
@@ -305,6 +308,7 @@ public class MovieController {
     })
     @PutMapping("/{id}")
     @ToAuthenticate
+    @ToAuthorize
     public ResponseEntity<Void> update(
             @Parameter(required = true)
             @PathVariable

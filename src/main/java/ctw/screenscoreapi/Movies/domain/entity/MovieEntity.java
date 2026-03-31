@@ -3,6 +3,7 @@ package ctw.screenscoreapi.Movies.domain.entity;
 import ctw.screenscoreapi.Movies.domain.enums.Genre;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 public class MovieEntity {
@@ -31,7 +32,7 @@ public class MovieEntity {
         this.overview = overview;
         this.genres = genres;
         this.avaliationsIds = avaliationsIds;
-        this.averageScore = averageScore;
+        setAverageScore(averageScore);
     }
 
     // Getters e Setters
@@ -48,7 +49,7 @@ public class MovieEntity {
     }
 
     public void setAverageScore(BigDecimal averageScore) {
-        this.averageScore = averageScore;
+        this.averageScore = averageScore.setScale(2, RoundingMode.HALF_UP);
     }
 
     public Long getId() {

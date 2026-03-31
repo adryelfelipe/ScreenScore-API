@@ -12,6 +12,7 @@ import ctw.screenscoreapi.Movies.application.exceptions.MovieTitleAlreadyUsedExc
 import ctw.screenscoreapi.Movies.domain.enums.Genre;
 import ctw.screenscoreapi.Movies.infra.aws.service.S3Service;
 import ctw.screenscoreapi.Movies.infra.themoviedb.feign.models.detailed.DetailedMovieApiEntity;
+import ctw.screenscoreapi.Share.aop.ToAuthenticate;
 import ctw.screenscoreapi.Share.exception.categories.NoContentToUpdateException;
 import ctw.screenscoreapi.Movies.application.mapper.MovieMapper;
 import ctw.screenscoreapi.Movies.domain.MovieEntity;
@@ -49,6 +50,7 @@ public class MovieService {
     }
 
     // Metodos
+    @ToAuthenticate
     public long create(CreateMovieRequest request, MultipartFile file) throws IOException {
         String title = request.title();
         Optional<MovieEntity> optionalMovie = movieRepository.findByExactTitle(title);
@@ -63,6 +65,7 @@ public class MovieService {
         return movieRepository.create(movie);
     }
 
+    @ToAuthenticate
     public GetListOfExternalMoviesResponse getExternalByTitle(String title) {
         MovieApiResponse movieApiResponse = movieApiClient.search(title, "pt-BR", themoviedbApiKey);
         List<MovieEntity> movies = tmdbMapper.toDomainEntities(movieApiResponse.getResults());
@@ -70,6 +73,7 @@ public class MovieService {
         return tmdbMapper.toResponseEntities(movies);
     }
 
+    @ToAuthenticate
     public GetExternalMovieResponse getExternalById(long id) {
         DetailedMovieApiEntity movieApiEntity = movieApiClient.search(id, "pt-BR", themoviedbApiKey);
         MovieEntity movieEntity = tmdbMapper.toDomainEntity(movieApiEntity);
@@ -77,6 +81,7 @@ public class MovieService {
         return tmdbMapper.toResponseEntity(movieEntity);
     }
 
+    @ToAuthenticate
     public GetMovieResponse getById(long id) {
         MovieEntity movie = movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundByIdException(id));                                             ;
         String posterUrl = s3Service.getPresignedUrl(movie.getPosterImage());
@@ -85,6 +90,7 @@ public class MovieService {
         return movieMapper.toResponse(movie);
     }
 
+    @ToAuthenticate
     public GetListOfMoviesResponse getMovies(String title, List<Genre> genres) {
         if(title != null || genres != null){
             List<MovieEntity> movieEntities = movieRepository.findMovieByFilter(title, genres);
@@ -101,6 +107,7 @@ public class MovieService {
         return movieMapper.toResponse(movies);
     }
 
+    @ToAuthenticate
     public void delete(long id) {
         MovieEntity movie = movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundByIdException(id));
         movieRepository.delete(id);
@@ -108,6 +115,7 @@ public class MovieService {
         s3Service.deleteObject(posterKey);
     }
 
+    @ToAuthenticate
     public void update(long id, UpdateMovieRequest request) {
         if (request.title() == null &&
                 request.originalLanguage() == null &&
@@ -164,6 +172,7 @@ public class MovieService {
         movieRepository.update(movie);
     }
 
+    @ToAuthenticate
     public GetListOfMoviesResponse getTop10Movies() {
         // Implement after create the avaliations module
         return getMovies(null ,null);

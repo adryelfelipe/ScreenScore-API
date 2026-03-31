@@ -87,14 +87,25 @@ public class MovieService {
     public GetListOfMoviesResponse getMovies(String title, List<Genre> genres) {
         if(title != null || genres != null){
             List<MovieEntity> movieEntities = movieRepository.findMovieByFilter(title, genres);
-            movieEntities.stream().forEach(m -> m.setPosterImage(s3Service.getPresignedUrl(m.getPosterImage())));
+
+            movieEntities.forEach(movie -> {
+                if(movie.getPosterImage() != null && !movie.getPosterImage().isBlank()) {
+                    movie.setPosterImage(s3Service.getPresignedUrl(movie.getPosterImage()));
+                }
+            });
+
             List<GetMovieResponse> movieResponses = movieEntities.stream().map(movieMapper::toResponse).toList();
 
             return new GetListOfMoviesResponse(movieResponses);
         }
 
         List<MovieEntity> movies = movieRepository.findAllMovies();
-        movies.stream().forEach(m -> m.setPosterImage(s3Service.getPresignedUrl(m.getPosterImage())));
+
+        movies.forEach(movie -> {
+            if(movie.getPosterImage() != null && !movie.getPosterImage().isBlank()) {
+                movie.setPosterImage(s3Service.getPresignedUrl(movie.getPosterImage()));
+            }
+        });;
 
         return movieMapper.toResponse(movies);
     }
@@ -164,7 +175,11 @@ public class MovieService {
 
     public GetListOfMoviesResponse getTop10Movies() {
         List<MovieEntity> movies = movieRepository.findTop10Movies();
-        movies.forEach(movie -> movie.setPosterImage(s3Service.getPresignedUrl(movie.getPosterImage())));
+        movies.forEach(movie -> {
+            if(movie.getPosterImage() != null && !movie.getPosterImage().isBlank()) {
+                movie.setPosterImage(s3Service.getPresignedUrl(movie.getPosterImage()));
+            }
+        });
 
         return movieMapper.toResponse(movies);
     }

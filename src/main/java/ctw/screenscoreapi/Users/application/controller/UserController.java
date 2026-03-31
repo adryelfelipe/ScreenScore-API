@@ -1,12 +1,12 @@
 package ctw.screenscoreapi.Users.application.controller;
 
-import ctw.screenscoreapi.Share.aop.ToAuthenticate;
+import ctw.screenscoreapi.Share.aop.authentication.ToAuthenticate;
+import ctw.screenscoreapi.Share.aop.authorization.ToAuthorize;
 import ctw.screenscoreapi.Users.application.dtos.create.CreateUserRequest;
 import ctw.screenscoreapi.Users.application.dtos.get.GetListOfUsersResponse;
 import ctw.screenscoreapi.Users.application.dtos.get.GetUserResponse;
 import ctw.screenscoreapi.Users.application.dtos.update.UpdateUserRequest;
 import ctw.screenscoreapi.Users.application.service.UserService;
-import ctw.screenscoreapi.Users.domain.enums.Role;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -60,6 +60,7 @@ public class UserController {
     })
     @PostMapping
     @ToAuthenticate
+    @ToAuthorize
     public ResponseEntity<Void> create(@Valid @RequestBody CreateUserRequest request) {
         long id = userService.create(request);
 
@@ -96,6 +97,7 @@ public class UserController {
     })
     @GetMapping("/{id}")
     @ToAuthenticate
+    @ToAuthorize
     public ResponseEntity<GetUserResponse> getById(
             @Positive(message = "O ID deve ser um número positivo")
             @Parameter(description = "Número identificador do usuário", example = "1")
@@ -129,6 +131,7 @@ public class UserController {
     })
     @DeleteMapping("/{id}")
     @ToAuthenticate
+    @ToAuthorize
     public ResponseEntity<Void> deleteById(
             @Positive(message = "O ID deve ser um número positivo")
             @Parameter(example = "1", description = "Número identificar do usuário")
@@ -161,6 +164,7 @@ public class UserController {
     })
     @GetMapping
     @ToAuthenticate
+    @ToAuthorize
     public ResponseEntity<GetListOfUsersResponse> getAll() {
         GetListOfUsersResponse users = userService.getAll();
 
@@ -213,6 +217,7 @@ public class UserController {
     })
     @PutMapping("/{id}")
     @ToAuthenticate
+    @ToAuthorize
     public ResponseEntity<Void> update(
             @Positive(message = "O número identificador de usuário deve ser positivo")
             @PathVariable

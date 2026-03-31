@@ -2,7 +2,7 @@ package ctw.screenscoreapi.Avaliations.application.controller;
 
 import ctw.screenscoreapi.Avaliations.application.dtos.create.CreateAvaliationRequest;
 import ctw.screenscoreapi.Avaliations.application.service.AvaliationService;
-import ctw.screenscoreapi.Share.aop.ToAuthenticate;
+import ctw.screenscoreapi.Share.aop.authentication.ToAuthenticate;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

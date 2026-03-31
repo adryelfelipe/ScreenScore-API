@@ -1,4 +1,4 @@
-package ctw.screenscoreapi.Share.aop;
+package ctw.screenscoreapi.Share.aop.authentication;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

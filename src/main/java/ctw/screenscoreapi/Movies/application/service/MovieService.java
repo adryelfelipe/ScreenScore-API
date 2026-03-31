@@ -12,8 +12,6 @@ import ctw.screenscoreapi.Movies.application.exceptions.MovieTitleAlreadyUsedExc
 import ctw.screenscoreapi.Movies.domain.enums.Genre;
 import ctw.screenscoreapi.Movies.infra.aws.service.S3Service;
 import ctw.screenscoreapi.Movies.infra.themoviedb.feign.models.detailed.DetailedMovieApiEntity;
-import ctw.screenscoreapi.Share.aop.ToAuthenticate;
-import ctw.screenscoreapi.Share.exception.categories.NoContentToUpdateException;
 import ctw.screenscoreapi.Movies.application.mapper.MovieMapper;
 import ctw.screenscoreapi.Movies.domain.MovieEntity;
 import ctw.screenscoreapi.Movies.domain.repository.MovieRepository;

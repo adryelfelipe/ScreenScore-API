@@ -1,6 +1,5 @@
 package ctw.screenscoreapi.Avaliations.application.service;
 
-import ctw.screenscoreapi.Auth.exception.UserNotAuthenticatedException;
 import ctw.screenscoreapi.Auth.exception.UserNotAuthorizedException;
 import ctw.screenscoreapi.Avaliations.application.dtos.create.CreateAvaliationRequest;
 import ctw.screenscoreapi.Avaliations.application.dtos.create.CreateAvaliationToEntity;
@@ -11,7 +10,6 @@ import ctw.screenscoreapi.Avaliations.domain.AvaliationRepository;
 import ctw.screenscoreapi.Movies.application.exceptions.MovieNotFoundByIdException;
 import ctw.screenscoreapi.Movies.domain.MovieEntity;
 import ctw.screenscoreapi.Movies.domain.repository.MovieRepository;
-import ctw.screenscoreapi.Share.aop.ToAuthenticate;
 import ctw.screenscoreapi.Users.domain.entity.UserEntity;
 import ctw.screenscoreapi.Users.domain.enums.Role;
 import ctw.screenscoreapi.Users.domain.repository.UserRepository;

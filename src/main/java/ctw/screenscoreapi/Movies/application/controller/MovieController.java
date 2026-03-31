@@ -1,6 +1,5 @@
 package ctw.screenscoreapi.Movies.application.controller;
 
-import ctw.screenscoreapi.Movies.application.dtos.create.CreateMovieMultipartRequest;
 import ctw.screenscoreapi.Movies.application.dtos.create.CreateMovieRequest;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetExternalMovieResponse;
 import ctw.screenscoreapi.Movies.application.dtos.get.GetMovieResponse;
@@ -9,7 +8,7 @@ import ctw.screenscoreapi.Movies.application.dtos.get.GetListOfMoviesResponse;
 import ctw.screenscoreapi.Movies.application.dtos.update.UpdateMovieRequest;
 import ctw.screenscoreapi.Movies.application.service.MovieService;
 import ctw.screenscoreapi.Movies.domain.enums.Genre;
-import ctw.screenscoreapi.Share.aop.ToAuthenticate;
+import ctw.screenscoreapi.Share.aop.authentication.ToAuthenticate;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

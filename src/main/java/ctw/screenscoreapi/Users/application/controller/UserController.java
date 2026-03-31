@@ -219,7 +219,7 @@ public class UserController {
     @ToAuthenticate
     @ToAuthorize
     public ResponseEntity<Void> update(
-            @Positive(message = "O número identificador de usuário deve ser positivo")
+            @Positive(message = "O ID deve ser um número positivo")
             @Parameter(description = "Número identificador do usuário", example = "4", required = true)
             @PathVariable
             long id,

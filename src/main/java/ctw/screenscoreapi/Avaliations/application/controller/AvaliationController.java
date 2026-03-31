@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -89,6 +90,7 @@ public class AvaliationController {
     @DeleteMapping("/{id}")
     @ToAuthenticate
     public ResponseEntity<Void> delete(
+            @Positive(message = "O ID deve ser um número positivo")
             @Parameter(description = "Número identificador da avaliação", example = "4", required = true)
             @PathVariable Long id) {
         avaliationService.delete(id);
@@ -123,6 +125,7 @@ public class AvaliationController {
     @GetMapping("/{id}")
     @ToAuthenticate
     public ResponseEntity<GetAvaliationResponse> getById(
+            @Positive(message = "O ID deve ser um número positivo")
             @Parameter(description = "Número identificador da avaliação", example = "4", required = true)
             @PathVariable Long id) {
         GetAvaliationResponse resposne = avaliationService.getById(id);

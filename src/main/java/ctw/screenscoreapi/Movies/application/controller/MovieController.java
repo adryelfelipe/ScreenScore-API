@@ -143,7 +143,7 @@ public class MovieController {
     @GetMapping("/externos/{id}")
     @ToAuthenticate
     public ResponseEntity<GetExternalMovieResponse> getExternalMoviesById(
-            @Positive(message = "O número identificador deve ser maior que zero")
+            @Positive(message = "O ID deve ser um número positivo")
             @Parameter(description = "Número identificador do filme", example = "25", required = true)
             @PathVariable
             long id
@@ -264,8 +264,8 @@ public class MovieController {
     @ToAuthenticate
     @ToAuthorize
     public ResponseEntity<Void> delete(
+            @Positive(message = "O ID deve ser um número positivo")
             @Parameter(description = "ID do filme", example = "256", required = true)
-            @Positive(message = "O id do filme deve ser um número positivo")
             @PathVariable
             long id
     ) {
@@ -310,6 +310,7 @@ public class MovieController {
     @ToAuthenticate
     @ToAuthorize
     public ResponseEntity<Void> update(
+            @Positive(message = "O ID deve ser um número positivo")
             @Parameter(description = "Número identificador do filme", example = "4", required = true)
             @PathVariable
             long id,

@@ -47,7 +47,7 @@ public class AvaliationSpringJdbcDao {
             return new AvaliationEntity(
                     rs.getLong("id"),
                     rs.getString("comentario"),
-                    rs.getDouble("nota"),
+                    rs.getBigDecimal("nota"),
                     rs.getLong("id_filme"),
                     rs.getLong("id_usuario")
             );

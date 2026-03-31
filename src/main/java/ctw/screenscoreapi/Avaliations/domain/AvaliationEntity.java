@@ -1,13 +1,15 @@
 package ctw.screenscoreapi.Avaliations.domain;
 
+import java.math.BigDecimal;
+
 public class AvaliationEntity {
     private Long id;
     private Long userId;
     private Long movieId;
-    private double score;
+    private BigDecimal score;
     private String comment;
 
-    public AvaliationEntity(Long id, String comment, double score, Long movieId, Long userId) {
+    public AvaliationEntity(Long id, String comment, BigDecimal score, Long movieId, Long userId) {
         this.id = id;
         this.comment = comment;
         this.score = score;
@@ -31,11 +33,11 @@ public class AvaliationEntity {
         this.comment = comment;
     }
 
-    public double getScore() {
+    public BigDecimal getScore() {
         return score;
     }
 
-    public void setScore(double score) {
+    public void setScore(BigDecimal score) {
         this.score = score;
     }
 

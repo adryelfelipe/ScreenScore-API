@@ -15,6 +15,7 @@ public class MovieEntity {
     private String posterImage;
     private String overview;
     private List<Genre> genres;
+    private List<Long> avaliations;
 
     // Construtor
     public MovieEntity(Long id, String posterImage, String releaseDate, boolean adult, String originalTitle, String originalLanguage, String title, String overview, List<Genre> genres) {

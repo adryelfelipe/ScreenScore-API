@@ -5,6 +5,7 @@ import ctw.screenscoreapi.Avaliations.application.dtos.get.GetAvaliationResponse
 import ctw.screenscoreapi.Avaliations.application.service.AvaliationService;
 import ctw.screenscoreapi.Share.aop.authentication.ToAuthenticate;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -87,7 +88,9 @@ public class AvaliationController {
     })
     @DeleteMapping("/{id}")
     @ToAuthenticate
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(
+            @Parameter(description = "Número identificador da avaliação", example = "4", required = true)
+            @PathVariable Long id) {
         avaliationService.delete(id);
 
         return ResponseEntity
@@ -119,7 +122,9 @@ public class AvaliationController {
     })
     @GetMapping("/{id}")
     @ToAuthenticate
-    public ResponseEntity<GetAvaliationResponse> getById(@PathVariable Long id) {
+    public ResponseEntity<GetAvaliationResponse> getById(
+            @Parameter(description = "Número identificador da avaliação", example = "4", required = true)
+            @PathVariable Long id) {
         GetAvaliationResponse resposne = avaliationService.getById(id);
 
         return ResponseEntity

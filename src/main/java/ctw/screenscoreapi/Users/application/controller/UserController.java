@@ -100,7 +100,7 @@ public class UserController {
     @ToAuthorize
     public ResponseEntity<GetUserResponse> getById(
             @Positive(message = "O ID deve ser um número positivo")
-            @Parameter(description = "Número identificador do usuário", example = "1")
+            @Parameter(description = "Número identificador do usuário", example = "4", required = true)
             @PathVariable long id) {
         GetUserResponse response = userService.getById(id);
 
@@ -134,7 +134,7 @@ public class UserController {
     @ToAuthorize
     public ResponseEntity<Void> deleteById(
             @Positive(message = "O ID deve ser um número positivo")
-            @Parameter(example = "1", description = "Número identificar do usuário")
+            @Parameter(description = "Número identificador do usuário", example = "4", required = true)
             @PathVariable long id) {
         userService.deleteById(id);
 
@@ -220,6 +220,7 @@ public class UserController {
     @ToAuthorize
     public ResponseEntity<Void> update(
             @Positive(message = "O número identificador de usuário deve ser positivo")
+            @Parameter(description = "Número identificador do usuário", example = "4", required = true)
             @PathVariable
             long id,
 

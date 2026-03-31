@@ -310,7 +310,7 @@ public class MovieController {
     @ToAuthenticate
     @ToAuthorize
     public ResponseEntity<Void> update(
-            @Parameter(required = true)
+            @Parameter(description = "Número identificador do filme", example = "4", required = true)
             @PathVariable
             long id,
 

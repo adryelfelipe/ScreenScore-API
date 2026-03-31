@@ -1,5 +1,6 @@
 package ctw.screenscoreapi.Users.application.controller;
 
+import ctw.screenscoreapi.Share.aop.ToAuthenticate;
 import ctw.screenscoreapi.Users.application.dtos.create.CreateUserRequest;
 import ctw.screenscoreapi.Users.application.dtos.get.GetListOfUsersResponse;
 import ctw.screenscoreapi.Users.application.dtos.get.GetUserResponse;
@@ -58,6 +59,7 @@ public class UserController {
             )
     })
     @PostMapping
+    @ToAuthenticate
     public ResponseEntity<Void> create(@Valid @RequestBody CreateUserRequest request) {
         long id = userService.create(request);
 
@@ -93,6 +95,7 @@ public class UserController {
             )
     })
     @GetMapping("/{id}")
+    @ToAuthenticate
     public ResponseEntity<GetUserResponse> getById(
             @Positive(message = "O ID deve ser um número positivo")
             @Parameter(description = "Número identificador do usuário", example = "1")
@@ -125,6 +128,7 @@ public class UserController {
             )
     })
     @DeleteMapping("/{id}")
+    @ToAuthenticate
     public ResponseEntity<Void> deleteById(
             @Positive(message = "O ID deve ser um número positivo")
             @Parameter(example = "1", description = "Número identificar do usuário")
@@ -156,6 +160,7 @@ public class UserController {
             )
     })
     @GetMapping
+    @ToAuthenticate
     public ResponseEntity<GetListOfUsersResponse> getAll() {
         GetListOfUsersResponse users = userService.getAll();
 
@@ -207,6 +212,7 @@ public class UserController {
             )
     })
     @PutMapping("/{id}")
+    @ToAuthenticate
     public ResponseEntity<Void> update(
             @Positive(message = "O número identificador de usuário deve ser positivo")
             @PathVariable

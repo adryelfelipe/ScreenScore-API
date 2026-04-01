@@ -145,6 +145,24 @@ public class AvaliationController {
                 .body(resposne);
     }
 
+    @Operation(
+            summary = "Retorna filmes cadastrados no sistema",
+            description = "Retorna uma lista de filmes disponíveis no sistema."
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = GetListOfAvaliationResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    ref = "#/components/responses/401"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    ref = "#/components/responses/500"
+            )
+    })
     @GetMapping
     @ToAuthenticate
     public ResponseEntity<GetListOfAvaliationResponse> getAll() {

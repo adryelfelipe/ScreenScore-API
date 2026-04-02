@@ -1,10 +1,8 @@
 package ctw.screenscoreapi.Share.exception;
 
-import ctw.screenscoreapi.Auth.exception.AuthException;
-import ctw.screenscoreapi.Auth.exception.InvalidCredentialsException;
-import ctw.screenscoreapi.Auth.exception.UserNotAuthenticatedException;
-import ctw.screenscoreapi.Auth.exception.UserNotAuthorizedException;
-import ctw.screenscoreapi.Movies.application.exceptions.MovieApplicationException;
+import ctw.screenscoreapi.Module.Auth.exception.AuthException;
+import ctw.screenscoreapi.Module.Auth.exception.UserNotAuthorizedException;
+import ctw.screenscoreapi.Module.Movies.application.exceptions.MovieApplicationException;
 import ctw.screenscoreapi.Share.exception.categories.DataAlreadyUsedException;
 import ctw.screenscoreapi.Share.exception.categories.DomainResourceNotFoundException;
 import ctw.screenscoreapi.Share.exception.categories.NoContentToUpdateException;

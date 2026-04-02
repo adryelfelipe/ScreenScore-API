@@ -1,0 +1,40 @@
+package ctw.screenscoreapi.Module.Movies.application.dtos.get;
+
+import ctw.screenscoreapi.Module.Movies.domain.enums.Genre;
+import io.swagger.v3.oas.annotations.media.Schema;
+
+import java.util.List;
+
+public record GetExternalMovieResponse(
+    @Schema(example = "ScreenScore, batalha nas estrelas")
+    String title,
+
+    Long id,
+
+    @Schema(example = "eu")
+    String originalLanguage,
+
+    @Schema(example = "ScreenScore, battle in the Stars")
+    String originalTitle,
+
+    @Schema(example = "false")
+    Boolean adult,
+
+    @Schema(example = "2026-02-26")
+    String releaseDate,
+
+    @Schema(example = "/caminho-da-imagem.jpg")
+    String posterImage,
+
+    @Schema(example = "ScreenScore é a melhor API para gestão de filmes!")
+    String overview,
+
+    @Schema(example =
+            """
+            [
+                "ACAO", 
+                "AVENTURA"
+            ]
+            """)
+    List<Genre> genres
+)  {}

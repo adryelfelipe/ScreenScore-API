@@ -50,6 +50,10 @@ public class UserController {
                     ref = "#/components/responses/401"
             ),
             @ApiResponse(
+                    responseCode = "403",
+                    ref = "#/components/responses/403"
+            ),
+            @ApiResponse(
                     responseCode = "409",
                     ref = "#/components/responses/409"
             ),
@@ -85,6 +89,10 @@ public class UserController {
             @ApiResponse(
                     responseCode = "401",
                     ref = "#/components/responses/401"
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    ref = "#/components/responses/403"
             ),
             @ApiResponse(
                     responseCode = "404",
@@ -125,6 +133,10 @@ public class UserController {
                     ref = "#/components/responses/401"
             ),
             @ApiResponse(
+                    responseCode = "403",
+                    ref = "#/components/responses/403"
+            ),
+            @ApiResponse(
                     responseCode = "404",
                     ref = "#/components/responses/404"
             ),
@@ -160,6 +172,10 @@ public class UserController {
             @ApiResponse(
                     responseCode = "401",
                     ref = "#/components/responses/401"
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    ref = "#/components/responses/403"
             ),
             @ApiResponse(
                     responseCode = "500",
@@ -205,6 +221,10 @@ public class UserController {
             @ApiResponse(
                     responseCode = "401",
                     ref = "#/components/responses/401"
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    ref = "#/components/responses/403"
             ),
             @ApiResponse(
                     responseCode = "404",

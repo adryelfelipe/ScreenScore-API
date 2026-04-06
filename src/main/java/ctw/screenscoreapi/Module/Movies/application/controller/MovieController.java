@@ -57,6 +57,10 @@ public class MovieController {
                     ref = "#/components/responses/400"
             ),
             @ApiResponse(
+                    responseCode = "403",
+                    ref = "#/components/responses/403"
+            ),
+            @ApiResponse(
                     responseCode = "409",
                     ref = "#/components/responses/409"
             ),
@@ -132,6 +136,10 @@ public class MovieController {
                     ref = "#/components/responses/400"
             ),
             @ApiResponse(
+                    responseCode = "403",
+                    ref = "#/components/responses/403"
+            ),
+            @ApiResponse(
                     responseCode = "500",
                     ref = "#/components/responses/500"
             ),
@@ -142,6 +150,7 @@ public class MovieController {
     })
     @GetMapping("/externos/{id}")
     @ToAuthenticate
+    @ToAuthorize
     public ResponseEntity<GetExternalMovieResponse> getExternalMoviesById(
             @Positive(message = "O ID deve ser um número positivo")
             @Parameter(description = "Número identificador do filme", example = "25", required = true)

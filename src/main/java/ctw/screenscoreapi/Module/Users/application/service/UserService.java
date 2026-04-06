@@ -5,7 +5,7 @@ import ctw.screenscoreapi.Module.Users.application.dtos.get.GetListOfUsersRespon
 import ctw.screenscoreapi.Module.Users.application.dtos.get.GetUserResponse;
 import ctw.screenscoreapi.Module.Users.application.dtos.update.UpdateUserRequest;
 import ctw.screenscoreapi.Module.Users.application.exception.UserEmailAlreadyUsedException;
-import ctw.screenscoreapi.Module.Users.application.exception.UserNoContentsToUpdateException;
+import ctw.screenscoreapi.Module.Users.application.exception.UserNoContentToUpdateException;
 import ctw.screenscoreapi.Module.Users.application.exception.UserNotFoundByEmailException;
 import ctw.screenscoreapi.Module.Users.application.exception.UserNotFoundByIdException;
 import ctw.screenscoreapi.Module.Users.application.mapper.UserMapper;
@@ -80,7 +80,7 @@ public class UserService {
 
     public void update(long id, UpdateUserRequest request) {
         if(request.email() == null && request.name() == null && request.password() == null && request.role() == null) {
-            throw new UserNoContentsToUpdateException();
+            throw new UserNoContentToUpdateException();
         }
 
         UserEntity userById = userRepository.findById(id).orElseThrow(() -> new UserNotFoundByIdException(id));

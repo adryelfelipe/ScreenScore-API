@@ -1,7 +1,7 @@
 package ctw.screenscoreapi.Share.aop.authentication;
 
-import ctw.screenscoreapi.Auth.exception.UserNotAuthenticatedException;
-import ctw.screenscoreapi.Users.infra.session.UserSession;
+import ctw.screenscoreapi.Module.Auth.exception.UserNotAuthenticatedException;
+import ctw.screenscoreapi.Module.Users.infra.session.UserSession;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.core.annotation.Order;

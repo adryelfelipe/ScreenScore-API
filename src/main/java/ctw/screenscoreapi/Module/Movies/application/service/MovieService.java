@@ -119,14 +119,14 @@ public class MovieService {
         s3Service.deleteObject(posterKey);
     }
 
-    public void update(long id, UpdateMovieRequest request) {
+    public void update(long id, UpdateMovieRequest request, MultipartFile file) throws IOException {
         if (request.title() == null &&
                 request.originalLanguage() == null &&
                 request.originalTitle() == null &&
                 request.adult() == null &&
                 request.releaseDate() == null &&
-                request.posterImage() == null &&
                 request.overview() == null &&
+                file == null &&
                 request.genres() == null) {
 
             throw new MovieNoContentToUpdateException();
@@ -137,7 +137,7 @@ public class MovieService {
         if(request.title() != null) {
             Optional<MovieEntity> optionalMovie = movieRepository.findByExactTitle(request.title());
 
-            if(optionalMovie.isPresent()) {
+            if(optionalMovie.isPresent() && !optionalMovie.get().getId().equals(id)) {
                 throw new MovieTitleAlreadyUsedException(request.title());
             }
 
@@ -160,16 +160,16 @@ public class MovieService {
             movie.setReleaseDate(request.releaseDate());
         }
 
-        if(request.posterImage() != null) {
-            movie.setPosterImage(request.posterImage());
-        }
-
         if(request.overview() != null) {
             movie.setOverview(request.overview());
         }
 
         if(request.genres() != null) {
             movie.setGenres(request.genres());
+        }
+
+        if(file != null) {
+            s3Service.updateObject(movie.getPosterImage(), file);
         }
 
         movieRepository.update(movie);

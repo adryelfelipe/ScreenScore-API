@@ -20,6 +20,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
+import jdk.jfr.ContentType;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -73,7 +74,7 @@ public class MovieController {
     @ToAuthenticate
     @ToAuthorize
     public ResponseEntity<Void> create(
-            @Parameter(content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
+            @Parameter(description = "Dados do filme", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
             @RequestPart() CreateMovieRequest data, MultipartFile file) throws IOException {
 
        long movieId = movieService.create(data, file);
@@ -329,11 +330,14 @@ public class MovieController {
             @PathVariable
             long id,
 
-            @RequestBody
+            @Parameter(description = "Dados do filme", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
+            @RequestPart
             @Valid
-            UpdateMovieRequest request
-    ) {
-        movieService.update(id, request);
+            UpdateMovieRequest data,
+
+            MultipartFile file
+    ) throws IOException {
+        movieService.update(id, data, file);
 
         return ResponseEntity.noContent().build();
     }

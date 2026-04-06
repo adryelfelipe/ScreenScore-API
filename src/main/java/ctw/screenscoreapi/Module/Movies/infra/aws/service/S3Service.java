@@ -28,6 +28,17 @@ public class S3Service {
         this.s3Presigner = s3Presigner;
     }
 
+    public void updateObject(String key, MultipartFile file) throws IOException {
+        PutObjectRequest configRequest = PutObjectRequest.builder()
+                .bucket(bucketName)
+                .key(key)
+                .build();
+
+        RequestBody requestBody = RequestBody.fromBytes(file.getBytes());
+
+        s3Client.putObject(configRequest, requestBody);
+    }
+
     public String putObject(MultipartFile file) throws IOException {
         String posterKey = UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
 

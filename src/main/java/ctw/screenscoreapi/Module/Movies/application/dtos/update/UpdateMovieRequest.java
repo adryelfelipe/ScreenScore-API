@@ -28,9 +28,6 @@ public record UpdateMovieRequest(
         @Schema(example = "2025-02-24")
         String releaseDate,
 
-        @Schema(description = "Referência da imagem obtida ao se comunicar com ThemovieDB", example = "/referencia-da-imagem-do-themoviedb.jpg")
-        String posterImage,
-
         @Size(min = 5, message = "A visão geral do filme deve possuir no mínimo 5 caracteres")
         @Schema(example = "ScreenScore é um filme de ficação científica")
         String overview,

@@ -78,8 +78,10 @@ public class MovieService {
 
     public GetMovieResponse getById(long id) {
         MovieEntity movie = movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundByIdException(id));                                             ;
-        String posterUrl = s3Service.getPresignedUrl(movie.getPosterImage());
-        movie.setPosterImage(posterUrl);
+
+        if(movie.getPosterImage() != null && !movie.getPosterImage().isBlank()) {
+            movie.setPosterImage(s3Service.getPresignedUrl(movie.getPosterImage()));
+        }
 
         return movieMapper.toResponse(movie);
     }

@@ -37,7 +37,7 @@ INSERT INTO Filmes (titulo, adulto, data_lancamento, lingua_original, titulo_ori
     ('Joker', TRUE, DATE '2019-10-04', 'en', 'Joker', NULL, 'A origem de um dos maiores vilões de Gotham.');
 
 INSERT INTO Usuarios (nome, email, senha, tipo_usuario) VALUES
-    ('Admin Principal', 'adryelgamer@gmail.com', '123456Aa@', 'ADMIN'),
+    ('Admin Principal', 'adryelgamer@gmail.com', '123456@Aa', 'ADMIN'),
     ('João Silva', 'joao@email.com', 'Joao@1234', 'CLIENTE'),
     ('Maria Souza', 'maria@email.com', 'Maria@2024', 'CLIENTE'),
     ('Carlos Lima', 'carlos@email.com', 'Carlos@99', 'CLIENTE'),

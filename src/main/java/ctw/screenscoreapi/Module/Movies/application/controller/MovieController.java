@@ -75,7 +75,11 @@ public class MovieController {
     @ToAuthorize
     public ResponseEntity<Void> create(
             @Parameter(description = "Dados do filme", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
-            @RequestPart() CreateMovieRequest data, MultipartFile file) throws IOException {
+            @RequestPart CreateMovieRequest data,
+
+            @RequestPart(required = false)
+            @Parameter(description = "Imagem do filme")
+            MultipartFile file) throws IOException {
 
        long movieId = movieService.create(data, file);
 
@@ -321,7 +325,7 @@ public class MovieController {
                     ref = "#/components/responses/500"
             )
     })
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ToAuthenticate
     @ToAuthorize
     public ResponseEntity<Void> update(
@@ -331,10 +335,12 @@ public class MovieController {
             long id,
 
             @Parameter(description = "Dados do filme", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
-            @RequestPart
+            @RequestPart(required = true)
             @Valid
             UpdateMovieRequest data,
 
+            @RequestPart(required = false)
+            @Parameter(description = "Imagem do filme")
             MultipartFile file
     ) throws IOException {
         movieService.update(id, data, file);

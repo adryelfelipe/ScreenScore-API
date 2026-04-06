@@ -6,6 +6,7 @@ import ctw.screenscoreapi.Module.Avaliations.application.dtos.get.GetListOfAvali
 import ctw.screenscoreapi.Module.Avaliations.application.dtos.update.UpdateAvaliationRequest;
 import ctw.screenscoreapi.Module.Avaliations.application.service.AvaliationService;
 import ctw.screenscoreapi.Share.aop.authentication.ToAuthenticate;
+import ctw.screenscoreapi.Share.aop.authorization.ToAuthorize;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -159,12 +160,17 @@ public class AvaliationController {
                     ref = "#/components/responses/401"
             ),
             @ApiResponse(
+                    responseCode = "403",
+                    ref = "#/components/responses/403"
+            ),
+            @ApiResponse(
                     responseCode = "500",
                     ref = "#/components/responses/500"
             )
     })
     @GetMapping
     @ToAuthenticate
+    @ToAuthorize
     public ResponseEntity<GetListOfAvaliationResponse> getAll() {
         GetListOfAvaliationResponse response = avaliationService.getAll();
 

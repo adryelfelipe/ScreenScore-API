@@ -30,12 +30,15 @@ public class OpenApiConfig {
                         new Info()
                                 .title("ScreenScore Movies Management API")
                                 .description("""
-                                        API para gerenciamento de filmes e séries, permitindo que usuários avaliem, filtrem e consultem rankings.
+                                        API para gerenciamento de filmes, permitindo que usuários avaliem, filtrem e consultem rankings.
                                         
                                         ## Visão Geral
                                         Este serviço oferece operações para:
                                         
-                                        - **Gerenciamento de Filmes e Séries**: Criar, consultar, atualizar e remover filmes e séries
+                                        - **Gerenciamento de Filmes**: Criar, consultar, atualizar e remover filmes
+                                        - **Gerenciamento de Usuários**: Criar, consultar, atualizar e remover usuários
+                                        - **Gerenciamento de Avaliações**: Criar, consultar, atualizar e remover avaliações
+                                        - **Autenticação de Usuários**: Usuários podem se registrar e realizar login
                                         - **Avaliações de Usuários**: Usuários podem enviar, editar e remover avaliações e comentários
                                         - **Filtragem e Ordenação**: Filtrar por gênero, título ou ano; ordenar por avaliação média
                                         - **Rankings e Estatísticas**: Top 10 filmes, média de avaliações por gênero e outras estatísticas agregadas
@@ -43,8 +46,8 @@ public class OpenApiConfig {
                                 .version("v1.0.0")
                                 .contact(
                                         new Contact()
-                                                .name("Adryel Felipe")
-                                                .email("adryxd003@gmail.com")
+                                                .name("Adryel Sapelli")
+                                                .email("sapelliadryel@gmail.com")
                                                 .url("https://github.com/adryelfelipe/ScreenScore-API")
                                 )
                 )

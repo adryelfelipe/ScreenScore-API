@@ -98,6 +98,10 @@ public class MovieController {
                     ref = "#/components/responses/400"
             ),
             @ApiResponse(
+                    responseCode = "403",
+                    ref = "#/components/responses/403"
+            ),
+            @ApiResponse(
                     responseCode = "500",
                     ref = "#/components/responses/500"
             ),
@@ -108,6 +112,7 @@ public class MovieController {
     })
     @GetMapping("/externos")
     @ToAuthenticate
+    @ToAuthorize
     public ResponseEntity<GetListOfExternalMoviesResponse> getExternalMoviesByTitle(
             @NotBlank()
             @Parameter(description = "Título do filme", example = "Piratas do Caribe", required = true)

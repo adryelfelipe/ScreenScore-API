@@ -11,6 +11,8 @@ import io.swagger.v3.oas.models.media.Content;
 import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.responses.ApiResponse;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ProblemDetail;
@@ -275,6 +277,21 @@ public class OpenApiConfig {
                                                 )
                                 )
 
+                                .addSecuritySchemes(
+                                        "session-auth",
+                                        new SecurityScheme()
+                                                .type(SecurityScheme.Type.APIKEY)
+                                                .description(
+                                                        """
+                                                        Autenticação baseada em sessão utilizando cookie JSESSIONID. Após o login,
+                                                        o servidor retorna um cookie de sessão que identifica o usuário autenticado.
+                                                        Esse cookie deve ser incluído automaticamente nas requisições subsequentes.
+                                                        A sessão pode expirar após um período de inatividade.
+                                                        """
+                                                )
+                                                .name("JSESSIONID")
+                                                .in(SecurityScheme.In.COOKIE)
+                                )
                 );
     }
 }

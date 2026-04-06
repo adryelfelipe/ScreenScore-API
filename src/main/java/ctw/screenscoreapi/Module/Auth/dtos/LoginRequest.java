@@ -18,6 +18,6 @@ public record LoginRequest(
                 message = "Senha deve conter pelo menos 1 letra maiúscula, 1 minúscula, 1 número e 1 símbolo"
         )
         @NotBlank(message = "A senha é obrigatória")
-        @Schema(example = "123456Aa@")
+        @Schema(example = "123456@Aa")
         String password
 ) {}

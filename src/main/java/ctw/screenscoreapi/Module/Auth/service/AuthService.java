@@ -38,6 +38,7 @@ public class AuthService {
             }
 
             userSession.setUserId(user.getId());
+            userSession.setRole(user.getRole());
         } catch (UserNotFoundByEmailException e) {
             throw new InvalidCredentialsException();
         }

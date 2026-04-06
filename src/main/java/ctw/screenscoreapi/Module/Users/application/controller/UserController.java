@@ -245,7 +245,6 @@ public class UserController {
     })
     @PutMapping("/{id}")
     @ToAuthenticate
-    @ToAuthorize
     public ResponseEntity<Void> update(
             @Positive(message = "O ID deve ser um número positivo")
             @Parameter(description = "Número identificador do usuário", example = "4", required = true)

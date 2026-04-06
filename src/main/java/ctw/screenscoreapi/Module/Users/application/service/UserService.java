@@ -1,5 +1,6 @@
 package ctw.screenscoreapi.Module.Users.application.service;
 
+import ctw.screenscoreapi.Module.Auth.exception.UserNotAuthorizedException;
 import ctw.screenscoreapi.Module.Users.application.dtos.create.CreateUserRequest;
 import ctw.screenscoreapi.Module.Users.application.dtos.get.GetListOfUsersResponse;
 import ctw.screenscoreapi.Module.Users.application.dtos.get.GetUserResponse;
@@ -10,7 +11,9 @@ import ctw.screenscoreapi.Module.Users.application.exception.UserNotFoundByEmail
 import ctw.screenscoreapi.Module.Users.application.exception.UserNotFoundByIdException;
 import ctw.screenscoreapi.Module.Users.application.mapper.UserMapper;
 import ctw.screenscoreapi.Module.Users.domain.entity.UserEntity;
+import ctw.screenscoreapi.Module.Users.domain.enums.Role;
 import ctw.screenscoreapi.Module.Users.domain.repository.UserRepository;
+import ctw.screenscoreapi.Module.Users.infra.session.UserSession;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,12 +21,14 @@ import java.util.Optional;
 
 @Service
 public class UserService {
+    private final UserSession userSession;
     private UserMapper userMapper;
     private UserRepository userRepository;
 
-    public UserService(UserMapper userMapper, UserRepository userRepository) {
+    public UserService(UserMapper userMapper, UserRepository userRepository, UserSession userSession) {
         this.userMapper = userMapper;
         this.userRepository = userRepository;
+        this.userSession = userSession;
     }
 
     public long create(CreateUserRequest request) {
@@ -83,28 +88,42 @@ public class UserService {
             throw new UserNoContentToUpdateException();
         }
 
-        UserEntity userById = userRepository.findById(id).orElseThrow(() -> new UserNotFoundByIdException(id));
+        UserEntity user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundByIdException(id));
+
+        if(userSession.getRole() != Role.ADMIN && !userSession.getUserId().equals(id)) {
+            throw new UserNotAuthorizedException();
+        }
+
+        if(user.getRole() == Role.ADMIN && !userSession.getUserId().equals(id)) {
+            throw new UserNotAuthorizedException();
+        }
 
         if(request.name() != null) {
-            userById.setName(request.name());
+            user.setName(request.name());
         }
 
         if(request.email() != null) {
-            if(userRepository.findByEmail(request.email()).isPresent()) {
+            Optional<UserEntity> duplicateUser = userRepository.findByEmail(request.email());
+
+            if(duplicateUser.isPresent() && !duplicateUser.get().getId().equals(id)){
                 throw new UserEmailAlreadyUsedException();
             }
 
-            userById.setEmail(request.email());
+            user.setEmail(request.email());
         }
 
         if(request.password() != null) {
-            userById.setPassword(request.password());
+            user.setPassword(request.password());
         }
 
         if(request.role() != null) {
-            userById.setRole(request.role());
+            if(userSession.getRole() != Role.ADMIN) {
+                throw new UserNotAuthorizedException();
+            }
+
+            user.setRole(request.role());
         }
 
-        userRepository.update(userById);
+        userRepository.update(user);
     }
 }

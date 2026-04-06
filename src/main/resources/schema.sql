@@ -35,7 +35,7 @@ CREATE TABLE Avaliacoes (
     id BIGINT NOT NULL AUTO_INCREMENT,
     id_usuario BIGINT NOT NULL,
     id_filme BIGINT NOT NULL,
-    nota INT NOT NULL,
+    nota DECIMAL(4,2) NOT NULL,
     comentario CLOB,
     PRIMARY KEY (id),
 

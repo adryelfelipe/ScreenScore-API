@@ -1,4 +1,4 @@
-package ctw.screenscoreapi.Module.Avaliations.domain;
+package ctw.screenscoreapi.Module.Avaliations.domain.entity;
 
 import java.math.BigDecimal;
 

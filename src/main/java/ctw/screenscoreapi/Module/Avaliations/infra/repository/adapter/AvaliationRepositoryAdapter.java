@@ -1,7 +1,7 @@
 package ctw.screenscoreapi.Module.Avaliations.infra.repository.adapter;
 
-import ctw.screenscoreapi.Module.Avaliations.domain.AvaliationEntity;
-import ctw.screenscoreapi.Module.Avaliations.domain.AvaliationRepository;
+import ctw.screenscoreapi.Module.Avaliations.domain.entity.AvaliationEntity;
+import ctw.screenscoreapi.Module.Avaliations.domain.repository.AvaliationRepository;
 import ctw.screenscoreapi.Module.Avaliations.infra.repository.dao.AvaliationSpringJdbcDao;
 import org.springframework.stereotype.Repository;
 
@@ -34,5 +34,10 @@ public class AvaliationRepositoryAdapter implements AvaliationRepository {
     @Override
     public List<AvaliationEntity> findAll() {
         return avaliationSpringJdbcDao.findAll();
+    }
+
+    @Override
+    public void update(AvaliationEntity avaliation) {
+        avaliationSpringJdbcDao.update(avaliation);
     }
 }

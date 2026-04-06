@@ -3,7 +3,7 @@ package ctw.screenscoreapi.Module.Avaliations.application.mapper;
 import ctw.screenscoreapi.Module.Avaliations.application.dtos.create.CreateAvaliationToEntity;
 import ctw.screenscoreapi.Module.Avaliations.application.dtos.get.GetAvaliationResponse;
 import ctw.screenscoreapi.Module.Avaliations.application.dtos.get.GetListOfAvaliationResponse;
-import ctw.screenscoreapi.Module.Avaliations.domain.AvaliationEntity;
+import ctw.screenscoreapi.Module.Avaliations.domain.entity.AvaliationEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

@@ -3,6 +3,7 @@ package ctw.screenscoreapi.Module.Avaliations.application.controller;
 import ctw.screenscoreapi.Module.Avaliations.application.dtos.create.CreateAvaliationRequest;
 import ctw.screenscoreapi.Module.Avaliations.application.dtos.get.GetAvaliationResponse;
 import ctw.screenscoreapi.Module.Avaliations.application.dtos.get.GetListOfAvaliationResponse;
+import ctw.screenscoreapi.Module.Avaliations.application.dtos.update.UpdateAvaliationRequest;
 import ctw.screenscoreapi.Module.Avaliations.application.service.AvaliationService;
 import ctw.screenscoreapi.Share.aop.authentication.ToAuthenticate;
 import io.swagger.v3.oas.annotations.Operation;
@@ -170,5 +171,15 @@ public class AvaliationController {
         return ResponseEntity
                 .ok()
                 .body(response);
+    }
+
+    @PutMapping("/{id}")
+    @ToAuthenticate
+    public ResponseEntity<Void> update(@Valid @RequestBody UpdateAvaliationRequest request, @PathVariable Long id) {
+        avaliationService.update(request, id);
+
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 }

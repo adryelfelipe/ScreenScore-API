@@ -5,10 +5,12 @@ import ctw.screenscoreapi.Module.Avaliations.application.dtos.create.CreateAvali
 import ctw.screenscoreapi.Module.Avaliations.application.dtos.create.CreateAvaliationToEntity;
 import ctw.screenscoreapi.Module.Avaliations.application.dtos.get.GetAvaliationResponse;
 import ctw.screenscoreapi.Module.Avaliations.application.dtos.get.GetListOfAvaliationResponse;
+import ctw.screenscoreapi.Module.Avaliations.application.dtos.update.UpdateAvaliationRequest;
+import ctw.screenscoreapi.Module.Avaliations.application.exception.AvaliationNoContentToUpdateException;
 import ctw.screenscoreapi.Module.Avaliations.application.exception.AvaliationNotFoundByIdException;
 import ctw.screenscoreapi.Module.Avaliations.application.mapper.AvaliationMapper;
-import ctw.screenscoreapi.Module.Avaliations.domain.AvaliationEntity;
-import ctw.screenscoreapi.Module.Avaliations.domain.AvaliationRepository;
+import ctw.screenscoreapi.Module.Avaliations.domain.entity.AvaliationEntity;
+import ctw.screenscoreapi.Module.Avaliations.domain.repository.AvaliationRepository;
 import ctw.screenscoreapi.Module.Movies.application.exceptions.MovieNotFoundByIdException;
 import ctw.screenscoreapi.Module.Movies.domain.entity.MovieEntity;
 import ctw.screenscoreapi.Module.Movies.domain.repository.MovieRepository;
@@ -91,5 +93,30 @@ public class AvaliationService {
         List<GetAvaliationResponse> response = avaliations.stream().map(avaliationMapper::toResponse).toList();
 
         return avaliationMapper.toResponse(response);
+    }
+
+    public void update(UpdateAvaliationRequest request, Long avaliationId) {
+        if(request.comment() == null && request.score() == null) {
+            throw new AvaliationNoContentToUpdateException();
+        }
+
+        Long userId = userSession.getUserId();
+
+        Optional<AvaliationEntity> optionalAvaliation = avaliationRepository.findById(avaliationId);
+        AvaliationEntity avaliation = optionalAvaliation.orElseThrow(() -> new AvaliationNotFoundByIdException(avaliationId));
+
+        if(!avaliation.getUserId().equals(userId)) {
+            throw new UserNotAuthorizedException();
+        }
+
+        if(request.comment() != null) {
+            avaliation.setComment(request.comment());
+        }
+
+        if(request.score() != null) {
+            avaliation.setScore(request.score());
+        }
+
+        avaliationRepository.update(avaliation);
     }
 }

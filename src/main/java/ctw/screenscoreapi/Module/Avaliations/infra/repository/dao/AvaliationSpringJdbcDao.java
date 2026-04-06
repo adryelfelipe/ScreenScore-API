@@ -1,6 +1,6 @@
 package ctw.screenscoreapi.Module.Avaliations.infra.repository.dao;
 
-import ctw.screenscoreapi.Module.Avaliations.domain.AvaliationEntity;
+import ctw.screenscoreapi.Module.Avaliations.domain.entity.AvaliationEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -71,5 +71,11 @@ public class AvaliationSpringJdbcDao {
         });
 
         return avaliations;
+    }
+
+    public void update(AvaliationEntity avaliation) {
+        String sql = "UPDATE Avaliacoes SET comentario = ?, nota = ? WHERE id = ?";
+
+        jdbcTemplate.update(sql, avaliation.getComment(), avaliation.getScore(), avaliation.getId());
     }
 }

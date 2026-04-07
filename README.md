@@ -1,128 +1,155 @@
 # 🎬 ScreenScore API
 
-> API para gerenciamento e avaliação de filmes construída com **Java** e **Spring Boot**.
+> API para gerenciamento e avaliação de filmes construída com **Java** e **Spring Boot**, com foco em **consistência, desacoplamento e evolução sustentável**.
 
 [![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://www.oracle.com/java/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0.3-brightgreen.svg)](https://spring.io/projects/spring-boot)
 [![MySQL](https://img.shields.io/badge/MySQL-Database-blue.svg)](https://www.mysql.com/)
 [![Swagger](https://img.shields.io/badge/OpenAPI-Swagger-green.svg)](https://swagger.io/)
-[![JDBC](https://img.shields.io/badge/JDBC-Persistence-yellow.svg)](https://docs.oracle.com/javase/tutorial/jdbc/)
+[![Spring Data JDBC](https://img.shields.io/badge/Spring%20Data-JDBC-yellow.svg)](https://spring.io/projects/spring-data)
 
 ---
 
 # 📌 Sobre o projeto
 
-O **ScreenScore** é uma API para **gerenciamento e avaliação de filmes**, permitindo que usuários cadastrem filmes, consultem informações e publiquem avaliações, criando **rankings e estatísticas dentro da plataforma**.
+O **ScreenScore** é uma API para **gestão e avaliação de filmes**, permitindo que usuários cadastrem filmes, publiquem avaliações e construam rankings dentro da plataforma.
 
-Uma das funcionalidades principais é a **integração com uma API externa de filmes**, que permite buscar automaticamente informações como:
-
-- título
-- data de lançamento
-- sinopse
-- gêneros
-
-Isso facilita o processo de cadastro e mantém os dados padronizados dentro do sistema.
-
-O backend segue uma **arquitetura em camadas inspirada na Arquitetura Hexagonal**, separando domínio, aplicação e infraestrutura. Essa abordagem ajuda a manter o código **mais organizado, desacoplado e preparado para evoluções futuras**.
+Mais do que um CRUD, o objetivo da V1 foi construir uma base **pronta para evoluir sem gerar dívida técnica**, aplicando decisões que aumentam a **robustez e previsibilidade do sistema**.
 
 ---
 
-# 🚀 Funcionalidades atuais
+# 🎬 Domínio da aplicação
 
-Atualmente a API possui:
+- Gestão de **filmes**
+- Gestão de **usuários**
+- Sistema de **avaliações**
+- Base preparada para **rankings e estatísticas**
+
+---
+
+# 🧠 Decisões de Engenharia (V1)
+
+## 🔐 Arquitetura e Segurança
+
+- Autenticação centralizada com **Spring AOP**
+- Gerenciamento de sessão com **Spring**
+- Controle de acesso desacoplado do domínio
+
+👉 Segurança aplicada como **cross-cutting concern**, sem poluir regras de negócio
+
+---
+
+## 🔗 Integração com API externa
+
+- Separação entre **domínio interno** e **domínio externo**
+- Conversão de dados para evitar acoplamento
+- Uso de **DTOs** para exposição controlada
+
+👉 Integrações sem comprometer a estabilidade do sistema
+
+---
+
+## ☁️ Armazenamento de arquivos (AWS S3)
+
+- Upload próprio de posters de filmes
+- Persistência apenas da **chave do arquivo**
+- Geração de **URLs pré-assinadas** para acesso seguro
+
+👉 Controle total sobre dados críticos e maior resiliência
+
+---
+
+## ⚙️ Consistência e Manutenção
+
+- Padronização de erros com **ProblemDetail (RFC 7807)**
+- Centralização com **GlobalExceptionHandler**
+- Reutilização de schemas de erro na documentação
+- Migração de **JDBC → Spring Data JDBC**
+
+👉 Menos boilerplate, mais consistência e manutenção simplificada
+
+---
+
+# 🚀 Funcionalidades
 
 - CRUD completo de filmes
-- Filtros de busca por **título**
-- Filtros de busca por **gênero**
-- Integração com **API externa de filmes**
-- Documentação automática da API com **OpenAPI / Swagger**
-- Tratamento padronizado de erros seguindo **RFC 7807**
-
----
-
-# 🔮 Próximas evoluções do projeto
-
-O projeto ainda está em desenvolvimento e as próximas evoluções planejadas incluem:
-
-- Sistema de **usuários**
-- Sistema de **avaliações de filmes**
-- **Rankings de filmes** baseados nas avaliações
-- **Autenticação e controle de acesso** para os usuários da plataforma
-- Migração da camada de persistência atual (**JDBC**) para soluções do ecossistema **Spring Data**
-
----
-
-# 🛠️ Stack de Tecnologias
-
-## Linguagem
-
-**Java 21** — linguagem principal utilizada no desenvolvimento da aplicação.
-
-## Framework
-
-**Spring Boot** — framework utilizado para construção da API e gerenciamento de dependências.
-
-## Persistência de Dados
-
-**JDBC** — acesso ao banco de dados utilizando a API de persistência nativa do Java.
-
-## Banco de Dados
-
-**MySQL** — banco de dados relacional utilizado para armazenamento das informações do sistema.
-
-## Integração com APIs
-
-**OpenFeign** — utilizado para comunicação com API externa de filmes.
-
-## Documentação
-
-**OpenAPI / Swagger** — geração automática da documentação dos endpoints da API.
+- CRUD de usuários
+- Sistema de avaliações
+- Integração com API externa de filmes
+- Upload e gerenciamento de imagens (S3)
+- Documentação automática com Swagger
+- Tratamento padronizado de erros
 
 ---
 
 # 🏗️ Arquitetura
 
-O projeto segue uma **arquitetura em camadas inspirada na Arquitetura Hexagonal**, separando responsabilidades entre:
+O projeto segue uma abordagem inspirada em **Arquitetura Hexagonal (Ports & Adapters)**:
 
 ### Domínio
-Contém as **entidades e regras de negócio da aplicação**.
+Regras de negócio e entidades centrais
 
 ### Aplicação
-Contém os **casos de uso e serviços da aplicação**, responsáveis por coordenar a lógica de negócio.
+Casos de uso e orquestração
 
 ### Infraestrutura
-Contém implementações externas, como:
+- Banco de dados
+- Integrações externas
+- Configurações do framework
 
-- acesso ao banco de dados
-- integrações com APIs externas
-- configurações do framework
-
-Essa separação facilita a **manutenção, evolução e testabilidade do sistema**.
+👉 O domínio não depende de frameworks ou detalhes externos
 
 ---
 
-# 🖥️ Frontend
+# 🛠️ Stack de Tecnologias
 
-O frontend da aplicação está sendo desenvolvido em um repositório separado.
-
-O repositório do frontend pode ser encontrado em:
-
-https://github.com/jonathan7gb/ScreenScore-UI
+- **Java 21**
+- **Spring Boot**
+- **Spring Data JDBC**
+- **Spring AOP**
+- **OpenFeign**
+- **MySQL**
+- **H2 (ambiente de desenvolvimento)**
+- **AWS S3**
+- **OpenAPI / Swagger**
 
 ---
 
 # 📑 Documentação da API
 
-A documentação da API é gerada automaticamente através do **Swagger / OpenAPI**.
-
-Ela pode ser acessada de duas formas:
-
-### 🔗 Ambiente online (deploy)
-
+### 🔗 Produção
 https://screenscore-api-yrw8.onrender.com/swagger-ui/index.html
 
-### 💻 Ambiente local
-
-Após iniciar a aplicação localmente:
-
+### 💻 Local
 http://localhost:8080/swagger-ui/index.html
+
+---
+
+# 🖥️ Frontend
+
+O frontend está em um repositório separado:
+
+👉 https://github.com/jonathan7gb/ScreenScore-UI
+
+---
+
+# 💡 Conclusão
+
+A V1 do ScreenScore não foi sobre quantidade de features, mas sobre construir uma base sólida para evolução.
+
+👉 Sistemas escalam pela qualidade das decisões, não pela complexidade.
+
+---
+
+# 🔮 Próximos passos
+
+- JWT / OAuth2
+- Testes automatizados (unitários e integração)
+- Evolução da arquitetura
+- Observabilidade e métricas
+
+---
+
+# 💬 Feedback
+
+Feedbacks são sempre bem-vindos! 🚀

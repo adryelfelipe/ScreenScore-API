@@ -13,7 +13,7 @@ public class AuthMapper {
                 request.name(),
                 request.email(),
                 request.password(),
-                Role.CLIENTE
+                Role.CLIENT
         );
     }
 }

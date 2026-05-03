@@ -87,4 +87,18 @@ public class AuthServiceTest {
         verify(userSession, never()).setUserId(any());
         verify(userSession, never()).setRole(any());
     }
+
+    @Test
+    @DisplayName("Should throw InvalidCredentialsException when email is invalid")
+    public void shouldThrowInvalidCredentialsExceptionWhenEmailIsInvalid() {
+        // Arrange
+        LoginRequest loginRequest = new LoginRequest("pedro@gmail.com", "123456@Aa");
+        when(userService.getFullUserByEmail(loginRequest.email())).thenThrow(new UserNotFoundByEmailException(loginRequest.email()));
+
+        // Assert + Act
+        InvalidCredentialsException e = assertThrows(InvalidCredentialsException.class, () -> authService.login(loginRequest));
+        verify(userService).getFullUserByEmail(loginRequest.email());
+        verify(userSession, never()).setUserId(any());
+        verify(userSession, never()).setRole(any());
+    }
 }

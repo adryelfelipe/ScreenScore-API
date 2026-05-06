@@ -1,4 +1,4 @@
-package ctw.screenscoreapi.auth;
+package ctw.screenscoreapi.auth.service;
 
 import ctw.screenscoreapi.Module.Auth.dtos.LoginRequest;
 import ctw.screenscoreapi.Module.Auth.dtos.RegisterRequest;
@@ -17,8 +17,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;

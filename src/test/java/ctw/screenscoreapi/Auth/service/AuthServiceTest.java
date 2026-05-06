@@ -1,4 +1,4 @@
-package ctw.screenscoreapi.auth.service;
+package ctw.screenscoreapi.Auth.service;
 
 import ctw.screenscoreapi.Module.Auth.dtos.LoginRequest;
 import ctw.screenscoreapi.Module.Auth.dtos.RegisterRequest;

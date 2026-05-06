@@ -12,7 +12,7 @@ public class MovieEntity {
     private String title;
     private String originalLanguage;
     private String originalTitle;
-    private boolean adult;
+    private Boolean adult;
     private String releaseDate;
     private String posterImage;
     private String overview;

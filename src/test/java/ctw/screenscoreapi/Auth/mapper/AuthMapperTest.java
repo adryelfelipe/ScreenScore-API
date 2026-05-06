@@ -1,4 +1,4 @@
-package ctw.screenscoreapi.auth.mapper;
+package ctw.screenscoreapi.Auth.mapper;
 
 import ctw.screenscoreapi.Module.Auth.dtos.RegisterRequest;
 import ctw.screenscoreapi.Module.Auth.mapper.AuthMapper;

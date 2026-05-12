@@ -1,6 +1,7 @@
 package ctw.screenscoreapi.Movies.application;
 
 import ctw.screenscoreapi.Module.Movies.application.dtos.create.CreateMovieRequest;
+import ctw.screenscoreapi.Module.Movies.application.dtos.get.GetMovieResponse;
 import ctw.screenscoreapi.Module.Movies.application.exceptions.MovieTitleAlreadyUsedException;
 import ctw.screenscoreapi.Module.Movies.application.mapper.MovieMapper;
 import ctw.screenscoreapi.Module.Movies.application.service.MovieService;
@@ -108,5 +109,32 @@ public class MovieServiceTest {
         verify(movieRepository).findByExactTitle(request.title());
         verifyNoInteractions(movieMapper);
         verifyNoInteractions(s3Service);
+    }
+
+    @Test
+    @DisplayName("Should return a movie with presigned post url")
+    public void shouldReturnMovieWithPresignedPostUrlSuccessfully() {
+        // Arrange
+        String presignedUrl = "test";
+        String posterKey = "123";
+        String title =  "ScreenScore, o melhor filme de todos!";
+        String releaseDate = "2025-02-24";
+        String originalLanguage = "en";
+        String originalTitle = "ScreenScore, the best movie!";
+        Boolean adult  = false;
+        String overview = "ScreenScore é um filme de ficação científica";
+        List<Genre> genres = List.of(Genre.FICCAO_CIENTIFICA, Genre.ACAO);
+        MovieEntity movie = new MovieEntity(1L, posterKey, releaseDate, adult, originalTitle, originalLanguage, title, overview, genres, null, null);
+        when(movieRepository.findById(movie.getId())).thenReturn(Optional.of(movie));
+        when(s3Service.getPresignedUrl(movie.getPosterImage())).thenReturn(presignedUrl);
+        when(movieMapper.toResponse(movie)).thenReturn(new GetMovieResponse(movie.getId(), movie.getTitle(), movie.getOriginalLanguage(), movie.getOriginalTitle(), movie.isAdult(), movie.getReleaseDate(), presignedUrl, movie.getOverview(), movie.getGenres(), movie.getAvaliationsIds(), movie.getAverageScore()));
+
+        // Act
+        GetMovieResponse response = movieService.getById(movie.getId());
+
+        // Asserts
+        verify(movieRepository).findById(movie.getId());
+        verify(s3Service).getPresignedUrl(posterKey);
+        assertThat(movie.getPosterImage()).isEqualTo(response.posterImage());
     }
 }

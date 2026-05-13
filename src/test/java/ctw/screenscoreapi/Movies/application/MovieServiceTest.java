@@ -2,6 +2,7 @@ package ctw.screenscoreapi.Movies.application;
 
 import ctw.screenscoreapi.Module.Movies.application.dtos.create.CreateMovieRequest;
 import ctw.screenscoreapi.Module.Movies.application.dtos.get.GetMovieResponse;
+import ctw.screenscoreapi.Module.Movies.application.exceptions.MovieNotFoundByIdException;
 import ctw.screenscoreapi.Module.Movies.application.exceptions.MovieTitleAlreadyUsedException;
 import ctw.screenscoreapi.Module.Movies.application.mapper.MovieMapper;
 import ctw.screenscoreapi.Module.Movies.application.service.MovieService;
@@ -135,6 +136,28 @@ public class MovieServiceTest {
         // Asserts
         verify(movieRepository).findById(movie.getId());
         verify(s3Service).getPresignedUrl(posterKey);
+        verify(movieMapper).toResponse(movie);
         assertThat(movie.getPosterImage()).isEqualTo(response.posterImage());
+    }
+
+    @Test
+    @DisplayName("Should throw MovieNotFoundByIdException when the movie is not found")
+    public void shouldThrowMovieNotFoundByIdExceptionWhenTheMovieIsNotFound() {
+        // Arrange
+        String posterKey = "123";
+        String title =  "ScreenScore, o melhor filme de todos!";
+        String releaseDate = "2025-02-24";
+        String originalLanguage = "en";
+        String originalTitle = "ScreenScore, the best movie!";
+        Boolean adult  = false;
+        String overview = "ScreenScore é um filme de ficação científica";
+        List<Genre> genres = List.of(Genre.FICCAO_CIENTIFICA, Genre.ACAO);
+        MovieEntity movie = new MovieEntity(1L, posterKey, releaseDate, adult, originalTitle, originalLanguage, title, overview, genres, null, null);
+        when(movieRepository.findById(movie.getId())).thenThrow(MovieNotFoundByIdException.class);
+
+        // Act + Asserts
+        assertThrows(MovieNotFoundByIdException.class, () -> movieService.getById(movie.getId()));
+        assertThat(movie.getPosterImage()).isEqualTo(posterKey);
+        verifyNoInteractions(movieMapper);
     }
 }
